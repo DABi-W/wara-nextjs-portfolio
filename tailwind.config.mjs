@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// Force Rebuild CSS: 2024-01-01
 export default {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
