@@ -7,7 +7,7 @@ export default function Home() {
       {/* ส่วน Header */}
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-blue-900">Wara.Dev</h1>
+          <h1 className="text-xl font-bold text-red-600">Wara.Dev</h1>
           <nav>
             <a href="#about" className="mx-2 hover:text-blue-600">About</a>
             <a href="#projects" className="mx-2 hover:text-blue-600">Projects</a>
@@ -16,7 +16,7 @@ export default function Home() {
       </header>
 
       {/* ส่วน Hero (หน้าแรก) */}
-      <section className="py-20 text-center bg-blue-900 text-white">
+      <section className="py-20 text-center bg-indigo-900 text-white">
         <h2 className="text-4xl font-bold mb-4">สวัสดีครับ ผมวรา</h2>
         <p className="text-xl mb-8">Frontend Developer | Specialist in SharePoint & Internal Tools</p>
         <button className="bg-white text-blue-900 px-6 py-2 rounded-full font-bold hover:bg-gray-200 transition">
