@@ -86,7 +86,7 @@ const ResumePage = () => {
     {
       title: "Corporate Website Redesign",
       description: "Modernized a legacy corporate website using Next.js and Tailwind CSS, improving page load speed by 40%.",
-      tags: ["Next.js", "Tailwind", "Framer Motion"],
+      tags: ["HTML", "CSS", "Javascript"],
       image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3",
       links: {
         demo: "#",
@@ -96,7 +96,7 @@ const ResumePage = () => {
     {
       title: "E-commerce Dashboard",
       description: "Responsive admin dashboard for tracking sales and inventory with data visualization charts.",
-      tags: ["React", "Chart.js", "Material UI"],
+      tags: ["HTML", "CSS", "Javascript"],
       image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2370&ixlib=rb-4.0.3",
       links: {
         demo: "#",
@@ -106,7 +106,7 @@ const ResumePage = () => {
     {
       title: "Interactive Campaign Landing Page",
       description: "High-conversion landing page with scroll animations and integrated lead capture forms.",
-      tags: ["HTML5", "SCSS", "GSAP"],
+      tags: ["HTML", "CSS", "Javascript"],
       image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=2370&ixlib=rb-4.0.3",
       links: {
         demo: "#",
@@ -116,7 +116,7 @@ const ResumePage = () => {
     {
       title: "Portfolio V1 (WordPress)",
       description: "Previous portfolio site built with custom WordPress theme and PHP functions.",
-      tags: ["WordPress", "PHP", "jQuery"],
+      tags: ["HTML", "CSS", "Javascript"],
       image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3",
       links: {
         demo: "#",
