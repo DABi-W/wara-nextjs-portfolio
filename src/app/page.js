@@ -142,7 +142,11 @@ const ResumePage = () => {
       <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="font-bold text-xl tracking-tight text-slate-900">WC.</h1>
-          <a href="https://dabi-w.github.io/wara-nextjs-portfolio/CV-Warawut-Chummongkhon.pdf" target="_blank" rel="noopener noreferrer" download className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-md hover:bg-slate-700 transition text-sm font-medium shadow-md hover:shadow-lg">
+          <a href="https://dabi-w.github.io/wara-nextjs-portfolio/CV-Warawut-Chummongkhon.pdf" 
+          target="_blank"
+          rel="noopener noreferrer" 
+          download
+          className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-md hover:bg-slate-700 transition text-sm font-medium shadow-md hover:shadow-lg">
             <Download size={20} />
             <span>Download CV</span>
           </a>
