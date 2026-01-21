@@ -78,8 +78,8 @@ const ResumePage = () => {
 
   const projects = [
     {
-      title: "Corporate Website Redesign",
-      description: "Modernized a legacy corporate website using Next.js and Tailwind CSS, improving page load speed by 40%.",
+      title: "Product Credit",
+      description: "The structure of this website will be similar to a 'Credit Card' product.",
       tags: ["HTML", "CSS", "Javascript"],
       image: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/product-banner-mb.webp?raw=true",
       links: {
@@ -88,8 +88,8 @@ const ResumePage = () => {
       }
     },
     {
-      title: "E-commerce Dashboard",
-      description: "Responsive admin dashboard for tracking sales and inventory with data visualization charts.",
+      title: "In Application",
+      description: "The structure of this website will be similar to a 'In Application' product.",
       tags: ["HTML", "CSS", "Javascript"],
       image: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/product-banner-mb.webp?raw=true",
       links: {
@@ -98,8 +98,8 @@ const ResumePage = () => {
       }
     },
     {
-      title: "Interactive Campaign Landing Page",
-      description: "High-conversion landing page with scroll animations and integrated lead capture forms.",
+      title: "Product Home Loan",
+      description: "The structure of this website will be similar to a 'Home Loan' product.",
       tags: ["HTML", "CSS", "Javascript"],
       image: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/product-banner-mb.webp?raw=true",
       links: {
@@ -108,8 +108,8 @@ const ResumePage = () => {
       }
     },
     {
-      title: "Portfolio V1 (WordPress)",
-      description: "Previous portfolio site built with custom WordPress theme and PHP functions.",
+      title: "Promotion Page Content",
+      description: "The structure of this website will be similar to a 'Promotion' every page.",
       tags: ["HTML", "CSS", "Javascript"],
       image: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/promotion-banner-mb.webp?raw=true",
       links: {
@@ -118,8 +118,8 @@ const ResumePage = () => {
       }
     },
     {
-      title: "Portfolio V1 (WordPress)",
-      description: "Previous portfolio site built with custom WordPress theme and PHP functions.",
+      title: "News Page Content",
+      description: "The structure of this website will be similar to a 'News' every page.",
       tags: ["HTML", "CSS", "Javascript"],
       image: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/news-banner-mb.webp?raw=true",
       links: {
