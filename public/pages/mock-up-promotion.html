@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Promotion - Low interest rate of 6.66% per year, fixed for 3 years">
+    <meta property="og:description" content="Home Loan  6.66% fixed for 3 years, available for office workers, tenor up to 30 years, fast approval in 7 days, no bundle required">
+    <meta property="og:image" content="https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/promotion-banner-mb.webp?raw=true">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Promotion</title>
+</head>
+<style>
+    /* standart control*/
+    .main-icw .qlfy-container { padding: 0px 10px; }
+    .kvnm_f10{font-size: 10px;}
+    .kvnm_f12{font-size: 12px;}
+    .kvnm_f14{font-size: 14px!important;}
+    .kvnm_f16{font-size: 16px!important;}
+    .kvnm_f18{font-size: 18px;}
+    .kvnm_f20{font-size: 20px;}
+    .kvnm_f22{font-size: 22px;}
+    .kvnm_f24{font-size: 24px!important;}
+    .kvnm_f26{font-size: 26px!important;}
+    .kvnm_f30{font-size: 30px;}
+    .kvnm_f36{font-size: 36px;}
+    .kvnm_fw600{font-weight: 600;}
+    .kvnm_fw400{font-weight: 400;}
+    
+    .kvnm_pad_all_10{padding:10px !important;}
+    .kvnm_pad_all_15{padding:15px;}
+    .kvnm_pad_all_20{padding:20px 0px 0px 20px !important;}
+    .kvnm_pad_all_30{padding:30px;}
+    .kvnm_pad_all_40{padding:40px;}
+    .kvnm_pad_all_50{padding:50px;}
+    
+    .kvnm_pc{display:block;}
+    .kvnm_mb{display:none;}
+    
+    .kvnm_text_left{ text-align: left !important;}
+    .kvnm_text_center{text-align: center !important;}
+    .kvnm_text_right{ text-align: right !important;}
+    
+    .kvnm_text_green{ color: #00A850 !important;}
+    .kvnm_text_white{ color: #fff !important;}
+    .kvnm_text_dark{ color: #000 !important;}
+    
+    
+    .kvnm_bg_green{ background: #00A850 !important;color: #fff!important;}
+    .kvnm_bg_green_gradient{ background: linear-gradient(45deg, rgba(0, 168, 80, 1) 0%, rgba(97, 214, 153, 1) 100%) !important;color: #fff!important;}
+    
+    .kvnm_bg_gray_dark{ background: #40515E !important; color: #fff!important;}
+    .kvnm_bg_red{ background: #ee370f !important;color: #fff!important;}
+    
+    .kvnm_container {max-width: 1140px;margin: auto; padding: 20px 0px; font-family: Arial !important; font-size: 14px; line-height:1.4 !important;}
+    .kvnm_container a{text-decoration: none !important; color: #000;}
+    .kvnm_container a:hover{text-decoration: none !important; color: #000;}
+    .kvnm_container h1{font-size: 36px; color: #00A850; text-align: center; font-weight: 600;}
+    .kvnm_container h2{font-size: 26px !important; color: #00A850; text-align: center;font-weight: 600;}
+    .kvnm_container h3{font-size: 16px; color: #000; font-weight: 600;}
+    .kvnm_container p{font-size: 14px; color: #000; text-align:left; padding: 0px; margin: 0px; }
+    
+    .kvnm_container ul{ margin-top: 10px; margin-left: 20px !important; color: #000;}
+    .kvnm_container ul li{ list-style: disc; font-size: 16px !important; margin-bottom:4px !important; padding: 0px;}
+    
+    .kvnm_box_60{width: 60%; margin: 0px auto;}
+    .kvnm_box_80{width: 100%;}
+    
+    .kvnm_space{margin:15px 0px;}
+    .kvnm_space_line{border-bottom: 4px solid #02a850; border-radius: 3px;}
+    .kvnm_space_lines{border-bottom: 2px solid #02a850; border-radius: 3px;}
+    .kvnm_clear{clear: both;}
+    
+    .kvnm_responsive{ width: 100%;}
+    
+    .kvnm_bt_small{  max-width: 285px; width:auto; height: 45px; padding:12px  5px; text-align: center; font-size: 14px; background-color: #00A850; border-radius: 5px; color: #fff; margin: 5px auto; box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .kvnm_bt_s_focus { text-align: center; height: 40px; max-width: 200px; font-size: 12px; margin: 10px auto; padding: 10px 30px; border-radius: 5px; background-color: #00A850; color: #fff; font-weight: bold; border: #fff 1px solid; cursor: pointer;}
+    .kvnm_bt_medium{  max-width:265px; width:auto; height: 45px; padding:10px  5px; text-align: center; font-size: 16px; background-color: #00A850; border-radius: 55px; color: #fff; margin: 5px auto; box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .kvnm_bt_large{font-weight: 600; max-width:285px; width:auto; height: 55px; padding:15px 5px; text-align: center; font-size: 16px; background-color: #fff; border-radius: 5px; color: #00A850; margin: 0 auto; box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .kvnm_bt_full{font-weight: 600; height: 55px; width: 75%; padding:10px 5px; text-align: center; font-size: 24px; background-color: #ee370f; border-radius: 55px; color: #fff; margin: -30px auto -20px auto; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);}
+    .kvnm_bt_small:hover{ background-color: #fff;  color: #008000;}
+    .kvnm_bt_medium:hover{ background-color: #fff;  color: #008000;}
+    .kvnm_bt_large:hover{ background-color: #fff; color: #008000; }
+    .kvnm_bt_full:hover{ background-color: #ee370f; color: #fff;}
+    
+    .kvnm_bt_gfull{font-weight: 600; height: 55px; width: 70%; padding:10px 5px; text-align: center; font-size: 24px; background-color: #00A850; border-radius: 5px; color: #fff; margin: -33px auto -15px auto; box-shadow: 0 3px 3px 0 rgba(0,0,0,0.2), 0px 3px 8px 0 rgba(0,0,0,0.10);}
+    .kvnm_bt_gfull:hover{ background-color: #00A850; color: #fff;}
+    
+    .knvm_card_cpvv{ text-align: left; padding:10px;  border-radius: 3px; min-height: 120px; background-color: #f7f7f7;  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .knvm_card_cpvv .title{ text-align: left; font-weight:600; font-size: 20px; color: #000;}
+    .knvm_card_cpvv .detail{ text-align: left; font-size: 16px; font-weight: 400; color: #000;}
+    .knvm_card_cpvv_2{ text-align: left; padding:10px;  border-radius: 3px; min-height: 8vh; background-color: #f7f7f7;  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .knvm_card_cpvv_2 .title{ text-align: left; font-weight:600; font-size: 20px; color: #000;}
+    .knvm_card_cpvv_2 .detail{ text-align: left; font-size: 16px; font-weight: 400; color: #000;}
+
+    .knvm_card_step{  text-align: center;  padding:20px 10px;  border-radius: 3px; margin: 10px; min-height: 190px; background-color: #ebf7eb; box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .knvm_card_step .no{ margin-top: -50px; margin-bottom: 30px; font-size: 22px; font-weight: 600; color: #40515E; padding: 10px; background-color: #007600; color: #fff; border-radius: 15px; width: 50px; height: 50px;}
+    .knvm_card_step .detail{text-align: center; font-size: 16px; font-weight: 400;}
+    .kvnm_bggreenimg_hilight{ background: url('https://www.kasikornbank.com.vn/SiteCollectionDocuments/img/bg-sc-highlight-mb.jpg') repeat top center; color: #fff; }
+    .kvnm_bggry_hilight{ background: url('https://www.kasikornbank.com.vn/SiteCollectionDocuments/img/bg-sc-highlight-mb-grey1.jpg') repeat top center; }
+    
+    .kvnm_remak{ font-size: 10px; font-style: italic; }
+    .kvnm_border{ border: 1px #b7b7b7 solid;}
+    .kvnm_block_video{width: 560px; margin: 0px auto;}
+    .kvnm_video{ position: relative; padding-bottom: 56.25%; padding-top: 25px;	height: 0; border: 6px #00A850 solid; border-radius: 3px; margin: 0 auto; }
+    .kvnm_video iframe {	position: absolute;	top: 0;	left: 0;	width: 100%;	height: 100%;}
+    
+    /*========== Accordion - START ==========*/
+    .kvnm_accordion {position: relative;font-size: 16px;}
+    .kvnm_accordion:not(:last-child) {margin-bottom: 10px;}
+    .kvnm_accordion-title {position: relative; padding: 20px 64px 20px 22px;background: #f3f3f3; border-radius: 5px;border-left: 3px solid #00A850;color: #333;word-wrap: break-word; cursor: pointer;}
+    .kvnm_accordion-title:after {font-family: 'iconkcc';content: "\e91d";font-size: 16px;line-height: 1;position: absolute;right: 25px;top: 50%;-webkit-transform: translate(0, -50%);-ms-transform: translate(0, -50%);transform: translate(0, -50%);}
+    .kvnm_accordion-title.active:after {content: "\e91c";}
+    .kvnm_accordion-title:after,.kvnm_accordion-title:hover,.kvnm_accordion-title.active {    color: #00A850;}
+    .kvnm_accordion-content .wrap {    padding: 5px 10px 25px 10px;    background: #fff;    font-size: 16px;}
+    .kvnm_accordion-content .wrap ul { margin-top: 15px; margin-left: -20px !important;}
+    .kvnm_accordion-content .wrap ul li {  list-style-type: disc;   margin-bottom: 18px; font-size: 16px;}
+    .kvnm_table{margin: 0 auto; padding: 4px; border-radius: 5px;}
+    .kvnm_table tr:first-child{ color: #fff; background-color: #007600; text-align: center;}
+    .kvnm_table tr{ border: 1px solid #b7b7b7; padding: 6px;}
+    .kvnm_table td{ border: 1px solid #b7b7b7; padding: 6px;}
+    /* Custom CSS*/
+
+/*Calculator*/
+    .kvnm_cal_calculator { background: #fff; padding: 20px; border-radius: 10px !important; box-shadow: 0 0 10px rgba(0, 0, 0, .1); }
+    .kvnm_cal_button1{background:#198952;color:#fff;border:none;border-radius:3px!important;padding:10px!important;cursor:pointer;width:100%!important; user-select:none; text-align: center; font-size: 18px; font-weight: bold;}
+    .kvnm_cal_button1:hover{background:#166940;}
+    .kvnm_cal_button1.disabled { pointer-events: none; opacity: 0.5; }
+    .kvnm_cal_button2{background:#e2e2e2;color:#000000;border:none;border-radius:3px!important;padding:10px!important;cursor:pointer;width:100%!important; user-select:none; text-align: center; font-size: 18px; font-weight: bold;}
+    .kvnm_cal_button2:hover{background:#bababa; color: #166940;}
+    .kvnm_cal_button2.disabled { pointer-events: none; opacity: 0.5; }
+    
+    .kvnm_cal_result{display: flex; justify-content: space-between; align-items: baseline;}
+    .kvnm_cal_result-box1{background: linear-gradient(to right, #0f4c3a, #2a7d61);padding:20px;border-radius:5px!important;text-align:center;}
+    .kvnm_cal_result-box2{background: linear-gradient(to top, #ffffff, #eeeeee);padding:20px;border-radius:5px!important;text-align:center;min-height:200px;}
+    
+    .kvnm_cal_result1{font-size:34px;font-weight:600;color:#fff;}
+    .kvnm_cal_result2{font-size:28px;font-weight:600;color:#0b6027;}
+    .kvnm_form-group label {font-weight: bold;}
+    .kvnm_error {color: red; font-size: 0.9em; display: none;}
+    .kvnm_invalid {border-color: red !important;}
+    .kvnm_input-group-text-right {border-left: 0;}
+    .kvnm_input-group > .form-control:not(:last-child) {border-right: 0;}
+    .kvnm_result-box {background: #f9f9f9; padding: 20px; border-radius: 5px; box-shadow: 0 0 5px rgba(0,0,0,0.1);}
+    
+    .modal-body { max-height: 70vh; padding: 0; display: flex; flex-direction: column; } 
+    .table-container { overflow-y: auto; flex: 1 1 auto; } 
+    .table { width: 100%; border-collapse: collapse; } 
+    .table thead, .table tfoot {color: white; font-weight: bold; background: #00A850; /* ตัวอย่างสี header/footer */ } 
+    /*.table tfoot { position: sticky; bottom: 0; background: #eee; font-weight: bold; z-index: 10; }*/
+    .table thead { position: sticky; top: 0; background: #00A850; z-index: 10;}
+    .table thead th { background: inherit; color: #fff;}
+    .table-container { max-height: 800px; overflow-y: auto; }
+    .kvnm_result-box-wrapper{display:none}
+    select.form-control { appearance: none; -webkit-appearance: none; -moz-appearance: none; background: url('data:image/svg+xml;utf8,<svg fill="gray" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center; background-size: 16px; padding-right: 30px;}
+    
+    /* ซ่อนฝั่งขวาเริ่มต้น */ 
+    .kvnm_result-box-wrapper { display: none; animation: fadeIn 0.5s ease forwards; } 
+    /* animation ตอนโผล่ */ 
+    @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+/*Left Right*/
+.knvm_divider,.knvm_step{text-align:center;box-shadow:0 4px 6px rgba(0,0,0,.1)}
+.knvm_box{background:linear-gradient(to right,#0f4c3a,#2a7d61);width:100%;max-width:1140px;display:flex;overflow:hidden;position:relative}
+.knvm_left, .knvm_right{flex:1;padding:10px;color:#fff;text-align:center;display:flex;flex-direction:column;justify-content:center;min-width:350px}
+.knvm_left{background:#0f4c3a}
+.knvm_steps{display:flex;margin-top:20px}
+.knvm_step{background:#fff;color:#333;padding:15px;border-radius:10px;font-size:14px;width:120px}
+.knvm_btn,.knvm_divider{background:#fff;color:#2a7d61;font-weight:700}
+.knvm_step span{display:inline-block;color:#fff;width:24px;height:24px;line-height:24px;border-radius:50%;font-weight:700;margin-bottom:5px}
+.knvm_btn{padding:10px 20px;border-radius:5px;text-decoration:none;margin-top:20px;display:inline-block}
+.knvm_divider{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;line-height:40px;border-radius:50%}
+.knvm_kvnm_bggreenimg_hilight{background:url(https://www.kasikornbank.com.vn/SiteCollectionDocuments/img/bg-sc-highlight-mb.jpg) top center}
+
+/*card slide*/
+.knvm_slider-container{display:flex;flex-direction:column;align-items:center;justify-content:center;max-width:100%;overflow:hidden;padding:20px;margin:auto}
+.knvm_slider{display:flex;gap:20px;scroll-behavior:smooth;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;cursor:grab;padding:20px}
+.knvm_slider::-webkit-scrollbar{display:none}
+.knvm_card{flex:0 0 auto;width:350px;background:#fff;border-radius:10px!important;box-shadow:0 4px 6px rgba(0,0,0,.1);scroll-snap-align:start;text-align:center;border:0!important}
+.knvm_card img{width:100%;height:auto;max-width:350px;border-radius:10px 10px 0 0}
+.knvm_knvm_dots{display:flex;justify-content:center;margin-top:15px}
+.knvm_knvm_dot{width:10px;height:10px;margin:0 5px;background-color:#ccc;border-radius:50%;cursor:pointer;transition:background .3s}
+.knvm_knvm_dot.active{background-color:#333}
+
+/*iframe responsive*/
+.knvm_container {position: relative;width: 100%;overflow: hidden;padding-top: 135%;}
+.knvm_responsive-iframe {position: absolute;top: 0;left: 0;bottom: 0;right: 0;width: 100%;height: 100%;border: none;}
+
+/*carousel banner*/
+.knvm_carousel{position:relative;width:100%;overflow:hidden;margin:auto}
+.knvm_carousel-track{display:flex;transition:transform .5s ease-in-out}
+.knvm_carousel-item{min-width:100%;user-select:none}
+.knvm_carousel-item img{width:100%;height:auto}
+.knvm_carousel-next,.knvm_carousel-prev{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0);color:#fff;border:none;padding:10px;cursor:pointer;font-size:30px}
+.knvm_carousel-prev{left:10px}
+.knvm_carousel-next{right:10px}
+
+.knvm_row {--bs-gutter-x: 0 !important;}
+input {border-radius: 5px !important;}
+.kbdl_or{font-family: arial !important; font-size: 16px !important;}
+.knvm_a {text-decoration: none;}
+
+/*New Css table*/
+.knvm_wrapper{margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:var(--knvm_shadow)}
+.knvm_table_header_section{padding:20px 25px;background:#fff;border-bottom:2px solid var(--knvm_primary)}
+.knvm_th,.knvm_tr:not(:last-child) 
+.knvm_td{border-bottom:1px solid var(--knvm_border_color)}
+.knvm_title{margin:0;font-size:1.25rem;font-weight:600;color:var(--knvm_primary)}
+.knvm_table{width:100%;border-collapse:collapse;text-align:left}
+.knvm_thead_row{background-color:#007600;}
+.knvm_th{padding:16px 24px;font-weight:600;text-transform:uppercase;font-size:.75rem;letter-spacing:.05em;color:#fff;}
+.knvm_tr{transition:background-color .2s}
+.knvm_tr:hover{background-color:#f0fdf4}
+.knvm_td{padding:18px 24px;font-size:.95rem;vertical-align:middle}
+.knvm_doc_name{font-weight:500;color:var(--knvm_text_dark)}
+.knvm_text_center{text-align:center}
+.knvm_download_btn{display:inline-flex;align-items:center;justify-content:center;padding:8px 16px;background-color:#fff;color:var(--knvm_primary)!important;border:1.5px solid var(--knvm_primary);border-radius:6px;text-decoration:none!important;font-weight:600;font-size:.85rem;transition:.2s}
+.knvm_download_btn:hover{background-color:var(--knvm_primary);color:#fff!important;box-shadow:0 2px 4px rgba(0,169,80,.2);transform:translateY(-1px)}
+        :root {
+            --knvm_primary: #00a950;
+            --knvm_primary_hover: #008f43;
+            --knvm_text_dark: #333333;
+            --knvm_text_light: #666666;
+            --knvm_bg_light: #f9fafb;
+            --knvm_border_color: #e5e7eb;
+            --knvm_shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+.product-detail-menu{margin:0px; margin-top: 0px; }
+.main-icw .heading-page {
+        color: #333 !important;
+        font-weight: normal;
+        letter-spacing: 0.015rem;
+    }
+.apply-now {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  display: none;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+  
+/*End Desktop*/
+  
+/* Mobile control*/
+    @media (max-width:768px){
+    
+    .kvnm_pad_all_10{padding:10px 6px;}
+    .kvnm_pad_all_15{padding:15px 6px;}
+    .kvnm_pad_all_20{padding:10px 30px !important;}
+    .kvnm_pad_alll_20{padding:5px !important;}
+    .kvnm_pad_all_30{padding:30px 6px;}
+    .kvnm_pad_all_40{padding:40px 6px;}
+    .kvnm_pad_all_50{padding:50px 6px;}
+    .kvnm_pc{display:none;}
+    .kvnm_mb{display:block;}
+    
+    .kvnm_container {max-width: 1140px;margin: auto; padding: 10px 10px !important;}
+    .kvnm_container h1{font-size: 26px; color: #00A850; text-align: center;}
+    .kvnm_container h2{font-size: 20px; color: #00A850; text-align: center;}
+    .kvnm_container h3{font-size: 16px; color: #000; text-align: left;}
+    .kvnm_container p{font-size: 14px; color: #000; line-height: inherit ;}
+    
+    .product-detail-menu ul{margin:10px; padding-left: 0px;}
+    .kvnm_bt_small{ max-width:285px; width:auto; height: 45px; padding:12px 5px; text-align: center; font-size: 14px; background-color: #00A850; border-radius: 5px; color: #fff; margin: 5px auto;}
+    .kvnm_bt_medium{  max-width:265px; width:auto; height: 45px; padding:10px  5px; text-align: center; font-size: 16px; background-color: #00A850; border-radius: 55px; color: #fff; margin: 5px auto;}
+    .kvnm_bt_large{font-weight: 600; max-width:285px; width:auto; height: 45px; padding:11px 5px; text-align: center; font-size: 16px; background-color: #fff; border-radius: 5px; color: #00A850; margin: 0 auto;}
+    .kvnm_bt_full{font-weight: 600; width: 75%; padding:15px 5px; text-align: center; font-size: 18px; background-color: #ee370f; border-radius: 55px; color: #fff; margin: -20px auto -20px auto;}
+    .kvnm_bt_gfull{font-weight: 600; width: 70%; padding:15px 5px; text-align: center; font-size: 18px; background-color: #00A850; border-radius: 5px; color: #fff; margin: -5px auto -5px auto;}
+    
+    
+    
+    .knvm_card_cpvv{ text-align: left; padding:10px;  border-radius: 3px; min-height: 80px; background-color: #f7f7f7; margin:5px auto; box-shadow: none;}
+    .knvm_card_cpvv .title{ text-align: left; font-weight:600; font-size: 20px;}
+    .knvm_card_cpvv .detail{ text-align: left; font-size: 16px; font-weight: 400;}
+    .knvm_card_cpvv_2 { text-align: left; padding:10px;  border-radius: 3px; min-height: 10vh; background-color: #f7f7f7; margin-bottom:-10px; box-shadow: none;}
+    .knvm_card_cpvv_2 .title{ text-align: left; font-weight:600; font-size: 20px;}
+    .knvm_card_cpvv_2 .detail{ text-align: left; font-size: 16px; font-weight: 400;}
+    
+    .knvm_card_step{  text-align: center;  padding:20px 10px;  border-radius: 3px; margin: 10px auto; min-height: 190px; background-color:#ebf7eb ;}
+    .knvm_card_step .no{ margin:0px auto; margin-bottom: 10px; font-size: 22px; font-weight: 600; color: #40515E; padding: 10px; background-color: #007600; color: #fff; border-radius: 15px; width: 50px; height: 50px;}
+    .kvnm_box_60{width: auto; margin: 0px auto;}
+    .kvnm_box_80{width: auto; margin: 0px auto;}
+    .kvnm_video{ border: 4px #00A850 solid; border-radius: 3px; width: auto; height: 230px; margin: 0 auto;}
+    .kvnm_bolck_video{width: auto; margin: 0px auto;}
+    /* Custom CSS*/   
+ #LBDate{display: none;}
+
+/*Left Right*/
+.knvm_box{flex-direction:column;text-align:center}
+.knvm_steps{flex-direction:column}
+.knvm_step{width:100%;max-width:200px}
+.knvm_divider{position:relative;top:auto;left:auto;transform:none;margin:-20px auto}
+.knvm_left, .knvm_right{flex:1;padding:5px;color:#fff;text-align:center;display:flex;flex-direction:column;justify-content:center}
+
+        /*iframe responsive*/
+.knvm_container {position: relative;width: 100%;overflow: hidden;padding-top: 190%;}
+.knvm_responsive-iframe {position: absolute;top: 0;left: 0;bottom: 0;right: 0;width: 100%;height: 100%;border: none;}
+ 
+.heading-page { color: #000 !important; font-weight: 600; padding:0px 0px; font-size: 14px !important;margin: 0px 0px 5px!important;}
+.list-menu{padding-left: 0px !important;}
+.kbdl_or{font-family: arial !important; font-size: 16px !important; top: 314px !important;}
+
+.kvnm_row {flex-direction: column;}
+.knvm_td,.knvm_th{padding:12px 16px}
+.knvm_download_btn{padding:6px 12px;font-size:.8rem}
+.apply-now {
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+  }
+    }
+
+/*End Mobile*/
+
+</style>
+<body>
+<!-- ============ Banner PC-Mobile ============ -->    
+    <section id="herobanner">
+        <a href="#RegisterDroplead" id="install1">
+            <div class="kvnm_pc">
+            <img src="https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/promotion-banner-pc.webp?raw=true" alt="kvnm_Hero_banner on PC" class="kvnm_responsive">&nbsp;</div>
+            <div class="kvnm_mb">
+            <img src="https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/promotion-banner-mb.webp?raw=true" alt="kvnm_Hero_banner on Mobile" class="kvnm_responsive"></div> 
+        </a> 
+    </section>
+<!-- ============ CTA Button ============ -->
+    <section>
+        <div class="kvnm_container"> 
+            <a href="#RegisterDroplead">
+            <div class="kvnm_bt_gfull" id="install2">Contact Sales</div> 
+            </a> 
+        </div>
+    </section>
+<!-- ============ CPV CARD ============ -->
+    <section>
+        <div class="kvnm_container">
+            <div class="knvm_card_cpvv_2 kvnm_f16">Our product is dedicated to young professional, middle, and senior
+                management because having a new home is exciting but it can mean you need to rethink your finances. Explore
+                ways you can manage your money in ways that works for you and your family</div>
+            <br />
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-12">
+                    <div class="knvm_card_cpvv">
+                        <div class="title kvnm_text_green">Special fixed rate</div>
+                        <p class="detail">Lock in a rate and enjoy low interest burden up to 3 years<br /></p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-12">
+                    <div class="knvm_card_cpvv">
+                        <div class="title kvnm_text_green">No hidden fees</div>
+                        <p class="detail">Say No! to hidden cost insurance bundling product</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-12">
+                    <div class="knvm_card_cpvv">
+                        <div class="title kvnm_text_green">Extra financial benefits</div>
+                        <p class="detail">Unlock perks and enjoy more savings over your loan period<br /></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- ============ Product Feature ============ -->      
+    <section>
+        <div class="kvnm_container kvnm_pad_all_10">
+            <h2 class="kvnm_text_left">Useful Information</h2>
+            <div>
+                <div class="row">
+                    <div class="kvnm_text_left kvnm_pad_all_10">
+                        <ul style="margin-left: 20px !important;">
+                            <li>Open to all office workers in Ho Chi Minh City, with no requirement to be current KBank
+                                customer.</li>
+                            <li>Borrower’s age (including loan tenor): 20 - 60 years old for female, and 20 - 62 years old
+                                for male.</li>
+                            <li>6.66% fixed 3-year, available for loan amounts from 700 million to 10 billion VND.</li>
+                            <li>No extra conditions, with no need to buy insurance or deposit money to receive this offer.
+                            </li>
+                            <li>Free fire insurance throughout loan period, covering 110% of loan outstanding balance or
+                                building value.</li>
+                            <li>Eligible for application between 1 - 31 Dec 2025 and have the loan disbursed by 15 Jan 2026.
+                            </li>
+                            <div class="kvnm_space">
+                            </div>
+                            <li>
+                                <div>At a glance with KBank Factsheet<a
+                                        href="/SiteCollectionDocuments/pdf/homeloan/122025-kbank-vietnam-home-loan-factsheet-en.pdf"
+                                        target="_blank" id="learnmore1"><span class="kvnm_fw600 kvnm_f16"
+                                            style="font-style: italic; color: #00a850; padding-left: 5px; text-decoration: underline !important;">See
+                                            more </span></a></div>
+                            </li>
+                            <li>Go for monthly repayment calculation<a
+                                    href="/EN/personal/HomeLoan/Pages/index.aspx#calculator" target="_blank"
+                                    id="learnmore2"><span class="kvnm_fw600 kvnm_f16"
+                                        style="font-style: italic; color: #00a850; padding-left: 5px; text-decoration: underline !important;">See
+                                        more </span></a></li>
+                            <li>
+                                <div>View full Terms &amp; Conditions<a
+                                        href="/SiteCollectionDocuments/pdf/homeloan/122024-terms-and-conditions-year-end-offer-with-free-one-month-interest.pdf"
+                                        target="_blank" id="learnmore1"><span class="kvnm_fw600 kvnm_f16"
+                                            style="font-style: italic; color: #00a850; padding-left: 5px; text-decoration: underline !important;">See
+                                            more </span></a></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="kvnm_container kvnm_pad_all_15">
+                        <a href="#RegisterDroplead">
+                            <div class="apply-now" id="register2F">Contact Sales</div>
+                    </div>
+                    </a>
+                    <div id="RegisterDroplead" class="kvnm_space">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--Start Script-->    
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="utm-handler.js"></script>
+
+<!--BTN-->   
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const applyBtn = document.getElementById("register2F");
+
+  window.addEventListener("scroll", function () {
+    if (window.scrollY > 50) {
+      applyBtn.style.opacity = "1";
+      applyBtn.style.pointerEvents = "auto";
+    } else {
+      applyBtn.style.opacity = "0";
+      applyBtn.style.pointerEvents = "none";
+    }
+  });
+});
+</script>
+<!--UTM-->
+<script>
+        (function () {
+    /*** ฟังก์ชันดึงค่าพารามิเตอร์ UTM จาก URL*/
+    function getUTMParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const utmParams = {};
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+            if (urlParams.has(param)) {
+                utmParams[param] = urlParams.get(param);
+            }
+        });
+        return utmParams;
+    }
+
+    /*** ฟังก์ชันบันทึก UTM ลงใน sessionStorage เพื่อป้องกันหายเมื่อโหลดซ้ำ*/
+    function saveUTMToSession() {
+        const utmParams = getUTMParams();
+        if (Object.keys(utmParams).length > 0) {
+            sessionStorage.setItem('utm_params', JSON.stringify(utmParams));
+        }
+    }
+
+    /*** ฟังก์ชันดึงค่าพารามิเตอร์ UTM จาก sessionStorage ถ้าไม่มีใน URL*/
+    function getSavedUTM() {
+        return JSON.parse(sessionStorage.getItem('utm_params')) || {};
+    }
+
+    /*** ฟังก์ชันอัปเดต src ของ iframe โดยเพิ่ม UTM Parameter เข้าไป*/
+    function updateIframeSrc() {
+        let utmParams = getUTMParams();
+        
+        if (Object.keys(utmParams).length === 0) {
+            utmParams = getSavedUTM(); // ใช้ค่าที่เก็บไว้ใน sessionStorage ถ้าไม่มีใน URL
+        } else {
+            saveUTMToSession(); // บันทึกค่าใหม่ลง sessionStorage
+        }
+
+        const iframe = document.getElementById('myIframe');
+        if (!iframe) return;
+
+        let iframeSrc = iframe.getAttribute('data-src');
+
+        if (Object.keys(utmParams).length > 0) {
+            const url = new URL(iframeSrc);
+            Object.keys(utmParams).forEach(key => url.searchParams.set(key, utmParams[key]));
+            iframe.src = url.toString(); // อัปเดต iframe.src พร้อม UTM
+        } else {
+            iframe.src = iframeSrc; // โหลดปกติถ้าไม่มี UTM
+        }
+    } 
+    /***เรียกใช้ฟังก์ชัน updateIframeSrc เมื่อหน้าเว็บโหลดเสร็จ*/
+    window.addEventListener('load', updateIframeSrc);
+})();
+
+function getSavedUTM() {
+    try {
+        return JSON.parse(sessionStorage.getItem('utm_params')) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+</script>
+
+<script>
+// Carousel Banner
+        const track = document.querySelector('.knvm_carousel-track');
+        const items = document.querySelectorAll('.knvm_carousel-item');
+        const prevBtn = document.querySelector('.knvm_carousel-prev');
+        const nextBtn = document.querySelector('.knvm_carousel-next');
+        let index = 0;
+        let interval;
+
+        function moveSlide(n) {
+            index = (index + n + items.length) % items.length;
+            track.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        function startAutoSlide() {
+            interval = setInterval(() => moveSlide(1), 5000);
+        }
+
+        function stopAutoSlide() {
+            clearInterval(interval);
+        }
+
+        prevBtn.addEventListener('click', () => {
+            moveSlide(-1);
+            stopAutoSlide();
+            startAutoSlide();
+        });
+        nextBtn.addEventListener('click', () => {
+            moveSlide(1);
+            stopAutoSlide();
+            startAutoSlide();
+        });
+
+        let isDragging = false, startPosX, currentTranslate;
+        
+        track.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startPosX = e.clientX;
+            stopAutoSlide();
+        });
+        track.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            let diff = startPosX - e.clientX;
+            if (diff > 50) moveSlide(1);
+            else if (diff < -50) moveSlide(-1);
+            isDragging = false;
+            startAutoSlide();
+        });
+        track.addEventListener('mouseleave', () => isDragging = false);
+
+        startAutoSlide();
+    </script>
+
+<script>
+        const slider = document.querySelector('.knvm_slider');
+        const dotsContainer = document.querySelector('.knvm_knvm_dots');
+        const cards = document.querySelectorAll('.knvm_card');
+        let dots = [];
+        let isDragging = false;
+        let startX;
+        let scrollLeft;
+
+        cards.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('knvm_dot');
+            dot.addEventListener('click', () => {
+                slider.scrollTo({ left: index * 320, behavior: 'smooth' });
+            });
+            dotsContainer.appendChild(dot);
+            dots.push(dot);
+        });
+
+        function updateDots() {
+            let index = Math.round(slider.scrollLeft / 320);
+            dots.forEach(dot => dot.classList.remove('active'));
+            if (dots[index]) {
+                dots[index].classList.add('active');
+            }
+        }
+
+        slider.addEventListener('scroll', updateDots);
+        updateDots();
+
+        slider.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => isDragging = false);
+        slider.addEventListener('mouseup', () => isDragging = false);
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2;
+            slider.scrollLeft = scrollLeft - walk;
+        });
+
+        slider.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('touchend', () => isDragging = false);
+        slider.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            const x = e.touches[0].pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2;
+            slider.scrollLeft = scrollLeft - walk;
+        });
+</script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var tabs = document.querySelectorAll(".kvnm_tab-link");
+            var panes = document.querySelectorAll(".kvnm_tab-pane");
+            var select = document.querySelector(".kvnm_mobile-select");
+
+            function showTab(tabId) {
+                panes.forEach(pane => pane.classList.remove("kvnm_active"));
+                document.getElementById(tabId).classList.add("kvnm_active");
+            }
+
+            // Desktop Tabs
+            tabs.forEach(tab => {
+                tab.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    tabs.forEach(t => t.classList.remove("kvnm_active"));
+                    this.classList.add("kvnm_active");
+                    showTab(this.getAttribute("data-tab"));
+                    localStorage.setItem("kvnm_selectedTab", this.getAttribute("data-tab"));
+                });
+            });
+
+            // Mobile Select
+            select.addEventListener("change", function () {
+                showTab(this.value);
+                localStorage.setItem("kvnm_selectedTab", this.value);
+            });
+
+            // Load last selected tab
+            var savedTab = localStorage.getItem("kvnm_selectedTab") || "kvnm_home";
+            showTab(savedTab);
+            document.querySelector(`.kvnm_tab-link[data-tab="${savedTab}"]`)?.classList.add("kvnm_active");
+            select.value = savedTab;
+        });
+    </script>
+
+<script>
+    $(document).ready(function () {
+        // ทำให้แท็บ Bootstrap ทำงานได้
+        $('.nav-tabs a').click(function (e) {
+            e.preventDefault();  // ป้องกันพฤติกรรมปกติของลิงก์
+            $(this).tab('show'); // แสดงแท็บที่ถูกคลิก
+        });
+
+        // ทำให้แท็บที่ถูกเลือกล่าสุดยังคงอยู่หลังจากรีเฟรชหน้า
+        $('.nav-tabs a').on('shown.bs.tab', function (event) {
+            var tabID = $(event.target).attr('href');
+            localStorage.setItem('selectedTab', tabID);
+        });
+
+        // โหลดแท็บที่เลือกล่าสุด
+        var selectedTab = localStorage.getItem('selectedTab');
+        if (selectedTab) {
+            $('.nav-tabs a[href="' + selectedTab + '"]').tab('show');
+        }
+    });
+</script>
+
+
+<!-- slide -->
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var swiper = new Swiper("#pdSwiper", {
+      slidesPerView: 1.2, // ปรับตามขนาดหน้าจอ
+      spaceBetween: 20,
+      loop: true, // วนซ้ำ
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      breakpoints: {
+        768: { slidesPerView: 2 }, // Tablet
+        1024: { slidesPerView: 3 }, // Desktop
+      },
+    });
+  });
+</script>
+
+    <!--Slide Privilate-->
+  <script>
+  const cardWrapper = document.querySelector('.knvm_card-wrapper');
+const prevButton = document.getElementById('prev');
+const nextButton = document.getElementById('next');
+const cards = document.querySelectorAll('.knvm_card'); // Select all cards
+
+let isDragging = false;
+let startX;
+let scrollLeft;
+
+// Calculate the width of a single card
+const cardWidth = cards[0].clientWidth;
+
+prevButton.addEventListener('click', () => {
+  cardWrapper.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+});
+
+nextButton.addEventListener('click', () => {
+  cardWrapper.scrollBy({ left: cardWidth, behavior: 'smooth' });
+});
+
+cardWrapper.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  cardWrapper.style.cursor = 'grabbing';
+  startX = e.pageX - cardWrapper.offsetLeft;
+  scrollLeft = cardWrapper.scrollLeft;
+});
+
+cardWrapper.addEventListener('mouseleave', () => {
+  isDragging = false;
+  cardWrapper.style.cursor = 'grab';
+});
+
+cardWrapper.addEventListener('mouseup', () => {
+  isDragging = false;
+  cardWrapper.style.cursor = 'grab';
+});
+
+cardWrapper.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  e.preventDefault();
+  const x = e.pageX - cardWrapper.offsetLeft;
+  const walk = (x - startX) * 5; // Adjust speed multiplier
+  cardWrapper.scrollLeft = scrollLeft - walk;
+});
+
+  </script> 
+
+<script>
+$(function () {
+    if ($(".kvnm_accordion").length) {
+        $(".kvnm_accordion").each(function () {
+            var acc = $(this),
+                title = $(this).find(">.kvnm_accordion-title"),
+                content = $(this).find(">.kvnm_accordion-content");
+            content.hide();
+            if (acc.find(".kvnm_accordion-content").length == 0) {
+                acc.addClass("empty");
+            }
+            if (title.hasClass("active")) {
+                $(this).parent().find(content).slideDown(300);
+            }
+              // เปิดเนื้อหาของ "Qualifications" และ "Required Documents" โดยค่าเริ่มต้น
+            if (title.text().trim() === "Qualifications" || title.text().trim() === "Required Documents") {
+                title.addClass("active");
+                content.show();
+            } else {
+                content.hide();
+            }
+            title.click(function () {
+                if ($(this).hasClass("active")) {
+                    $(this).removeClass("active").parent().find(content).slideUp(300);
+                } else {
+                    $(this).toggleClass("active").parent().find(content).slideDown(300);
+                }
+                return false;
+            });
+        });
+    }
+});
+</script>
+
+<script>
+// ===== Utilities shared =====
+const formatVND = (value) => value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+const setDivButtonState = (div, enabled) => { enabled ? div.classList.remove('disabled') : div.classList.add('disabled'); };
+
+/* ==================== เครื่องที่ 1: Equal Principal ==================== */
+(function(){
+  // Validate
+  const E_validateInputs = () => {
+    let isValid = true;
+
+    const loanAmountInput = document.getElementById('E_loanAmount');
+    const loanAmountError = document.getElementById('E_loanAmountError');
+    const loanAmountVal = parseInt((loanAmountInput.value||'').replace(/,/g,'') || 0);
+
+    if (!loanAmountVal) {
+      loanAmountError.textContent = 'Please enter the loan amount (700,000,000 – 10,000,000,000)';
+      loanAmountError.style.display = 'block';
+      loanAmountInput.classList.add('kvnm_invalid');
+      isValid = false;
+    } else if (loanAmountVal < 700000000) {
+      loanAmountError.textContent = 'Loan amount must be at least 700,000,000';
+      loanAmountError.style.display = 'block';
+      loanAmountInput.classList.add('kvnm_invalid');
+      isValid = false;
+    } else if (loanAmountVal > 10000000000) {
+      loanAmountError.textContent = 'Loan amount must not exceed 10,000,000,000';
+      loanAmountError.style.display = 'block';
+      loanAmountInput.classList.add('kvnm_invalid');
+      isValid = false;
+    } else {
+      loanAmountError.style.display = 'none';
+      loanAmountInput.classList.remove('kvnm_invalid');
+    }
+
+    const loanMonthsInput = document.getElementById('E_loanMonths');
+    const loanMonthsError = document.getElementById('E_loanMonthsError');
+    let loanMonthsVal = parseInt(loanMonthsInput.value || 0);
+
+    if (!loanMonthsVal || loanMonthsVal < 61) {
+      loanMonthsError.textContent = 'Please enter the number of loan months (61 - 360)';
+      loanMonthsError.style.display = 'block';
+      loanMonthsInput.classList.add('kvnm_invalid');
+      isValid = false;
+    } else if (loanMonthsVal > 360) {
+      loanMonthsError.textContent = 'The number of loan months must not exceed 360 months. Please check again!';
+      loanMonthsError.style.display = 'block';
+      loanMonthsInput.classList.add('kvnm_invalid');
+      loanMonthsInput.value = 360;
+      loanMonthsVal = 360;
+      isValid = false;
+    } else {
+      loanMonthsError.style.display = 'none';
+      loanMonthsInput.classList.remove('kvnm_invalid');
+    }
+
+    setDivButtonState(document.getElementById('E_calculateBtn'), isValid);
+    return isValid;
+  };
+
+  // Clear
+  const E_clearFields = () => {
+    ['E_loanAmount', 'E_loanMonths'].forEach(id => {
+      const input = document.getElementById(id);
+      input.value = 0;
+      input.classList.remove('kvnm_invalid');
+      document.getElementById(id + 'Error').style.display = 'none';
+    });
+    document.getElementById('E_monthlyPayment').innerText = '0';
+    setDivButtonState(document.getElementById('E_repaymentScheduleBtn'), false);
+    document.getElementById('E_repaymentScheduleBody').innerHTML = '';
+    setDivButtonState(document.getElementById('E_calculateBtn'), false);
+    document.getElementById('E_resultWrapper').style.display = 'none';
+    document.querySelector('#E_wrapper .kvnm_row').classList.add('justify-content-center');
+  };
+
+// ===== Replace old E_calculateLoan with this one =====
+const E_calculateLoan = () => {
+  const btn = document.getElementById('E_calculateBtn');
+  if (btn.classList.contains('disabled')) return;
+  if (!E_validateInputs()) return;
+
+  // show result panel (คงพฤติกรรมเดิม)
+  document.getElementById('E_resultWrapper').style.display = 'block';
+  document.querySelector('#E_wrapper .kvnm_row').classList.remove('justify-content-center');
+
+  // inputs
+  const P = Math.round(parseFloat(document.getElementById('E_loanAmount').value.replace(/,/g, '')) || 0);
+  const annualRate = parseFloat(document.getElementById('E_interestRate').value || 0);  // e.g. 6.99
+  const n = parseInt(document.getElementById('E_loanMonths').value, 10) || 0;
+
+  // constants (Excel display mode)
+  const DAYS_PER_MONTH = 30;
+  const interestOf = (bal) => Math.round((bal * DAYS_PER_MONTH * annualRate) / 36500);
+
+  // Equal principal shown every month = round(P/n)
+  const principalStd = Math.round(P / n);
+
+  // walk schedule using "display" integers
+  let balance = P;
+  let totalInterest = 0;
+
+  let rows = [];
+for (let i = 1; i <= n; i++) {
+  // ปี 1–3 ใช้อัตราที่ผู้ใช้กรอก (annualRate), หลังจากนั้น 11.94%
+  const rate = (i <= 36) ? annualRate : 11.94;
+
+  const interest  = Math.round((balance * DAYS_PER_MONTH * rate) / 36500);
+  const principal = principalStd;       // เงินต้นคงที่ตามสูตร Equal Principal
+  const payment   = principal + interest;
+
+  let nextBal = balance - principal;
+  if (i === n) nextBal = 0;             // งวดสุดท้ายบังคับให้ปิดหนี้เหลือ 0
+
+  rows.push({ i, principal, interest, payment, nextBal });
+
+  totalInterest += interest;
+  balance = nextBal;
+}
+
+  // render table
+  const tbody = document.getElementById('E_repaymentScheduleBody');
+  let html = '';
+  rows.forEach(r => {
+    html += `
+      <tr>
+        <td>${r.i}</td>
+        <td>${formatVND(r.principal)}</td>
+        <td>${formatVND(r.interest)}</td>
+        <td>${formatVND(r.payment)}</td>
+        <td>${formatVND(r.nextBal)}</td>
+      </tr>`;
+  });
+  tbody.innerHTML = html;
+
+  // summary/footer (Excel-style)
+const month37Pay = rows[36]?.payment || 0;   // index 36 = เดือนที่ 37
+  const lastPay  = rows[rows.length - 1]?.payment || 0;
+
+  // แสดงช่วงจ่ายรายเดือน: เดือนท้าย - เดือนแรก (ตามที่คุณใช้)
+  document.getElementById('E_monthlyPayment').innerText =
+    `${formatVND(lastPay)} - ${formatVND(month37Pay)}`;
+
+  document.getElementById('E_displayLoanAmount').innerText = formatVND(P.toString());
+  document.getElementById('E_displayLoanMonths').innerText = n.toString();
+  document.getElementById('E_displayInterestRate').innerText = annualRate.toFixed(2);
+
+  setDivButtonState(document.getElementById('E_repaymentScheduleBtn'), true);
+
+  // Footer totals:
+  // - totalPrincipal = P (force)
+  // - totalInterest  = sum of shown interests
+  // - totalMonthlyPayment = P + totalInterest
+  document.getElementById('E_totalPrincipal').innerText      = formatVND(P);
+  document.getElementById('E_totalInterestFooter').innerText = formatVND(totalInterest);
+  document.getElementById('E_totalMonthlyPayment').innerText = formatVND(P + totalInterest);
+};
+
+
+// Disable Repayment Schedule when inputs changed
+function E_disableRepaymentSchedule() {
+  setDivButtonState(document.getElementById('E_repaymentScheduleBtn'), false);
+}
+
+// ✅ รวม input change และ validation
+const E_onInputChange = () => {
+  E_validateInputs();
+  E_disableRepaymentSchedule();
+};
+
+['E_loanAmount','E_loanMonths','E_interestRate'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', (e)=>{
+    if(id==='E_loanAmount'){
+      const clean = e.target.value.replace(/\D/g,'');
+      e.target.value = formatVND(clean);
+    }
+    E_onInputChange();
+  });
+});
+
+// ปุ่ม Calculate / Clear ยังเหมือนเดิม
+document.getElementById('E_calculateBtn').addEventListener('click', E_calculateLoan);
+document.getElementById('E_clearBtn').addEventListener('click', E_clearFields);
+})();
+
+/* ==================== เครื่องที่ 2: Annuity (Tiered) ==================== */
+(function(){
+  // Policy (ไม่แตะ UI, คง readonly 6.99 ที่ช่อง A_interestRate ใช้เพื่อแสดง)
+  const getPromoRate = () => {
+  const val = parseFloat(document.getElementById('A_interestRate').value);
+  return isNaN(val) ? 6.99 : val; // default 6.99% ถ้าใส่ไม่ถูก
+}
+  const AFTER_RATE   = 11.94; // หลังโปรโมชัน
+  const PROMO_MONTHS = 36;
+
+  // ปัดค่างวดตามนโยบาย (ถ้าไม่ต้องการปัดขั้น เปลี่ยนเป็น Math.round(A_raw))
+  const ROUND_TO   = 100000; // ขั้น 100,000
+  const ROUND_MODE = 'ceil'; // ceil|nearest|floor
+  const roundByPolicy = (value)=>{
+    if(!ROUND_TO || ROUND_TO<=1) return Math.round(value);
+    const q = value / ROUND_TO;
+    if(ROUND_MODE==='floor')   return Math.floor(q)*ROUND_TO;
+    if(ROUND_MODE==='nearest') return Math.round(q)*ROUND_TO;
+    return Math.ceil(q)*ROUND_TO;
+  };
+
+  // Validate
+  const A_validateInputs = () => {
+    let isValid = true;
+
+    const loanAmountInput = document.getElementById('A_loanAmount');
+    const loanAmountError = document.getElementById('A_loanAmountError');
+    const loanAmountVal = parseInt((loanAmountInput.value||'').replace(/,/g,'') || 0);
+
+    if (!loanAmountVal) {
+      loanAmountError.textContent = 'Please enter the loan amount (700,000,000 – 10,000,000,000)';
+      loanAmountError.style.display = 'block';
+      loanAmountInput.classList.add('kvnm_invalid');
+      isValid = false;
+    } else if (loanAmountVal < 700000000) {
+      loanAmountError.textContent = 'Loan amount must be at least 700,000,000';
+      loanAmountError.style.display = 'block';
+      loanAmountInput.classList.add('kvnm_invalid');
+      isValid = false;
+    } else if (loanAmountVal > 10000000000) {
+      loanAmountError.textContent = 'Loan amount must not exceed 10,000,000,000';
+      loanAmountError.style.display = 'block';
+      loanAmountInput.classList.add('kvnm_invalid');
+      isValid = false;
+    } else {
+      loanAmountError.style.display = 'none';
+      loanAmountInput.classList.remove('kvnm_invalid');
+    }
+
+    const loanMonthsInput = document.getElementById('A_loanMonths');
+    const loanMonthsError = document.getElementById('A_loanMonthsError');
+    let loanMonthsVal = parseInt(loanMonthsInput.value || 0);
+
+    if (!loanMonthsVal || loanMonthsVal < 61) {
+      loanMonthsError.textContent = 'Please enter the number of loan months (61 - 360)';
+      loanMonthsError.style.display = 'block';
+      loanMonthsInput.classList.add('kvnm_invalid');
+      isValid = false;
+    } else if (loanMonthsVal > 360) {
+      loanMonthsError.textContent = 'The number of loan months must not exceed 360 months. Please check again!';
+      loanMonthsError.style.display = 'block';
+      loanMonthsInput.classList.add('kvnm_invalid');
+      loanMonthsInput.value = 360;
+      loanMonthsVal = 360;
+      isValid = false;
+    } else {
+      loanMonthsError.style.display = 'none';
+      loanMonthsInput.classList.remove('kvnm_invalid');
+    }
+
+    // interest rate
+      const interestRateInput = document.getElementById('A_interestRate');
+      const interestRateError = document.getElementById('A_interestRateError');
+      const interestRateVal = parseFloat(interestRateInput.value);
+
+      if (isNaN(interestRateVal) || interestRateVal <= 0) {
+      if (interestRateError) interestRateError.style.display='block';
+      interestRateInput.classList.add('kvnm_invalid');
+      isValid=false;
+    } else {
+      if (interestRateError) interestRateError.style.display='none';
+      interestRateInput.classList.remove('kvnm_invalid');
+    }
+
+    setDivButtonState(document.getElementById('A_calculateBtn'), isValid);
+    return isValid;
+
+  };
+
+  // Clear
+  const A_clearFields = () => {
+    ['A_loanAmount', 'A_loanMonths'].forEach(id => {
+      const input = document.getElementById(id);
+      input.value = 0;
+      input.classList.remove('kvnm_invalid');
+      document.getElementById(id + 'Error').style.display = 'none';
+    });
+    document.getElementById('A_monthlyPayment').innerText = '0';
+    setDivButtonState(document.getElementById('A_repaymentScheduleBtn'), false);
+    document.getElementById('A_repaymentScheduleBody').innerHTML = '';
+    setDivButtonState(document.getElementById('A_calculateBtn'), false);
+    document.getElementById('A_resultWrapper').style.display = 'none';
+    document.querySelector('#A_wrapper .kvnm_row').classList.add('justify-content-center');
+  };
+
+
+(function(){
+  // ====== Constants / Policy ======
+  const PROMO_MONTHS = 36;   // 36 เดือนแรก
+  const AFTER_RATE   = 11.94; // หลัง 36 เดือน
+  const ROUND_TO     = 100000;
+  const ROUND_MODE   = 'ceil';
+
+  // ====== Helpers ======
+  const formatVND = (value) => value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const setDivButtonState = (div, enabled) => { enabled ? div.classList.remove('disabled') : div.classList.add('disabled'); };
+  
+  const roundByPolicy = (value) => {
+    if(!ROUND_TO || ROUND_TO<=1) return Math.round(value);
+    const q = value / ROUND_TO;
+    if(ROUND_MODE==='floor')   return Math.floor(q)*ROUND_TO;
+    if(ROUND_MODE==='nearest') return Math.round(q)*ROUND_TO;
+    return Math.ceil(q)*ROUND_TO;
+  };
+
+  // ====== Get user-entered promo rate ======
+  const getPromoRate = () => {
+    const val = parseFloat(document.getElementById('A_interestRate').value);
+    return isNaN(val) ? 6.99 : val;
+  };
+
+  // ====== Validation ======
+  const A_validateInputs = () => {
+    let isValid = true;
+    const loanAmountInput = document.getElementById('A_loanAmount');
+    const loanAmountError = document.getElementById('A_loanAmountError');
+    const loanAmountVal = parseInt((loanAmountInput.value||'').replace(/,/g,'') || 0);
+
+    if (!loanAmountVal) {
+      loanAmountError.style.display='block'; loanAmountInput.classList.add('kvnm_invalid'); isValid=false;
+    } else { loanAmountError.style.display='none'; loanAmountInput.classList.remove('kvnm_invalid'); }
+
+    const loanMonthsInput = document.getElementById('A_loanMonths');
+    const loanMonthsError = document.getElementById('A_loanMonthsError');
+    const loanMonthsVal = parseInt(loanMonthsInput.value || 0);
+    if (!loanMonthsVal || loanMonthsVal < 61 || loanMonthsVal > 360) {
+      loanMonthsError.style.display='block'; loanMonthsInput.classList.add('kvnm_invalid'); isValid=false;
+    } else { loanMonthsError.style.display='none'; loanMonthsInput.classList.remove('kvnm_invalid'); }
+
+    setDivButtonState(document.getElementById('A_calculateBtn'), isValid);
+    return isValid;
+  };
+
+  // ====== Clear ======
+  const A_clearFields = () => {
+    ['A_loanAmount','A_loanMonths'].forEach(id=>{
+      const input=document.getElementById(id); input.value=0; input.classList.remove('kvnm_invalid');
+      document.getElementById(id+'Error').style.display='none';
+    });
+    document.getElementById('A_monthlyPayment').innerText='0';
+    setDivButtonState(document.getElementById('A_repaymentScheduleBtn'), false);
+    document.getElementById('A_repaymentScheduleBody').innerHTML='';
+    setDivButtonState(document.getElementById('A_calculateBtn'), false);
+    document.getElementById('A_resultWrapper').style.display='none';
+    document.querySelector('#A_wrapper .kvnm_row').classList.add('justify-content-center');
+  };
+
+// ====== Calculate ======
+const A_calculateLoan = () => {
+  const btn = document.getElementById('A_calculateBtn');
+  if (btn.classList.contains('disabled')) return;
+  if (!A_validateInputs()) return;
+
+  document.getElementById('A_resultWrapper').style.display = 'block';
+  document.querySelector('#A_wrapper .kvnm_row').classList.remove('justify-content-center');
+
+  const P = parseFloat(document.getElementById('A_loanAmount').value.replace(/,/g, '')) || 0;
+  const n = parseInt(document.getElementById('A_loanMonths').value, 10) || 0;
+
+  const rCal = AFTER_RATE / 100 / 12;
+  const A_raw = rCal === 0 ? (P / n) : (P * rCal / (1 - Math.pow(1 + rCal, -n)));
+  const installmentPolicy = roundByPolicy(A_raw);
+
+  let balance = P, totalPrincipal = 0, totalInterest = 0;
+  let rowsHtml = '';
+
+  for (let i = 1; i <= n; i++) {
+    const annualRateForThisMonth = (i <= PROMO_MONTHS) ? getPromoRate() : AFTER_RATE;
+    const rMonth = annualRateForThisMonth / 100 / 12;
+
+    let interest = Math.round(balance * rMonth);
+    let principal = installmentPolicy - interest;
+    let payment = installmentPolicy;
+
+    // งวดสุดท้ายที่ปิดหนี้
+    if (principal > balance) {
+      principal = balance;
+      payment = principal + interest;
+    }
+
+    balance = Math.max(balance - principal, 0);
+
+    totalPrincipal += principal;
+    totalInterest += interest;
+
+    rowsHtml += `
+      <tr>
+        <td>${i}</td>
+        <td>${formatVND(principal)}</td>
+        <td>${formatVND(interest)}</td>
+        <td>${formatVND(payment)}</td>
+        <td>${formatVND(balance)}</td>
+      </tr>`;
+
+    // ถ้า balance = 0 → งวดถัดไปทั้งหมดเป็น 0
+    if (balance <= 0 && i < n) {
+      for (let j = i + 1; j <= n; j++) {
+        rowsHtml += `
+          <tr>
+            <td>${j}</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>`;
+      }
+      break;
+    }
+  }
+
+  document.getElementById('A_repaymentScheduleBody').innerHTML = rowsHtml;
+  document.getElementById('A_monthlyPayment').innerText = formatVND(installmentPolicy);
+  document.getElementById('A_displayLoanAmount').innerText = formatVND(P.toFixed(0));
+  document.getElementById('A_displayLoanMonths').innerText = n.toString();
+  document.getElementById('A_displayInterestRate').innerText = getPromoRate().toFixed(2);
+
+  setDivButtonState(document.getElementById('A_repaymentScheduleBtn'), true);
+  document.getElementById('A_totalPrincipal').innerText = formatVND(totalPrincipal);
+  document.getElementById('A_totalInterestFooter').innerText = formatVND(totalInterest);
+  document.getElementById('A_totalMonthlyPayment').innerText = formatVND(totalPrincipal + totalInterest);
+};
+
+  // ====== Disable schedule on input change ======
+  const A_disableRepaymentSchedule = ()=> setDivButtonState(document.getElementById('A_repaymentScheduleBtn'), false);
+
+  // ====== Events ======
+  document.getElementById('A_loanAmount').addEventListener('input', e=>{
+    const clean = e.target.value.replace(/\D/g,'');
+    e.target.value = formatVND(clean);
+    A_validateInputs(); A_disableRepaymentSchedule();
+  });
+  document.getElementById('A_loanMonths').addEventListener('input', ()=>{ A_validateInputs(); A_disableRepaymentSchedule(); });
+  document.getElementById('A_calculateBtn').addEventListener('click', A_calculateLoan);
+  document.getElementById('A_clearBtn').addEventListener('click', A_clearFields);
+
+})();
+
+// Disable Repayment Schedule when inputs changed
+function A_disableRepaymentSchedule() {
+  setDivButtonState(document.getElementById('A_repaymentScheduleBtn'), false);
+}
+
+// ✅ รวม input change และ validation
+const A_onInputChange = () => {
+  A_validateInputs();
+  A_disableRepaymentSchedule();
+};
+
+['A_loanAmount','A_loanMonths','A_interestRate'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', (e)=>{
+    if(id==='A_loanAmount'){
+      const clean = e.target.value.replace(/\D/g,'');
+      e.target.value = formatVND(clean);
+    }
+    A_onInputChange();
+  });
+});
+
+// ปุ่ม Calculate / Clear
+document.getElementById('A_calculateBtn').addEventListener('click', A_calculateLoan);
+document.getElementById('A_clearBtn').addEventListener('click', A_clearFields);
+})();
+</script>
+
+<!-- Select Dropdown -->
+<script>
+document.querySelectorAll(".calculatorSelect").forEach(sel => {
+  sel.addEventListener("change", function() {
+    const selected = this.value;
+
+    // ==== copy ค่า input ก่อนสลับ + trigger validate ====
+    if (selected === "Cal2") {
+      document.getElementById("A_loanAmount").value =
+        document.getElementById("E_loanAmount").value;
+      document.getElementById("A_loanMonths").value =
+        document.getElementById("E_loanMonths").value;
+      document.getElementById("A_interestRate").value =
+        document.getElementById("E_interestRate").value;
+
+      // 🔥 trigger input events → validate ทำงานทันที
+      document.getElementById("A_loanAmount").dispatchEvent(new Event("input"));
+      document.getElementById("A_loanMonths").dispatchEvent(new Event("input"));
+      document.getElementById("A_interestRate").dispatchEvent(new Event("input"));
+
+    } else if (selected === "Cal1") {
+      document.getElementById("E_loanAmount").value =
+        document.getElementById("A_loanAmount").value;
+      document.getElementById("E_loanMonths").value =
+        document.getElementById("A_loanMonths").value;
+      document.getElementById("E_interestRate").value =
+        document.getElementById("A_interestRate").value;
+
+      // 🔥 trigger input events → validate ทำงานทันที
+      document.getElementById("E_loanAmount").dispatchEvent(new Event("input"));
+      document.getElementById("E_loanMonths").dispatchEvent(new Event("input"));
+      document.getElementById("E_interestRate").dispatchEvent(new Event("input"));
+    }
+
+    // ซ่อนทุกเครื่องคิดเลข
+    document.querySelectorAll(".calc-box").forEach(el => el.style.display = "none");
+
+    // แสดงเครื่องคิดเลขที่เลือก
+    const activeBox = document.getElementById(selected);
+    activeBox.style.display = "block";
+
+    // Sync select ของเครื่องคิดเลขอื่นให้ตรงกัน
+    document.querySelectorAll(".calculatorSelect").forEach(otherSel => {
+      if (otherSel !== this) otherSel.value = selected;
+    });
+  });
+});
+</script>
+
+
+</body>
+</html>

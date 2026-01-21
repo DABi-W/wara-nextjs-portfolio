@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Product - KBank CASHBACK PLUS Credit Card">
+    <meta property="og:description" content=" Home Loan  6.66% fixed for 3 years, available for office workers, tenor up to 30 years, fast approval in 7 days, no bundle required">
+    <meta property="og:image" content="https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/product-banner-mb.webp?raw=true">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script>
+        function getUTMParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let utmString = '';
+            ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+                if (urlParams.has(param)) {
+                    utmString += `&${param}=${encodeURIComponent(urlParams.get(param))}`;
+                }
+            });
+            return utmString;
+        }
+
+        function updateIframe() {
+            const baseUrl = "https://www.kasikornbank.com.vn/EN/DropLead/Pages/LeadForm.aspx?Lang=EN&ProdCode=CreditCard"; // เปลี่ยนเป็น URL ของปลายทาง
+            const utmParams = getUTMParams();
+            const fullUrl = `${baseUrl}&${utmParams.substring(1)}`; // ลบ & ตัวแรกออก
+            document.getElementById("utmIframe").src = fullUrl;
+        }
+
+        window.onload = updateIframe;
+    </script>
+    <title>Product - Credit</title>
+</head>
+<style>
+    /* standart control*/
+    .main-icw .qlfy-container { padding: 0px 10px; }
+    .kvnm_f10{font-size: 10px;}
+    .kvnm_f12{font-size: 12px;}
+    .kvnm_f14{font-size: 14px!important;}
+    .kvnm_f16{font-size: 16px!important;}
+    .kvnm_f18{font-size: 18px;}
+    .kvnm_f20{font-size: 20px;}
+    .kvnm_f22{font-size: 22px;}
+    .kvnm_f24{font-size: 24px!important;}
+    .kvnm_f26{font-size: 26px!important;}
+    .kvnm_f30{font-size: 30px;}
+    .kvnm_f36{font-size: 36px;}
+    .kvnm_fw600{font-weight: 600;}
+    .kvnm_fw400{font-weight: 400;}
+    
+    .kvnm_pad_all_10{padding:10px;}
+    .kvnm_pad_all_15{padding:15px;}
+    .kvnm_pad_all_20{padding:20px;}
+    .kvnm_pad_all_30{padding:30px;}
+    .kvnm_pad_all_40{padding:40px;}
+    .kvnm_pad_all_50{padding:50px;}
+    
+    .kvnm_pc{display:block;}
+    .kvnm_mb{display:none;}
+    
+    .kvnm_text_left{ text-align: left !important;}
+    .kvnm_text_center{text-align: center !important;}
+    .kvnm_text_right{ text-align: right !important;}
+    
+    .kvnm_text_green{ color: #00A850 !important;}
+    .kvnm_text_white{ color: #fff !important;}
+    .kvnm_text_dark{ color: #000 !important;}
+    .kvnm_a {text-decoration: underline !important; font-weight: 600; font-size: 16px !important;}
+    .kvnm_a:hover{text-decoration: none !important; }
+    
+    .kvnm_bg_green{ background: #00A850 !important;color: #fff!important;}
+    .kvnm_bg_green_gradient{ background: linear-gradient(45deg, rgba(0, 168, 80, 1) 0%, rgba(97, 214, 153, 1) 100%) !important;color: #fff!important;}
+    
+    .kvnm_bg_gray_dark{ background: #40515E !important; color: #fff!important;}
+    .kvnm_bg_red{ background: #ee370f !important;color: #fff!important;}
+    
+    .kvnm_container {max-width: 1140px;margin: auto; padding: 20px 0px; font-family: Arial !important; font-size: 14px; line-height:1.4 !important;}
+    .kvnm_container a { text-decoration: none !important;}
+    .kvnm_container a:hover{text-decoration: none !important; }
+    .kvnm_container h1{font-size: 36px; color: #008000; text-align: center; font-weight: 600; line-height: 1.5 !important;}
+    .kvnm_container h2{font-size: 26px !important; color: #008000; text-align: center;font-weight: 600; line-height: 1.5 !important;}
+    .kvnm_container h3{font-size: 16px; color: #000; font-weight: 600; line-height: 1.5 !important;}
+    .kvnm_container p{font-size: 14px; color: #000; text-align:left; padding: 0px; margin: 0px; }
+    
+    .kvnm_container ul{ margin-top: 10px; margin-left: 20px !important; padding-left: 15px;}
+    .kvnm_container ul li{ list-style: disc; font-size: 16px !important; margin-bottom:4px; padding: 0px;}
+    
+    .kvnm_box_60{width: 60%; margin: 0px auto;}
+    .kvnm_box_80{width: 80%; margin: 0px auto;}
+    
+    .kvnm_space{margin:15px 0px;}
+    .kvnm_space_line{border-bottom: 4px solid #02a850; border-radius: 3px;}
+    .kvnm_space_lines{border-bottom: 2px solid #02a850; border-radius: 3px;}
+    .kvnm_clear{clear: both;}
+    
+    .kvnm_responsive{ width: 100%;}
+    
+    .kvnm_bt_small{  max-width: 285px; width:auto; height: 45px; padding:12px  5px; text-align: center; font-size: 14px; background-color: #00A850; border-radius: 5px; color: #fff; margin: 5px auto; box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .kvnm_bt_medium{  max-width:265px; width:auto; height: 45px; padding:10px  5px; text-align: center; font-size: 16px; background-color: #00A850; border-radius: 55px; color: #fff; margin: 5px auto; box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .kvnm_bt_large{font-weight: 600; max-width:285px; width:auto; height: 55px; padding:15px 5px; text-align: center; font-size: 16px; background-color: #fff; border-radius: 5px !important; color: #00A850; margin: 0 auto; box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .kvnm_bt_full{font-weight: 600; height: 55px; width: 75%; padding:10px 5px; text-align: center; font-size: 24px; background-color: #ee370f; border-radius: 55px; color: #fff; margin: -30px auto -20px auto; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);}
+    .kvnm_bt_small:hover{ background-color: #fff;  color: #008000;}
+    .kvnm_bt_medium:hover{ background-color: #fff;  color: #008000;}
+    .kvnm_bt_large:hover{ background-color: #fff; color: #008000; }
+    .kvnm_bt_full:hover{ background-color: #ee370f; color: #fff;}
+    
+    .kvnm_bt_gfull{font-weight: 600; height: 55px; width: 70%; padding:10px 5px; text-align: center; font-size: 24px; background-color: #00A850; border-radius: 5px; color: #fff; margin: -15px auto -15px auto; box-shadow: 0 3px 3px 0 rgba(0,0,0,0.2), 0px 3px 8px 0 rgba(0,0,0,0.10);}
+    .kvnm_bt_gfull:hover{ background-color: #00A850; color: #fff;}
+    
+    .knvm_card_cpvv{ text-align: left; padding:10px;  border-radius: 3px; min-height: 120px; background-color: #f7f7f7;  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .knvm_card_cpvv .title{ text-align: left; font-weight:600; font-size: 20px; color: #000;}
+    .knvm_card_cpvv .detail{ text-align: left; font-size: 16px; font-weight: 400; color: #000;}
+    
+    
+    .knvm_card_step{  text-align: center;  padding:20px 10px;  border-radius: 3px; margin: 10px; min-height: 190px; background-color: #ebf7eb; box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .knvm_card_step .no{ margin-top: -50px; margin-bottom: 30px; font-size: 22px; font-weight: 600; color: #40515E; padding: 10px; background-color: #007600; color: #fff; border-radius: 15px; width: 50px; height: 50px;}
+    .knvm_card_step .detail{text-align: center; font-size: 16px; font-weight: 400;}
+    .kvnm_bggreenimg_hilight{ background: url('https://www.kasikornbank.com.vn/SiteCollectionDocuments/img/bg-sc-highlight-mb.jpg') repeat top center; color: #fff; }
+    .kvnm_bggry_hilight{ background: url('https://www.kasikornbank.com.vn/SiteCollectionDocuments/img/bg-sc-highlight-mb-grey1.jpg') repeat top center; }
+    
+    .kvnm_remak{ font-size: 10px; font-style: italic; }
+    .kvnm_border{ border: 1px #b7b7b7 solid;}
+    .kvnm_block_video{width: 560px; margin: 0px auto;}
+    .kvnm_video{ position: relative; padding-bottom: 56.25%; padding-top: 25px;	height: 0; border: 6px #00A850 solid; border-radius: 3px; margin: 0 auto; }
+    .kvnm_video iframe {	position: absolute;	top: 0;	left: 0;	width: 100%;	height: 100%;}
+    
+    /*========== Accordion - START ==========*/
+    .kvnm_accordion {position: relative;font-size: 14px;}
+    .kvnm_accordion:not(:last-child) {margin-bottom: 10px;}
+    .kvnm_accordion-title {position: relative; padding: 20px 64px 20px 22px;background:#f3f3f3 !important;border-left: 3px solid #00A850;color: #333;word-wrap: break-word; cursor: pointer;}
+    .kvnm_accordion-title:after {font-family: 'iconkcc';content: "\e91d";font-size: 14px;line-height: 1;position: absolute;right: 25px;top: 50%;-webkit-transform: translate(0, -50%);-ms-transform: translate(0, -50%);transform: translate(0, -50%);}
+    .kvnm_accordion-title.active:after {content: "\e91c";}
+    .kvnm_accordion-title:after,.kvnm_accordion-title:hover,.kvnm_accordion-title.active {    color: #00A850;}
+    .kvnm_accordion-content .wrap {    padding: 0px 0px 10px 0px;    background: #fff;    font-size: 14px;}
+    .kvnm_accordion-content .wrap ul { margin-top: 15px; margin-left: 5px !important; padding-left: 0px !important;}
+    .kvnm_accordion-content .wrap ul li {  list-style-type: disc; margin: 18px 0px 0px 25px;}
+    .kvnm_table{margin: 0 auto; padding: 4px; border-radius: 5px;}
+    .kvnm_table tr:first-child{ color: #fff; background-color: #007600; text-align: center;}
+    .kvnm_table tr{ border: 1px solid #b7b7b7; padding: 6px;}
+    .kvnm_table td{ border: 1px solid #b7b7b7; padding: 6px;}
+    /* Custom CSS*/
+    /* Popup Container */
+    #popupContainer {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+    
+      /* Video Content */
+      #popupContent {
+        position: relative;
+        width: 80%;
+        max-width: 800px;
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+    
+      /* Close Button */
+      #closeButton {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #333;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+    
+      /* Fade out animation */
+      .fade-out {
+        animation: fadeOut 1s forwards;
+      }
+    
+      @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; display: none; }
+      }
+      
+     /* Pop Up screenshot btn */
+
+    /* Overlay */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    /* Popup Box */
+    .popup-box {
+      position: relative;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      max-width: 90%;
+      max-height: 80%;
+      overflow-y: auto;
+      width: 420px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .popup-box img {
+      width: 90%;
+      height: auto;
+      border-radius: 10px;
+      margin: 0px 0px 12px 0px;
+    }
+    .close-btn-wrapper{
+    right: 0px;
+    top: -12px;
+    position: absolute;
+}
+     .close-btn {
+      position: fixed;
+      margin-left: -25px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background-color: #E53935;
+      color: #fff;
+      font-size: 24px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      line-height: 44px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: background-color 0.2s ease;   
+     }
+     .close-btn:hover {
+      background-color: #f2f2f2;
+      color: #E53935;    
+     }
+    
+     @keyframes fadeIn {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    @media (max-width: 480px) {
+      .btn {
+        font-size: 16px;
+        padding: 10px 20px;
+      }
+
+      .popup-box {
+        padding: 22px;
+      }
+
+     .close-btn {
+        font-size: 22px;
+      }
+    }
+    /* End pop up screenshot btn */
+
+      .kvnm_button-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .kvnm_toggle-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 5px;
+            border-radius: 5px;
+            text-align: center;
+            width: 200px;
+        }
+        .kvnm_toggle-button.active {
+            background-color: #2E7D32;
+        }
+        #kvnm_video-container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .kvnm_video {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            border: 6px #00A850 solid;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .kvnm_video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .kvnm_bolck_video {
+            max-width: 560px;
+            width: 100%;
+            margin: 0 auto;
+        }
+    
+        @media (max-width: 768px) {
+            .kvnm_toggle-button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+            .kvnm_video {
+                border-width: 4px;
+            }
+        }
+    
+        .inactive{background:#00A850}
+        .kvnm_div_c{
+               text-align: center;
+         }
+    
+    
+        .knvm_slider-container {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+        }
+        .knvm_card-wrapper {
+          display: flex;
+          gap: 10px;
+          overflow-x: auto;
+          scroll-behavior: smooth;
+          cursor: grab;
+        }
+        .knvm_card {
+          min-width: calc(350px - 15px);
+          background: #fff;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          text-align: center;
+        }
+        .knvm_card img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 5px 5px 0 0;
+        }
+        .knvm_controls {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-90%);
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          pointer-events: none;
+        }
+        .knvm_buttonn {
+          font-size: x-large !important;
+          width: 40px !important;
+          height: 40px !important;
+          background-color: #fff !important;
+          padding: 0 14px !important;
+          color: #00A850 !important;
+          border: none !important;
+          cursor: pointer !important;
+          border-radius: 50% !important;
+          opacity: 0.7 !important;
+          pointer-events: auto !important;
+          box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 4px 12px 0 rgba(0, 0, 0, 0.19) !important;
+        }
+        .knvm_buttonn:hover {
+          opacity: 1 !important;
+        }
+        .knvm_card-wrapper::-webkit-scrollbar {
+        display: none;
+        -ms-overflow-style: none;
+        }
+        .kvnm_bt_s_focus {
+        text-align: center;
+        height: 45px;
+        max-width: 200px;
+        font-size: 12px;
+        margin: 12px auto;
+        padding: 10px 30px;
+        border-radius: 5px;
+        background-color: #00A850;
+        color: #fff;
+        font-weight: bold;
+        border: #fff 1px solid;
+        cursor: pointer;
+    }
+    
+    .kvnm_emoji-checklist {
+      list-style: none;
+      margin: 0;
+    }
+    
+    .kvnm_emoji-checklist li {
+      position: relative;
+      padding-left: 30px;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    
+    .kvnm_emoji-checklist li::marker {
+      /*content: "✅";*/
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: green;
+    }
+    
+        .kvnm_bt_s_focus {
+        text-align: center;
+        height: 40px;
+        max-width: 200px;
+        font-size: 12px;
+        margin: 10px auto;
+        padding: 10px 30px;
+        border-radius: 5px;
+        background-color: #00A850;
+        color: #fff;
+        font-weight: bold;
+        border: #fff 1px solid;
+        cursor: pointer;
+    }
+        .kvnm_div_step { text-align: left !important;}
+    .knvm_div_img {display: inline-flex; align-items: center; min-width: 65px; min-height: 35px; padding-left: 10px; border-left: solid 4px #46C2B1;}
+    .knvm_ul {display: inline-block; margin: 10px 0 10px 0;}
+    .knvm_li {margin: 5px;}
+    .kvnm_wraps {padding-right: 10px;    background: #fff;    font-size: 14px;}
+    
+    .kvnm_bg_img{ background:url(home-loan-test.jpg) center center; background-size: cover;}
+    .kvnm_bg_img a{text-decoration: none; color: #fff;}
+    
+        .kvnm_form_block input, select {
+            width: 430px;padding: 10px;border-radius: 5px !important; border: 1px solid #ccc;outline: none;color: #000;font-size: 14px;
+        }
+
+    .knvm_card_step_credit{font-size: 16px; text-align: center;  padding:2px 2px; border: 3px solid #43c982;  border-radius: 5px; margin: 0px; min-height: 120px; background-color: #ebf7eb; box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1), 0 4px 12px 0 rgba(0,0,0,0.19);}
+    .knvm_credit_num{background-color: #10a65c; border: #d7ffea solid 2px; border-radius: 5px; padding: 0px 0; margin-bottom: 5px; box-shadow: 0 3px 10px 0 rgba(0,0,0,0.2), 0 4px 4px 0 rgba(0,0,0,0.29);}
+    .knvm_boxb {background: #fefefe; border: 2px solid #ffffff; border-radius: 40px 40px 0 0; box-shadow: 0px -5px 16px rgba(0, 0, 0, 0.1);}
+        #imgApplyLeftBlock {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#imgApplyLeftBlock img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+.knvm_row {
+    --bs-gutter-x: 0 !important;
+}
+.kbdl_or{font-family: arial !important; font-size: 16px !important;top: 285px !important;}
+.product-detail-menu ul{margin: 0px; padding: 0px !important; }
+.list-menu {margin: 10px 0px !important;}
+.form-container h2 {font-weight: 600;}
+.kbdl_bg{background: url(/SiteCollectionDocuments/img/bg-sc-highlight-pc.jpg) center center / cover;}
+.apply-now {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  display: none;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+    /* Mobile control*/
+    @media (max-width:768px){
+    
+    .kvnm_pad_all_10{padding:10px 6px;}
+    .kvnm_pad_all_15{padding:15px 6px;}
+    .kvnm_pad_all_20{padding:10px 30px !important;}
+    .kvnm_pad_all_30{padding:30px 6px;}
+    .kvnm_pad_all_40{padding:40px 6px;}
+    .kvnm_pad_all_50{padding:50px 6px;}
+    .kvnm_pc{display:none;}
+    .kvnm_mb{display:block;}
+    
+    .kvnm_container {max-width: 1140px;margin: auto; padding: 10px 10px !important;}
+    .kvnm_container h1{font-size: 26px; color: #00A850; text-align: center;}
+    .kvnm_container h2{font-size: 26px !important; color: #00A850; text-align: center;}
+    .kvnm_container h3{font-size: 16px; color: #000; text-align: left;}
+    .kvnm_container p{font-size: 14px; color: #000; line-height: inherit ;}
+
+    .kvnm_container ul{ margin-top: 10px; margin-left: 10px !important;}
+    .kvnm_container ul li{ list-style: disc; font-size: 16px !important; margin-bottom:4px; padding: 0px;}
+    .product-detail-menu{margin: 0px;}
+    .list-menu {margin: 10px !important;}
+    .kvnm_bt_small{ max-width:285px; width:auto; height: 45px; padding:12px 5px; text-align: center; font-size: 14px; background-color: #00A850; border-radius: 5px; color: #fff; margin: 5px auto;}
+    .kvnm_bt_medium{  max-width:265px; width:auto; height: 45px; padding:10px  5px; text-align: center; font-size: 16px; background-color: #00A850; border-radius: 55px; color: #fff; margin: 5px auto;}
+    .kvnm_bt_large{font-weight: 600; max-width:285px; width:auto; height: 45px; padding:11px 5px; text-align: center; font-size: 16px; background-color: #fff; border-radius: 5px; color: #00A850; margin: 0 auto;}
+    .kvnm_bt_full{font-weight: 600; width: 75%; padding:15px 5px; text-align: center; font-size: 18px; background-color: #ee370f; border-radius: 55px; color: #fff; margin: -20px auto -20px auto;}
+    .kvnm_bt_gfull{font-weight: 600; width: 70%; padding:15px 5px; text-align: center; font-size: 18px; background-color: #00A850; border-radius: 5px; color: #fff; margin: -10px auto -5px auto;}
+    
+    .kvnm_accordion-content .wrap ul { margin-top: 15px; margin-left: 5px !important; padding-left: 0px !important;}
+    .kvnm_accordion-content .wrap ul li{ list-style-type: disc;margin: 0px 0px 10px 25px;}  
+    .knvm_card_cpvv{ text-align: left; padding:10px;  border-radius: 3px; min-height: 80px; background-color: #f7f7f7; margin:5px auto; box-shadow: none;}
+    .knvm_card_cpvv .title{ text-align: left; font-weight:600; font-size: 20px;}
+    .knvm_card_cpvv .detail{ text-align: left; font-size: 16px; font-weight: 400;}
+    
+    .knvm_card_step{  text-align: center;  padding:20px 10px;  border-radius: 3px; margin: 10px auto; min-height: 190px; background-color:#ebf7eb ;}
+    .knvm_card_step .no{ margin:0px auto; margin-bottom: 10px; font-size: 22px; font-weight: 600; color: #40515E; padding: 10px; background-color: #007600; color: #fff; border-radius: 15px; width: 50px; height: 50px;}
+    .kvnm_box_60{width: auto; margin: 0px auto;}
+    .kvnm_box_80{width: auto; margin: 0px auto;}
+    .kvnm_video{ border: 4px #00A850 solid; border-radius: 3px; width: auto; height: 230px; margin: 0 auto;}
+    .kvnm_bolck_video{width: auto; margin: 0px auto;}
+    /* Custom CSS*/
+    #LBDate{display: none;}
+    .heading-page { color: #000 !important; font-weight: 600; } 
+.kbdl_or{font-family: arial !important; font-size: 16px !important; top: 404px !important;}
+.apply-now {
+    display: block;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+/*End Mobile*/
+
+</style>
+<body>
+<!-- ============ Banner PC-Mobile ============ -->    
+    <section id="herobanner">
+        <a href="#RegisterDroplead" id="install1">
+            <div class="kvnm_pc">
+            <img src="https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/product-banner-pc.webp?raw=true" alt="kvnm_Hero_banner on PC" class="kvnm_responsive">&nbsp;</div>
+            <div class="kvnm_mb">
+            <img src="https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/product-banner-mb.webp?raw=true" alt="kvnm_Hero_banner on Mobile" class="kvnm_responsive"></div> 
+        </a> 
+    </section>
+<!-- ============ CTA Button ============ -->
+    <section>
+        <div class="kvnm_container"> 
+            <a href="#RegisterDroplead">
+            <div class="kvnm_bt_gfull" id="install2">Contact Sales</div> 
+            </a> 
+        </div>
+    </section>
+<!-- ============ CPV CARD ============ -->
+<section> 
+   <div class="kvnm_container">
+      <div class="row">
+         <div class="col-lg-4 col-md-4 col-12">
+            <div class="knvm_card_cpvv">
+               <div class="title kvnm_text_green">10% cashback from first VND spending</div>
+               <p class="detail">covers most of your daily spending activity<br/>from A.M. to P.M.<br/></p>
+            </div>
+         </div>
+         <div class="col-lg-4 col-md-4 col-12">
+            <div class="knvm_card_cpvv">
+               <div class="title kvnm_text_green">Up to 1M VND cashback on every billing cycle<br/></div>
+               <p class="detail">When accumulate spending reaches 
+                  <br/>15M VND in a billing cycle<br/></p>
+            </div>
+         </div>
+         <div class="col-lg-4 col-md-4 col-12">
+            <div class="knvm_card_cpvv">
+               <div class="title kvnm_text_green">0% Interest and Fee for 3-month installment plan</div>
+               <p class="detail">for any purchase transaction value<br/>from 2M VND</p>
+            </div>
+         </div>
+      </div> 
+   </div> </section>
+<section> 
+   <div class="kvnm_container"> 
+      <div>
+         <h2 class="kvnm_pc kvnm_f22 kvnm_text_left" style="padding: 0px 15px; color: #00a850; margin-bottom: 0px !important; font-family: &quot;segoe ui semilight&quot;, &quot;segoe ui&quot;, segoe, tahoma, helvetica, arial, sans-serif !important;">Product Features</h2>
+         <h2 class="kvnm_mb kvnm_text_left" style="padding: 0px 5px; margin-bottom: -10px !important; font-family: &quot;segoe ui semilight&quot;, &quot;segoe ui&quot;, segoe, tahoma, helvetica, arial, sans-serif !important;">Product Features</h2>
+         <div class="row">
+            <div class="kvnm_text_left kvnm_pad_all_10">
+               <ul class="kvnm_emoji-checklist kvnm_f16">
+                  <li>Get maximum cashback up to 1M VND per billing cycle (valid until 30 June 2026)
+                     <div style="margin-left: -5px;">
+                        <ul>
+                           <li>10% cashback for any spending in most of daily expense categories</li>
+                           <li>15% cashback for any spending in Thailand</li>
+                        </ul>
+                     </div>
+                  </li>
+                  <li>0% Interest and Fee for 3-month installment plan for any purchase transaction value from 2M VND</li>
+                  <li>Cashback automatically credited to your credit card statement without any registration and redemption needed</li>
+                  <li>Other additional promotions and discounts from our partners<br/></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+   </div>
+   <br/> 
+   <div class="kvnm_container"> 
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f20">Qualifications </span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <br/>
+               <table class="kvnm_table kvnm_text_center">
+                  <tbody>
+                     <tr style="height: 8vh; font-weight: 600;">
+                        <td style="width: 15%;">Qualifications​</td>
+                        <td style="width: 30%;">Unsecured Credit Card</td>
+                        <td style="width: 30%;">Secured Credit Card</td>
+                     </tr>
+                     <tr>
+                        <td style="font-weight: 600; color: #00a850; text-align: left;">Nationality</td>
+                        <td>Vietnamese</td>
+                        <td>Any nationality</td>
+                     </tr>
+                     <tr>
+                        <td style="font-weight: 600; color: #00a850; text-align: left;">Age</td>
+                        <td>20 – 60 years old</td>
+                        <td>18 – 80 years old​</td>
+                     </tr>
+                     <tr>
+                        <td style="font-weight: 600; color: #00a850; text-align: left;">Employment</td>
+                        <td>Salary earner with at least 1 year of total work experience</td>
+                        <td style="color: #808080;">Not required</td>
+                     </tr>
+                     <tr>
+                        <td style="font-weight: 600; color: #00a850; text-align: left;">Income</td>
+                        <td>Monthly salary above 10,000,000 VND​</td>
+                        <td style="color: #808080;">Not required​</td>
+                     </tr>
+                     <tr>
+                        <td style="font-weight: 600; color: #00a850; text-align: left;">Credit History</td>
+                        <td>Own at least one bank credit card for more than 6 months​</td>
+                        <td style="color: #808080;">Not required</td>
+                     </tr>
+                     <tr>
+                        <td style="font-weight: 600; color: #00a850; text-align: left;">Deposit Requirement</td>
+                        <td style="color: #808080;">Not required</td>
+                        <td>KBank VND term deposit account with a balance of at least 10,000,000 VND</td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div> 
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f20">Required Documents</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <br/>
+               <table class="kvnm_table kvnm_text_center">
+                  <tbody>
+                     <tr style="height: 8vh; font-weight: 600;">
+                        <td style="width: 40%;">Required Documents​</td>
+                        <td style="width: 30%;">Unsecured Credit Card</td>
+                        <td style="width: 30%;">Secured Credit Card</td>
+                     </tr>
+                     <tr>
+                        <td style="font-weight: 600; color: #00a850; text-align: left; padding: 10px 5px;">Valid Vietnamese ID with Chip</td>
+                        <td> 
+                           <div style="width: 25px; height: 25px; border-radius: 50%; background-color: #008000; color: #ffffff; font-weight: bold; font-size: 15px; line-height: 28px; text-align: center; display: inline-block;"> ✓ </div> 
+                        </td>
+                        <td>
+                           <div style="width: 25px; height: 25px; border-radius: 50%; background-color: #008000; color: #ffffff; font-weight: bold; font-size: 15px; line-height: 28px; text-align: center; display: inline-block;"> ✓ </div>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td style="text-align: left;">
+                           <div style="font-weight: 600; color: #00a850;">VssID Screenshot 
+                              <span class="popupTrigger" style="color: #0d6efd; cursor: pointer; font-weight: 500;">see example 
+                                 <img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" width="10" height="10" alt="Search Icon"/> </span></div> 
+                        </td>
+                        <td>
+                           <div style="width: 25px; height: 25px; border-radius: 50%; background-color: #008000; color: #ffffff; font-weight: bold; font-size: 15px; line-height: 28px; text-align: center; display: inline-block;"> ✓ </div>
+                        </td>
+                        <td style="color: #808080;">Not required</td>
+                     </tr>
+                     <tr> 
+                        <td colspan="3" style="text-align: left; padding: 10px 7px;">If you do not have VssID available, please provide the following instead:</td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <div style="font-weight: 600; color: #00a850; text-align: left; padding: 5px 0px;">Labor Contract<span style="font-weight: 100; color: #212529; text-align: left;"> or </span>Valid Employment Certificate</div>
+                        </td>
+                        <td>
+                           <div style="width: 25px; height: 25px; border-radius: 50%; background-color: #008000; color: #ffffff; font-weight: bold; font-size: 15px; line-height: 28px; text-align: center; display: inline-block;"> ✓ </div>
+                        </td>
+                        <td style="color: #808080;">Not required​</td>
+                     </tr>
+                     <tr>
+                        <td>
+                           <div style="font-weight: 600; color: #00a850; text-align: left;">Bank Statement<span style="font-weight: 100; color: #212529; text-align: left;"> or </span>Pay Slip<span style="font-weight: 100; color: #212529; text-align: left;"> for at least the last 3 months (At least 6 months required for sales positions)</span></div>
+                        </td>
+                        <td>
+                           <div style="width: 25px; height: 25px; border-radius: 50%; background-color: #008000; color: #ffffff; font-weight: bold; font-size: 15px; line-height: 28px; text-align: center; display: inline-block;"> ✓ </div>
+                        </td>
+                        <td style="color: #808080;">Not required</td>
+                     </tr>
+                  </tbody>
+               </table>
+               <br/>
+               <div style="font-style: italic; font-size: 12px; color: grey;">Note: Bank may request your employment contract and bank statements to approve a higher credit limit.​<br/></div>
+            </div>
+         </div>
+      </div> 
+   </div></section>
+<section class="kvnm_bg_green_gradient " style="display: none;"> 
+   <div class="kvnm_container"> 
+      <br/> 
+      <h2 class="kvnm_text_white">Promotion for New Customers</h2>
+      <div class="kvnm_space">&#160;</div>
+      <div class="row ">
+         <div class="col-lg-6 col-md-6 col-12">
+            <div class="kvnm_f20 kvnm_text_white">Get 500K URBOX Voucher when spend at minimum 1,000,000 VND to enjoy your favorite lifestyle!</div>
+            <div class="kvnm_remak">*Valid from 1-31 December 2024<br/></div>
+            <div class="kvnm_space kvnm_mb">&#160;</div>
+         </div>
+         <div class="col-lg-6 col-md-6 col-12"> 
+            <a href="#" target="_blank"> 
+               <div class="kvnm_bt_large kvnm_bg_gray_dark" id="register3">Apply Now</div> </a> 
+            <br/> 
+            <a href="/EN/Campaign/Pages/Archive/hoan-tien-toi-da.aspx" target="_blank"> 
+               <div class="kvnm_bt_large" id="install1">Call Me Back</div> </a>
+            <br/></div>
+      </div>
+   </div> 
+</section> 
+<!-- ============ Promotion ============ -->
+<section style="background-color: #e7e7e7;">
+   <div class="row">
+      <div class="kvnm_container "><br/>
+         <h2 class="kvnm_pc kvnm_pad_all_10" style="color: #00a850; text-align: center !important; font-family: &quot;segoe ui semilight&quot;, &quot;segoe ui&quot;, segoe, tahoma, helvetica, arial, sans-serif !important;">Promotions​<br/></h2>
+         <h2 class="kvnm_mb" style="padding-left: 10px; font-family: &quot;segoe ui semilight&quot;, &quot;segoe ui&quot;, segoe, tahoma, helvetica, arial, sans-serif !important;">Promotions</h2>
+         <div class="kvnm_container">
+            <div class="knvm_slider-container">
+               <div class="knvm_controls">
+                  <button class="knvm_buttonn" id="prev" type="button">❮</button><button class="knvm_buttonn" id="next" type="button">❯</button> </div>
+               <div class="knvm_card-wrapper">
+                  <div class="knvm_card">
+                     <img src="https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/promotion-banner-mb.webp?raw=true" alt="Thumbnail 1"/>
+                     <div class="kvnm_pad_all_15">
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <div class="kvnm_text_left kvnm_f20 kvnm_fw600 kvnm_text_green_card kvnm_pc">Ascott Hotel </div>
+                              <div class="kvnm_text_left kvnm_f18 kvnm_fw600 kvnm_text_green_card kvnm_mb">Ascott Hotel </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <div class="kvnm_text_left kvnm_f14 kvnm_pad_all_15">01 January 2026 - 31 December 2026 (or until quota runs out) </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <a href="#" target="_blank" class="kvnm_a">
+                                 <div class="kvnm_bt_s_focus kvnm_f14" id="learnmore3">LEARN MORE</div> </a> </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="knvm_card">
+                     <img src="https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/promotion-banner-mb.webp?raw=true" alt="Thumbnail 1"/>
+                     <div class="kvnm_pad_all_15">
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <div class="kvnm_text_left kvnm_f20 kvnm_fw600 kvnm_text_green_card kvnm_pc">Mai House </div>
+                              <div class="kvnm_text_left kvnm_f18 kvnm_fw600 kvnm_text_green_card kvnm_mb">Mai House </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <div class="kvnm_text_left kvnm_f14 kvnm_pad_all_15">15 April 2025 - 15 April 2026 (or until quota runs out) </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <a href="#" target="_blank" class="kvnm_a">
+                                 <div class="kvnm_bt_s_focus kvnm_f14" id="learnmore5">LEARN MORE<br/></div> </a> </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="knvm_card"> 
+                     <img src="https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/promotion-banner-mb.webp?raw=true" alt="Thumbnail 1"/> 
+                     <div class="kvnm_pad_all_15">
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <div class="kvnm_text_left kvnm_f20 kvnm_fw600 kvnm_text_green_card kvnm_pc">Hoa Yeu Thuong </div>
+                              <div class="kvnm_text_left kvnm_f18 kvnm_fw600 kvnm_text_green_card kvnm_mb">Hoa Yeu Thuong </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <div class="kvnm_text_left kvnm_f14 kvnm_pad_all_15">14 February 2025 - 31 March 2027 (or until quota runs out) </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12"> 
+                              <a href="#" target="_blank" class="kvnm_a"> 
+                                 <div class="kvnm_bt_s_focus kvnm_f14" id="learnmore2">LEARN MORE</div> </a> </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="knvm_card">
+                     <img src="https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/promotion-banner-mb.webp?raw=true" alt="Thumbnail 1"/>
+                     <div class="kvnm_pad_all_15">
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <div class="kvnm_text_left kvnm_f20 kvnm_fw600 kvnm_text_green_card kvnm_pc">Pasteur Street Craft Beer </div>
+                              <div class="kvnm_text_left kvnm_f18 kvnm_fw600 kvnm_text_green_card kvnm_mb">Pasteur Street Craft Beer </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <div class="kvnm_text_left kvnm_f14 kvnm_pad_all_15">01 November 2025 - 31 October 2026 (or until quota runs out) </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <a href="#" target="_blank" class="kvnm_a">
+                                 <div class="kvnm_bt_s_focus kvnm_f14" id="learnmore4">LEARN MORE</div> </a> </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="knvm_card">
+                     <img src="https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/promotion-banner-mb.webp?raw=true" alt="Thumbnail 1"/>
+                     <div class="kvnm_pad_all_15">
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <div class="kvnm_text_left kvnm_f20 kvnm_fw600 kvnm_text_green_card kvnm_pc">KBank Thailand Foreign Exchange Booth </div>
+                              <div class="kvnm_text_left kvnm_f18 kvnm_fw600 kvnm_text_green_card kvnm_mb">KBank Thailand Foreign Exchange Booth </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <div class="kvnm_text_left kvnm_f14 kvnm_pad_all_15">15 August 2025 – 28 February 2026 </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-xs12 col-lg-12 col-md-12">
+                              <a href="#" target="_blank" class="kvnm_a">
+                                 <div class="kvnm_bt_s_focus kvnm_f14" id="learnmore4">LEARN MORE</div> </a> </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <a href="#" target="_blank" class="kvnm_a" style="color: #00a850;">
+            <div class="kvnm_text_center kvnm_a" id="click1">See More Promotion</div></a>
+         <div class="kvnm_space">
+         </div>
+      </div> 
+      <br/>
+   </div> 
+</section> 
+
+<!-- ============ Apply Now ============ -->
+<section id="leadFormPage1" class=" kbdl_bg">
+   <div class="row"> 
+      <div class=" col-lg-12 col-md-12 col-xs-12 kbdl_form_block form-container kbdl_box_flex" style="background: rgba(0, 0, 0, 0.518);"> 
+         <div class="kvnm_container"> 
+            <a id="install1" href="https://kplusvn.onelink.me/kml2/26ywr4w1" target="_blank"> 
+               <div class="kvnm_pad_all_30 kvnm_text_left"> 
+                  <h2 class="kvnm_text_white kvnm_text_cente" style="font-weight: 600 !important; font-size: 20px !important;">Easy application, fast approval.<br/>Apply for a KBank Cashback Plus Credit Card today!</h2> 
+                  <br/>
+                  <div id="imgApplyLeftBlock" style="width: 100%; height: 100%;">
+                     <img src="/SiteCollectionDocuments/img/credit-card/step-applyEN.png" alt="" style="margin: 0px; width: 100%;"/>
+                  </div>&#160;</div></a></div> 
+         <div id="RegisterDroplead"> 
+         </div> 
+         <div class="kbdl_space"> 
+         </div> 
+      </div> 
+   </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section> 
+   <div class="kvnm_container">
+      <h2 class="kvnm_text_left" style="color: #00a850; font-family: &quot;segoe ui semilight&quot;, &quot;segoe ui&quot;, segoe, tahoma, helvetica, arial, sans-serif !important;">FAQs for Unsecured Credit Card Application​<br/></h2>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">How can I apply for KBank Credit Card?</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <ul class="ms-rteFontSize-2" style="list-style-type: disc;">
+                  <li style="list-style-type: none;">You can easily apply for the credit card via K PLUS VN application. In case you need any assistance, you can also leave your contact information at the following channels, and we will promptly contact your back.</li>
+                  <li style="list-style-type: none;">(i) 24/7 K-Contact Center Vietnam<br/>(ii) &quot;KBank Vietnam&quot; Facebook page<br/>(iii) KBank official Zalo account</li>
+                  <li style="list-style-type: none;">Once your credit card is approved, your card will be delivered free of charge to your mailing address.</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">How long does it take to get approved for a credit card and receive it?</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <ul class="ms-rteFontSize-2" style="list-style-type: disc;">
+                  <li>Once all valid documents have been received, KBank will process your application within 7 working days. Upon approval, your credit card will be delivered within 3 - 5 working days.</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">How much credit limit that I will get?</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <ul class="ms-rteFontSize-2" style="list-style-type: disc;">
+                  <li>Your credit limit is calculated based on your credit information. The maximum credit limit is up to 3x of your monthly salary or 200m VND.</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">What is automatic cashback?</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <ul class="ms-rteFontSize-2" style="list-style-type: disc;">
+                  <li>Your cashback will automatically be credited to your credit card on the statement date without any registration and redemption needed. It will directly reduce the due amount of your credit card payment of each month.</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">How can I pay my credit card bill, and are there any associated fees?</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <ul class="ms-rteFontSize-2" style="list-style-type: disc;">
+                  <li>You can pay your credit card bill via K PLUS VN application and it’s free of charge.</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">Other Documents</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <div>
+                  <table class="kvnm_pad_all_15 knvm_boxb kvnm_table">
+                     <tbody>
+                        <tr class="kvmn_table_header kvnm_text_center">
+                           <td>Document</td>
+                           <td>Download</td>
+                        </tr>
+                        <tr>
+                           <td>Credit Card Factsheet<br/></td>
+                           <td class="kvnm_text_center">
+                              <a href="/SiteCollectionDocuments/PDF/credit/factsheet-credit-card-en-updated-15092025.pdf" target="_blank">Download</a></td>
+                        </tr>
+                        <tr>
+                           <td>Credit Card Term and Condition</td>
+                           <td class="kvnm_text_center">
+                              <a href="/SiteCollectionDocuments/PDF/credit/wblegal-21102025-kbank-vn-credit-card-contract-vn-en-v3-2025.pdf" target="_blank">Download</a><br/></td>
+                        </tr>
+                        <tr>
+                           <td>Cashback Term and Condition</td>
+                           <td class="kvnm_text_center">
+                              <a href="/SiteCollectionDocuments/PDF/credit/cash-back-term-and-condition-2025-update-oct-en.pdf" target="_blank">Download</a></td>
+                        </tr>
+                        <tr>
+                           <td>Installment plan</td>
+                           <td class="kvnm_text_center">
+                              <a href="/EN/personal/card/CreditCard/Documents/EN_Installment_plan.pdf" target="_blank">Download</a></td>
+                        </tr>
+                        <tr>
+                           <td>Interest and Fees</td>
+                           <td class="kvnm_text_center">
+                              <a href="/EN/personal/card/CreditCard/Documents/EN_Interest_and_Fees.pdf.pdf" target="_blank">Download</a></td>
+                        </tr>
+                        <tr>
+                           <td>How to get Social Security Insurance (VSSID screenshot)</td>
+                           <td class="kvnm_text_center">
+                              <a href="/EN/personal/card/CreditCard/Documents/how-to-get-VSSID-screenshot-v1.pdf" target="_blank">Download</a></td>
+                        </tr>
+                        <tr>
+                           <td>Free Withdrawal Fee from KBank ATM in Thailand</td>
+                           <td class="kvnm_text_center">
+                              <a href="/SiteCollectionDocuments/PDF/credit/wblegal-21022025-tnc-credit-card-free-withdrawal-fee-from-kbank-atm-thailand-vn-en.pdf" target="_blank">Download</a></td>
+                        </tr>
+                     </tbody>
+                  </table>
+                  <br/>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div> 
+   <div class="kvnm_container">
+      <h2 class="kvnm_text_left" style="color: #00a850; font-family: &quot;segoe ui semilight&quot;, &quot;segoe ui&quot;, segoe, tahoma, helvetica, arial, sans-serif !important;">FAQs for Secured Credit Card Application<br/></h2>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">I want to apply for KBank Cashback Plus Credit Card, but I am not a salary earner. How can I apply? </span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <ul class="ms-rteFontSize-2" style="list-style-type: disc;">
+                  <li>You can still apply by using a term deposit as collateral – no income proof required. This option allows non-salary earners such as business owners, freelancers, or students to enjoy all the benefits of KBank Cashback Plus Credit Card. </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">What type of security deposit account can I use as collateral?</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <ul class="ms-rteFontSize-2" style="list-style-type: disc;">
+                  <li>Currently, KBank accepts only a VND term deposit account that is opened at KBank under the cardholder’s name.​</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">How long does it take to get approved for a credit card after I pledged the term deposit account?</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <ul class="ms-rteFontSize-2" style="list-style-type: disc;">
+                  <li>The Bank will process within 2 working days.</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">How much credit limit that I will get?</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <ul class="ms-rteFontSize-2" style="list-style-type: disc;">
+                  <li>The credit limit on a secured credit card is 100% of your term deposit from 10m VND to 200m VND.</li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">How do I open term deposit account to apply for a credit card?</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <ul class="ms-rteFontSize-2" style="list-style-type: disc;">
+                  <li>You can open a term deposit account via KPLUS Vietnam application  or at a KBank branch before submitting your credit card application.</li>
+                  <li>
+                     <a href="https://www.kasikornbank.com.vn/EN/personal/mobile-banking/Pages/application-manual/OpenNewAccount/OpenTermDepositAccount.aspx" target="_blank">click to see how to open in KPLUS app</a></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="kvnm_accordion">
+         <div class="kvnm_accordion-title">
+            <span class="ms-rteFontSize-2 kvnm_f16">Can I use my existing term deposit account to apply for KBank Cashback Plus Credit Card?​</span> </div>
+         <div class="kvnm_accordion-content">
+            <div class="wrap">
+               <ul class="ms-rteFontSize-2" style="list-style-type: disc;">
+                  <li>Yes, as long as the account balance is at least 10m VND and is not fully or partially on hold for any other purpose.<br/></li>
+               </ul>
+            </div>
+         </div>
+      </div>
+   </div> </section>
+    <br><br>
+<!--BTN-->
+<div class="kvnm_container kvnm_pad_all_15">
+    <a href="#RegisterDroplead">
+        <div class="apply-now" id="register2F">Contact Sales</div>
+</div>
+</a>
+
+<!--Start Script-->    
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="utm-handler.js"></script>
+
+<!--BTN-->   
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const applyBtn = document.getElementById("register2F");
+
+  window.addEventListener("scroll", function () {
+    if (window.scrollY > 50) {
+      applyBtn.style.opacity = "1";
+      applyBtn.style.pointerEvents = "auto";
+    } else {
+      applyBtn.style.opacity = "0";
+      applyBtn.style.pointerEvents = "none";
+    }
+  });
+});
+</script>
+
+<!--UTM-->
+    <script>
+        document.getElementById("utmLink").addEventListener("click", function() {
+            const baseUrl = "https://www.kasikornbank.com.vn/EN/DropLead/Pages/LeadForm.aspx?Lang=EN&ProdCode=CreditCard"; // เปลี่ยนเป็น URL ของปลายทาง
+            const utmParams = getUTMParams();
+            const fullUrl = `${baseUrl}&${utmParams.substring(1)}`;
+            this.href = fullUrl;
+        });
+    </script>
+
+<!--Clip SWAP-->
+        <script>
+            $('#content-2-detail').hide();
+            $('#content-1').click(function(){
+                $('#content-1-detail').show();
+                $('#content-2-detail').hide();
+            });
+            $('#content-2').click(function(){
+                $('#content-2-detail').show();
+                $('#content-1-detail').hide();
+            });
+            $(document).ready(function(){
+              $('.kvnm_toggle-button').click(function(){
+                $('.kvnm_toggle-button').removeClass('active').addClass('inactive');
+                 $(this).removeClass('inactive').addClass('active');
+                });
+            })
+            
+            </script>
+    <!--Slide Privilate-->
+  <script>
+const cardWrapper = document.querySelector('.knvm_card-wrapper');
+const prevButton = document.getElementById('prev');
+const nextButton = document.getElementById('next');
+const cards = document.querySelectorAll('.knvm_card'); // Select all cards
+
+let isDragging = false;
+let startX;
+let scrollLeft;
+const cardWidth = cards[0].clientWidth;
+
+// Function for smooth scrolling
+prevButton.addEventListener('click', () => {
+  cardWrapper.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+});
+
+nextButton.addEventListener('click', () => {
+  cardWrapper.scrollBy({ left: cardWidth, behavior: 'smooth' });
+});
+
+// Mouse dragging events
+cardWrapper.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  cardWrapper.style.cursor = 'grabbing';
+  startX = e.pageX - cardWrapper.offsetLeft;
+  scrollLeft = cardWrapper.scrollLeft;
+});
+
+cardWrapper.addEventListener('mouseleave', () => {
+  isDragging = false;
+  cardWrapper.style.cursor = 'grab';
+});
+
+cardWrapper.addEventListener('mouseup', () => {
+  isDragging = false;
+  cardWrapper.style.cursor = 'grab';
+});
+
+cardWrapper.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  e.preventDefault();
+  const x = e.pageX - cardWrapper.offsetLeft;
+  const walk = (x - startX) * 5; // Adjust speed multiplier
+  cardWrapper.scrollLeft = scrollLeft - walk;
+});
+
+// Click event to open links when clicking a card
+cards.forEach(card => {
+  card.addEventListener('click', (e) => {
+    // Prevent click while dragging
+    if (isDragging) return;
+
+    const link = card.querySelector('a');
+    if (link) {
+      window.open(link.href, '_blank'); // Open link in new tab
+    }
+  });
+});
+  </script>  
+
+<script>
+$(function () {
+    if ($(".kvnm_accordion").length) {
+        $(".kvnm_accordion").each(function () {
+            var acc = $(this),
+                title = $(this).find(">.kvnm_accordion-title"),
+                content = $(this).find(">.kvnm_accordion-content");
+            content.hide();
+            if (acc.find(".kvnm_accordion-content").length == 0) {
+                acc.addClass("empty");
+            }
+            if (title.hasClass("active")) {
+                $(this).parent().find(content).slideDown(300);
+            }
+              // เปิดเนื้อหาของ "Qualifications" และ "Required Documents" โดยค่าเริ่มต้น
+            if (title.text().trim() === "Qualifications" || title.text().trim() === "Required Documents") {
+                title.addClass("active");
+                content.show();
+            } else {
+                content.hide();
+            }
+            title.click(function () {
+                if ($(this).hasClass("active")) {
+                    $(this).removeClass("active").parent().find(content).slideUp(300);
+                } else {
+                    $(this).toggleClass("active").parent().find(content).slideDown(300);
+                }
+                return false;
+            });
+        });
+    }
+});
+</script> 
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const triggers = document.querySelectorAll(".popupTrigger");
+    triggers.forEach(trigger => {
+      trigger.addEventListener("click", function () {
+        openPopup();
+      });
+    });
+  });
+
+  function openPopup() {
+    if (document.getElementById("popup")) return;
+
+    const overlay = document.createElement("div");
+    overlay.className = "popup-overlay";
+    overlay.id = "popup";
+    overlay.style.display = "flex";
+
+    const popupBox = document.createElement("div");
+    popupBox.className = "popup-box";
+
+    popupBox.innerHTML = `
+     <div class="close-btn-wrapper"><button class="close-btn" onclick="closePopup()">X</button></div>
+      <div class="kvnm_f24 kvnm_fw600">How to get VssID Screenshots</div>
+      <br>
+      <div class="kvnm_f16" style="text-align:left;">
+        <span class="kvnm_fw600">Screenshot 1:</span><br>
+        <ul style="padding-left:1rem;">
+          <li>- Login to VssID Application</li>
+          <li>- Screenshot “Personal Information”</li>
+          <li>- Then Click “ Social Security Participation Record”</li>
+        </ul>
+      </div>
+      <br>
+      <div style="max-width:300px;margin:0 auto;">
+        <img src="https://www.kasikornbank.com.vn/SiteCollectionDocuments/img/credit-card/vssid-1.jpg" alt="Popup Image">
+      </div>
+
+      <br>
+      <div class="kvnm_f16" style="text-align:left;">
+        <span class="kvnm_fw600">Screenshot 2:</span><br>
+        <ul style="padding-left:1rem;">
+          <li>- Screenshot “Participation Record”</li>
+          <li>- Click Icon <i style="font-size:24px;color:#005ccfde;" class="fa">&#xf06e;</i></li>
+        </ul>
+      </div>
+      <br>
+      <div style="max-width:300px;margin:0 auto;">
+        <img src="https://www.kasikornbank.com.vn/SiteCollectionDocuments/img/credit-card/vssid-2.jpg" alt="Popup Image">
+      </div>
+
+      <br>
+      <div class="kvnm_f16" style="text-align:left;">
+        <span class="kvnm_fw600">Screenshot 3:</span><br>
+        <ul style="padding-left:1rem;">
+          <li>- Screenshot “Salary Information”</li>
+        </ul>
+      </div>
+      <br>
+      <div style="max-width:300px;margin:0 auto;">
+        <img src="https://www.kasikornbank.com.vn/SiteCollectionDocuments/img/credit-card/vssid-3-v2.jpg" alt="Popup Image">
+      </div>
+    `;
+
+    overlay.appendChild(popupBox);
+    document.body.appendChild(overlay);
+
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closePopup();
+    });
+  }
+
+  function closePopup() {
+    const popup = document.getElementById("popup");
+    if (popup) popup.remove();
+  }
+</script>
+
+
+
+</body>
+</html>
