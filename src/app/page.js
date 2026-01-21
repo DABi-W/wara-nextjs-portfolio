@@ -195,7 +195,7 @@ const ResumePage = () => {
               </div>
 
               <div className="mt-6 pt-6 border-t border-gray-100">
-                <a href="https://github.com/DABi-W/wara-nextjs-portfolio/tree/main" className="flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 transition">
+                <a href="https://github.com/DABi-W/wara-nextjs-portfolio/tree/main" target="_blank" className="flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 transition">
                     <Github size={20}/>
                     <span className="font-medium">github.com/warawut</span>
                 </a>
