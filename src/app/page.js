@@ -3,23 +3,18 @@ import React from 'react';
 import { Mail, Phone, MapPin, ExternalLink, Download, Code, Palette, Settings, BookOpen, Github, Layers, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ResumePage = () => {
-  // สร้าง Ref สำหรับควบคุมการเลื่อน Scroll (ใช้ React.useRef เพื่อความชัวร์)
   const scrollRef = React.useRef(null);
 
-  // ฟังก์ชันสำหรับกดปุ่มเลื่อนซ้าย-ขวา
   const scroll = (direction) => {
     if (scrollRef.current) {
       const { current } = scrollRef;
-      // คำนวณความกว้างของการ์ดใบแรกเพื่อเลื่อนทีละการ์ด
       const cardWidth = current.children[0].offsetWidth;
-      // เพิ่ม gap (16px) เข้าไปในการคำนวณ
       const scrollAmount = direction === 'left' ? -(cardWidth + 16) : (cardWidth + 16);
       
       current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
-  // ข้อมูลจาก Resume
   const profile = {
     name: "WARAWUT CHUMMONGKHON",
     role: "Frontend Developer & Graphic Designer",
@@ -81,7 +76,6 @@ const ResumePage = () => {
     }
   ];
 
-  // เพิ่มข้อมูลส่วน Portfolio (ตัวอย่าง)
   const projects = [
     {
       title: "Corporate Website Redesign",
