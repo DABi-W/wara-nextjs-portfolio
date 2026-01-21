@@ -83,8 +83,8 @@ const ResumePage = () => {
       tags: ["HTML", "CSS", "Javascript"],
       image: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/product-banner-mb.webp?raw=true",
       links: {
-        demo: "#",
-        github: "#"
+        demo: "https://dabi-w.github.io/wara-nextjs-portfolio/pages/mock-up-credit-card.html",
+        github: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/pages/mock-up-credit-card.html"
       }
     },
     {
@@ -93,8 +93,8 @@ const ResumePage = () => {
       tags: ["HTML", "CSS", "Javascript"],
       image: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/product-banner-mb.webp?raw=true",
       links: {
-        demo: "#",
-
+        demo: "https://dabi-w.github.io/wara-nextjs-portfolio/pages/mock-up-inapp.html",
+        github: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/pages/mock-up-inapp.html"
       }
     },
     {
@@ -103,8 +103,8 @@ const ResumePage = () => {
       tags: ["HTML", "CSS", "Javascript"],
       image: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/product-banner-mb.webp?raw=true",
       links: {
-        demo: "#",
-        github: "#"
+        demo: "https://dabi-w.github.io/wara-nextjs-portfolio/pages/mock-up-home-loan-product.html",
+        github: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/pages/mock-up-home-loan-product.html"
       }
     },
     {
@@ -113,8 +113,8 @@ const ResumePage = () => {
       tags: ["HTML", "CSS", "Javascript"],
       image: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/promotion-banner-mb.webp?raw=true",
       links: {
-        demo: "#",
-        github: "#"
+        demo: "https://dabi-w.github.io/wara-nextjs-portfolio/pages/mock-up-promotion.html",
+        github: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/pages/mock-up-promotion.html"
       }
     },
     {
@@ -123,8 +123,8 @@ const ResumePage = () => {
       tags: ["HTML", "CSS", "Javascript"],
       image: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/img/news-banner-mb.webp?raw=true",
       links: {
-        demo: "#",
-        github: "#"
+        demo: "https://dabi-w.github.io/wara-nextjs-portfolio/pages/mock-up-news.html",
+        github: "https://github.com/DABi-W/wara-nextjs-portfolio/blob/main/public/pages/mock-up-news.html"
       }
     }
   ];
@@ -195,7 +195,7 @@ const ResumePage = () => {
               </div>
 
               <div className="mt-6 pt-6 border-t border-gray-100">
-                <a href="#" className="flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 transition">
+                <a href="https://github.com/DABi-W/wara-nextjs-portfolio/tree/main" className="flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 transition">
                     <Github size={20}/>
                     <span className="font-medium">github.com/warawut</span>
                 </a>
@@ -344,10 +344,10 @@ const ResumePage = () => {
                                     </div>
 
                                     <div className="flex items-center gap-3 pt-4 border-t border-gray-100 mt-auto">
-                                        <a href={project.links.demo} className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 rounded-lg transition-colors">
+                                        <a href={project.links.demo} target="_blank" className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 rounded-lg transition-colors">
                                             <ArrowUpRight size={16} /> Live Demo
                                         </a>
-                                        <a href={project.links.github} className="flex-1 flex items-center justify-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-slate-700 text-sm font-medium py-2 rounded-lg transition-colors">
+                                        <a href={project.links.github} target="_blank" className="flex-1 flex items-center justify-center gap-2 bg-white border border-gray-200 hover:bg-gray-50 text-slate-700 text-sm font-medium py-2 rounded-lg transition-colors">
                                             <Github size={16} /> Code
                                         </a>
                                     </div>
