@@ -18,6 +18,9 @@ export default function App() {
     }
   ]);
 
+  // State สำหรับโหมดแก้ไข
+  const [editingId, setEditingId] = useState(null);
+
   // State สำหรับฟอร์ม
   const [nameInput, setNameInput] = useState('');
   const [sizeInput, setSizeInput] = useState('');
@@ -30,14 +33,14 @@ export default function App() {
   const [productCodeInput, setProductCodeInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
 
-  // ฟังก์ชันเพิ่มสินค้ารายการใหม่
-  const handleAddProduct = (e) => {
+  // ฟังก์ชันเพิ่มหรือบันทึกการแก้ไขสินค้ารายการใหม่
+  const handleSubmit = (e) => {
     e.preventDefault();
     // เพิ่มเงื่อนไขบังคับให้ต้องมี locationInput ด้วย
     if (!nameInput || !priceInput || !locationInput) return;
 
-    const newProduct = {
-      id: Date.now(),
+    const productData = {
+      id: editingId ? editingId : Date.now(), // ถ้าแก้ให้ใช้ id เดิม ถ้าเพิ่มใหม่ใช้ Date.now()
       name: nameInput,
       size: sizeInput || "1 ชิ้น", // ถ้าไม่ใส่ขนาดให้ใส่ค่าเริ่มต้น
       price: parseFloat(priceInput),
@@ -48,9 +51,45 @@ export default function App() {
       location: locationInput || "1F" // ค่าเริ่มต้นถ้าไม่กรอก
     };
 
-    setProducts([...products, newProduct]);
+    if (editingId) {
+      // โหมดแก้ไข: อัปเดตข้อมูลตัวที่ id ตรงกัน
+      setProducts(products.map(p => p.id === editingId ? productData : p));
+      setEditingId(null); // ออกจากโหมดแก้ไข
+    } else {
+      // โหมดเพิ่มใหม่
+      setProducts([...products, productData]);
+    }
     
-    // ล้างค่าฟอร์มหลังจากเพิ่มเสร็จ (ส่วนวันที่ ไม่ล้าง เผื่อกดเพิ่มล็อตถัดไปได้เลย)
+    // ล้างค่าฟอร์มหลังจากทำงานเสร็จ (ส่วนวันที่ ไม่ล้าง เผื่อกดเพิ่มล็อตถัดไปได้เลย)
+    setNameInput('');
+    setSizeInput('');
+    setPriceInput('');
+    setPackPriceInput('');
+    setExpiryDaysInput('');
+    setProductCodeInput('');
+    setLocationInput('');
+  };
+
+  // ฟังก์ชันเมื่อกดปุ่มแก้ไขที่การ์ด
+  const handleEditClick = (product) => {
+    setEditingId(product.id);
+    setNameInput(product.name);
+    // กรณีที่ค่าเป็นค่าเริ่มต้น (default) ให้แสดงค่าว่างในช่องกรอก เพื่อให้แก้ไขได้ง่าย
+    setSizeInput(product.size === "1 ชิ้น" ? '' : product.size);
+    setPriceInput(product.price);
+    setPackPriceInput(product.packPrice || '');
+    setUpdateDateInput(product.updateDate);
+    setExpiryDaysInput(product.expiryDays === "180D" ? '' : product.expiryDays);
+    setProductCodeInput(product.productCode === "XXXXXXX" ? '' : product.productCode);
+    setLocationInput(product.location === "1F" ? '' : product.location);
+
+    // เลื่อนหน้าจอขึ้นไปบนสุด (สำหรับมือถือ)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // ฟังก์ชันยกเลิกการแก้ไข
+  const cancelEdit = () => {
+    setEditingId(null);
     setNameInput('');
     setSizeInput('');
     setPriceInput('');
@@ -68,6 +107,10 @@ export default function App() {
   // ฟังก์ชันลบรายการ
   const handleDelete = (id) => {
     setProducts(products.filter(p => p.id !== id));
+    // ถ้ายกเลิกตัวที่กำลังแก้ไขอยู่ ให้เคลียร์ฟอร์มด้วย
+    if (editingId === id) {
+      cancelEdit();
+    }
   };
 
   // ==========================================
@@ -111,7 +154,7 @@ export default function App() {
       <aside className="w-full md:w-80 md:min-h-screen bg-white p-6 shadow-md print:hidden flex-shrink-0 z-10 md:sticky md:top-0 h-fit">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">จัดการป้ายราคา</h1>
         
-        <form onSubmit={handleAddProduct} className="flex flex-col gap-4 mb-8">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-8">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">ชื่อสินค้า</label>
             <input
@@ -205,12 +248,25 @@ export default function App() {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors mt-2"
-          >
-            + เพิ่มรายการ
-          </button>
+          <div className="flex flex-col gap-2 mt-2">
+            <button
+              type="submit"
+              className={`w-full text-white font-medium py-2 px-4 rounded-md transition-colors ${
+                editingId ? 'bg-orange-500 hover:bg-orange-600' : 'bg-blue-600 hover:bg-blue-700'
+              }`}
+            >
+              {editingId ? '✓ บันทึกการแก้ไข' : '+ เพิ่มรายการ'}
+            </button>
+            {editingId && (
+              <button
+                type="button"
+                onClick={cancelEdit}
+                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-md transition-colors"
+              >
+                ✕ ยกเลิกการแก้ไข
+              </button>
+            )}
+          </div>
         </form>
 
         <div className="mb-6">
@@ -226,7 +282,7 @@ export default function App() {
               className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md shadow-sm transition-colors flex justify-center items-center gap-2"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
               </svg>
               สั่งปริ้นท์ (A4)
             </button>
@@ -293,7 +349,9 @@ export default function App() {
                 {pageProducts.map((product) => (
                   <div 
                     key={product.id} 
-                    className="relative border border-gray-300 flex flex-col bg-white overflow-hidden group shadow-sm rounded-sm"
+                    className={`relative border flex flex-col bg-white overflow-hidden group shadow-sm rounded-sm transition-all ${
+                      editingId === product.id ? 'border-orange-500 ring-2 ring-orange-300' : 'border-gray-300'
+                    }`}
                     style={{ height: '2in' }} 
                   >
                     {/* ส่วนบน (พื้นที่สีขาว) */}
@@ -345,14 +403,25 @@ export default function App() {
                       ></div>
                     </div>
 
-                    {/* ปุ่มลบ */}
-                    <button 
-                      onClick={() => handleDelete(product.id)}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 hover:bg-red-700 print:hidden transition-opacity z-10 shadow-md"
-                      title="ลบรายการนี้"
-                    >
-                      ✕
-                    </button>
+                    {/* กลุ่มปุ่ม แก้ไข และ ลบ */}
+                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 print:hidden transition-opacity z-10">
+                      {/* ปุ่มแก้ไข */}
+                      <button 
+                        onClick={() => handleEditClick(product)}
+                        className="bg-blue-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-blue-700 shadow-md"
+                        title="แก้ไขรายการ"
+                      >
+                        ✎
+                      </button>
+                      {/* ปุ่มลบ */}
+                      <button 
+                        onClick={() => handleDelete(product.id)}
+                        className="bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-red-700 shadow-md"
+                        title="ลบรายการนี้"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
