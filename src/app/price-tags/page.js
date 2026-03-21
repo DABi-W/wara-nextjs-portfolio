@@ -3,99 +3,192 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 export default function App() {
-  // 1. Data State: เก็บข้อมูลสินค้าที่จะแสดงบนหน้า A4
-  const [products, setProducts] = useState([
-    { 
-      id: 1, 
-      name: "@ซันไบทส์ทรัฟเฟิล", 
-      size: "50ก", 
-      price: 20.00, 
-      packPrice: 55.00,
-      updateDate: new Date().toISOString().split('T')[0],
-      expiryDays: "180D",
-      productCode: "A000000",
-      location: "N1F3"
-    }
-  ]);
+  // 1. Data State (เริ่มต้นเป็นหน้าเปล่า)
+  const [products, setProducts] = useState([]);
 
   // ==========================================
   // ระบบ Database จำลอง (Local Storage)
   // ==========================================
-  const [productDB, setProductDB] = useState([]); // เก็บฐานข้อมูลสินค้าทั้งหมดที่เคยกรอก
-  const [suggestions, setSuggestions] = useState([]); // เก็บรายการที่ค้นเจอตอนพิมพ์
-  const [showSuggestions, setShowSuggestions] = useState(false); // เปิด/ปิด popup
-  const wrapperRef = useRef(null); // ใช้เช็คการคลิกนอกกรอบเพื่อปิด popup
+  const [productDB, setProductDB] = useState([]); 
+  const [suggestions, setSuggestions] = useState([]); 
+  const [showSuggestions, setShowSuggestions] = useState(false); 
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
 
-  // ดึงข้อมูลจาก Local Storage เมื่อเปิดเว็บครั้งแรก
+  const [locationSuggestions, setLocationSuggestions] = useState([]);
+  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
+  const [activeLocationIndex, setActiveLocationIndex] = useState(-1);
+
+  const [activePad, setActivePad] = useState(null); 
+
+  const wrapperRef = useRef(null); 
+  const locWrapperRef = useRef(null);
+
+  // ดึงข้อมูลจาก Local Storage 
   useEffect(() => {
     const savedDB = localStorage.getItem('priceTagDB');
     if (savedDB) {
       setProductDB(JSON.parse(savedDB));
+    } else {
+      setProductDB([]);
     }
   }, []);
 
-  // คลิกนอกกรอบ Suggestion ให้ปิด
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setShowSuggestions(false);
-      }
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) setShowSuggestions(false);
+      if (locWrapperRef.current && !locWrapperRef.current.contains(event.target)) setShowLocationSuggestions(false);
+      if (!event.target.closest('.pad-container')) setActivePad(null); 
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // State สำหรับโหมดแก้ไข
   const [editingId, setEditingId] = useState(null);
-
-  // State สำหรับฟอร์ม
   const [nameInput, setNameInput] = useState('');
   const [sizeInput, setSizeInput] = useState('');
   const [priceInput, setPriceInput] = useState('');
   const [packPriceInput, setPackPriceInput] = useState('');
   const [updateDateInput, setUpdateDateInput] = useState(new Date().toISOString().split('T')[0]);
-  const [expiryDaysInput, setExpiryDaysInput] = useState('');
+  const [expiryDateInput, setExpiryDateInput] = useState(''); 
   const [productCodeInput, setProductCodeInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
 
   // -----------------------------------------
-  // ฟังก์ชันจัดการการพิมพ์และแสดง Suggestion
+  // ฟังก์ชันจัดรูปแบบวันที่ (แสดงเป็น ปี ค.ศ. 4 หลัก เช่น 2024)
   // -----------------------------------------
+  const formatDate = (dateString, prefix = "") => {
+    if (!dateString) return `${prefix}--/--/----`;
+    const [year, month, day] = dateString.split('-');
+    return `${prefix}${day}/${month}/${year}`;
+  };
+
   const handleNameChange = (e) => {
     const value = e.target.value;
     setNameInput(value);
-
+    setActiveSuggestionIndex(-1); 
     if (value.trim().length > 0) {
-      // ค้นหาใน DB ว่ามีชื่อไหนตรงกับที่พิมพ์บ้าง (ไม่สนตัวพิมพ์เล็กใหญ่)
-      const matches = productDB.filter(p => 
-        p.name.toLowerCase().includes(value.toLowerCase())
-      );
+      const matches = productDB.filter(p => p.name.toLowerCase().includes(value.toLowerCase()));
       setSuggestions(matches);
       setShowSuggestions(true);
     } else {
-      setSuggestions([]);
       setShowSuggestions(false);
     }
   };
 
-  // ฟังก์ชันเมื่อกดเลือก Suggestion (Auto-fill)
+  const handleNameKeyDown = (e) => {
+    if (!showSuggestions || suggestions.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveSuggestionIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveSuggestionIndex(prev => (prev > 0 ? prev - 1 : 0));
+    } else if (e.key === 'Enter' || e.key === 'Tab') {
+      if (activeSuggestionIndex >= 0 && activeSuggestionIndex < suggestions.length) {
+        if (e.key === 'Enter') e.preventDefault(); 
+        handleSelectSuggestion(suggestions[activeSuggestionIndex]);
+      }
+    }
+  };
+
+  const handleLocationChange = (e) => {
+    const value = e.target.value;
+    setLocationInput(value);
+    setActiveLocationIndex(-1); 
+    if (value.trim().length > 0) {
+      const uniqueLocations = Array.from(new Set(productDB.map(p => p.location).filter(Boolean)));
+      const matches = uniqueLocations.filter(loc => loc.toLowerCase().includes(value.toLowerCase()));
+      setLocationSuggestions(matches);
+      setShowLocationSuggestions(true);
+    } else {
+      setShowLocationSuggestions(false);
+    }
+  };
+
+  const handleLocationKeyDown = (e) => {
+    if (!showLocationSuggestions || locationSuggestions.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveLocationIndex(prev => (prev < locationSuggestions.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveLocationIndex(prev => (prev > 0 ? prev - 1 : 0));
+    } else if (e.key === 'Enter' || e.key === 'Tab') {
+      if (activeLocationIndex >= 0 && activeLocationIndex < locationSuggestions.length) {
+        if (e.key === 'Enter') e.preventDefault();
+        setLocationInput(locationSuggestions[activeLocationIndex]);
+        setShowLocationSuggestions(false);
+      }
+    }
+  };
+
   const handleSelectSuggestion = (product) => {
     setNameInput(product.name);
     setSizeInput(product.size === "1 ชิ้น" ? '' : product.size);
     setPriceInput(product.price);
     setPackPriceInput(product.packPrice || '');
-    // updateDate เราอาจจะอยากใช้วันที่ปัจจุบัน มากกว่าดึงวันที่เก่ามา
     setUpdateDateInput(new Date().toISOString().split('T')[0]); 
-    setExpiryDaysInput(product.expiryDays === "180D" ? '' : product.expiryDays);
+    setExpiryDateInput(product.expiryDate || '');
     setProductCodeInput(product.productCode === "XXXXXXX" ? '' : product.productCode);
     setLocationInput(product.location === "1F" ? '' : product.location);
-    
-    setShowSuggestions(false); // ปิด Popup
+    setShowSuggestions(false); 
   };
 
-  // -----------------------------------------
-  // ฟังก์ชันเพิ่มหรือบันทึกการแก้ไขสินค้ารายการใหม่
-  // -----------------------------------------
+  const QUICK_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100];
+  
+  const handleNumberAdd = (field, amount) => {
+    if (field === 'price') {
+      setPriceInput(prev => (parseFloat(prev || 0) + amount).toString());
+    } else if (field === 'packPrice') {
+      setPackPriceInput(prev => (parseFloat(prev || 0) + amount).toString());
+    } else if (field === 'size') {
+      const str = sizeInput || "";
+      const match = str.match(/^([\d.]+)(.*)$/);
+      if (match) {
+        const num = parseFloat(match[1]) + amount;
+        setSizeInput(num + match[2]);
+      } else {
+        const num = parseFloat(str);
+        if (!isNaN(num)) setSizeInput((num + amount).toString());
+        else setSizeInput(amount.toString());
+      }
+    }
+  };
+
+  const exportData = () => {
+    const data = { products, productDB };
+    const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `price_tags_backup_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importData = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target.result);
+        if (data.products) setProducts(data.products);
+        if (data.productDB) {
+          setProductDB(data.productDB);
+          localStorage.setItem('priceTagDB', JSON.stringify(data.productDB));
+        }
+        alert('✅ โหลดข้อมูลจากไฟล์สำเร็จ!');
+      } catch (err) {
+        alert('❌ ไฟล์ไม่ถูกต้อง');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = ''; 
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!nameInput || !priceInput || !locationInput) return;
@@ -107,9 +200,9 @@ export default function App() {
       price: parseFloat(priceInput),
       packPrice: packPriceInput ? parseFloat(packPriceInput) : null,
       updateDate: updateDateInput,
-      expiryDays: expiryDaysInput || "180D",
+      expiryDate: expiryDateInput, 
       productCode: productCodeInput || "XXXXXXX",
-      location: locationInput || "1F"
+      location: locationInput
     };
 
     if (editingId) {
@@ -119,29 +212,22 @@ export default function App() {
       setProducts([...products, productData]);
     }
 
-    // --- อัปเดต Database (Local Storage) ---
     const updateDB = [...productDB];
     const existingIndex = updateDB.findIndex(p => p.name.toLowerCase() === productData.name.toLowerCase());
-    
-    // ตัด id ทิ้งก่อนเก็บลง DB เพราะเราจำแค่ profile สินค้า
     const dbProfile = { ...productData };
     delete dbProfile.id;
 
-    if (existingIndex >= 0) {
-      updateDB[existingIndex] = dbProfile; // ถ้ามีชื่อนี้แล้ว ให้อัปเดตข้อมูลล่าสุด
-    } else {
-      updateDB.push(dbProfile); // ถ้าเป็นชื่อใหม่ให้เพิ่มเข้าไป
-    }
+    if (existingIndex >= 0) updateDB[existingIndex] = dbProfile;
+    else updateDB.push(dbProfile);
+    
     setProductDB(updateDB);
     localStorage.setItem('priceTagDB', JSON.stringify(updateDB));
-    // ------------------------------------
     
-    // ล้างค่าฟอร์ม
     setNameInput('');
     setSizeInput('');
     setPriceInput('');
     setPackPriceInput('');
-    setExpiryDaysInput('');
+    setExpiryDateInput('');
     setProductCodeInput('');
     setLocationInput('');
   };
@@ -153,10 +239,9 @@ export default function App() {
     setPriceInput(product.price);
     setPackPriceInput(product.packPrice || '');
     setUpdateDateInput(product.updateDate);
-    setExpiryDaysInput(product.expiryDays === "180D" ? '' : product.expiryDays);
+    setExpiryDateInput(product.expiryDate || '');
     setProductCodeInput(product.productCode === "XXXXXXX" ? '' : product.productCode);
-    setLocationInput(product.location === "1F" ? '' : product.location);
-
+    setLocationInput(product.location);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -166,20 +251,15 @@ export default function App() {
     setSizeInput('');
     setPriceInput('');
     setPackPriceInput('');
-    setExpiryDaysInput('');
+    setExpiryDateInput('');
     setProductCodeInput('');
     setLocationInput('');
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
+  const handlePrint = () => window.print();
   const handleDelete = (id) => {
     setProducts(products.filter(p => p.id !== id));
-    if (editingId === id) {
-      cancelEdit();
-    }
+    if (editingId === id) cancelEdit();
   };
 
   const ITEMS_PER_PAGE = 10;
@@ -188,11 +268,38 @@ export default function App() {
     pages.push(products.slice(i, i + ITEMS_PER_PAGE));
   }
 
-  const formatUpdateDate = (dateString) => {
-    if (!dateString) return "Update --/--/--";
-    const [year, month, day] = dateString.split('-');
-    const thaiYear = (parseInt(year) + 543).toString().slice(-2);
-    return `Update ${day}/${month}/${thaiYear}`;
+  const renderNumberPad = (field) => {
+    if (activePad !== field) return null;
+    return (
+      <div className="absolute top-full left-0 mt-1 w-[260px] bg-white border border-gray-200 rounded-md shadow-xl z-50 p-2 pad-container">
+        <div className="text-[10px] text-gray-500 mb-2 font-medium">💡 กดเพื่อบวกตัวเลขเพิ่ม</div>
+        <div className="grid grid-cols-5 gap-1">
+          {QUICK_NUMBERS.map(num => (
+            <button
+              key={num}
+              type="button"
+              tabIndex={-1} 
+              onClick={() => handleNumberAdd(field, num)}
+              className="bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-1.5 rounded text-xs transition-colors border border-blue-200"
+            >
+              +{num}
+            </button>
+          ))}
+          <button
+            type="button"
+            tabIndex={-1} 
+            onClick={() => {
+              if (field === 'size') setSizeInput('');
+              if (field === 'price') setPriceInput('');
+              if (field === 'packPrice') setPackPriceInput('');
+            }}
+            className="bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-1.5 rounded text-xs transition-colors border border-red-200 col-span-5 mt-1"
+          >
+            ⌫ เคลียร์ค่า
+          </button>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -205,32 +312,33 @@ export default function App() {
         }
       `}} />
 
-      <aside className="w-full md:w-80 md:min-h-screen bg-white p-6 shadow-md print:hidden flex-shrink-0 z-10 md:sticky md:top-0 h-fit">
+      <aside className="w-full md:w-80 md:min-h-screen bg-white p-6 shadow-md print:hidden flex-shrink-0 z-10 md:sticky md:top-0 h-fit overflow-y-auto">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">จัดการป้ายราคา</h1>
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-8">
           
-          {/* ช่องชื่อสินค้า (เพิ่มระบบ Suggestion) */}
-          <div className="relative" ref={wrapperRef}>
+          <div className="relative pad-container" ref={wrapperRef}>
             <label className="block text-sm font-medium text-gray-700 mb-1">ชื่อสินค้า</label>
             <input
               type="text"
               value={nameInput}
               onChange={handleNameChange}
-              onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
+              onKeyDown={handleNameKeyDown} 
+              onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); setActivePad(null); }}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="เช่น @ซันไบทส์ทรัฟเฟิล"
+              placeholder="เช่น โค้ก กระป๋อง"
               required
               autoComplete="off"
             />
-            {/* กล่อง Popup Suggestion */}
             {showSuggestions && suggestions.length > 0 && (
               <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto">
                 {suggestions.map((s, idx) => (
                   <li 
                     key={idx}
                     onClick={() => handleSelectSuggestion(s)}
-                    className="px-3 py-2 text-sm hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-0 flex flex-col"
+                    className={`px-3 py-2 text-sm cursor-pointer border-b border-gray-100 last:border-0 flex flex-col ${
+                      idx === activeSuggestionIndex ? 'bg-blue-100' : 'hover:bg-blue-50'
+                    }`} 
                   >
                     <span className="font-semibold text-gray-800">{s.name}</span>
                     <span className="text-xs text-gray-500">
@@ -242,38 +350,49 @@ export default function App() {
             )}
           </div>
 
-          <div>
+          <div className="relative pad-container">
             <label className="block text-sm font-medium text-gray-700 mb-1">ขนาด/น้ำหนัก</label>
             <input
               type="text"
               value={sizeInput}
               onChange={(e) => setSizeInput(e.target.value)}
+              onFocus={() => setActivePad('size')}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="เช่น 50ก"
+              autoComplete="off"
             />
+            {renderNumberPad('size')}
           </div>
-          <div>
+
+          <div className="relative pad-container">
             <label className="block text-sm font-medium text-gray-700 mb-1">ราคา (บาท)</label>
             <input
               type="number"
               step="0.01"
               value={priceInput}
               onChange={(e) => setPriceInput(e.target.value)}
+              onFocus={() => setActivePad('price')}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="เช่น 20.00"
               required
+              autoComplete="off"
             />
+            {renderNumberPad('price')}
           </div>
-          <div>
+
+          <div className="relative pad-container">
             <label className="block text-sm font-medium text-gray-700 mb-1">ราคายกแพ็ค (ไม่บังคับ)</label>
             <input
               type="number"
               step="0.01"
               value={packPriceInput}
               onChange={(e) => setPackPriceInput(e.target.value)}
+              onFocus={() => setActivePad('packPrice')}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="เช่น 55.00"
+              autoComplete="off"
             />
+            {renderNumberPad('packPrice')}
           </div>
 
           <div className="grid grid-cols-2 gap-3 border-t border-gray-200 pt-3">
@@ -283,17 +402,18 @@ export default function App() {
                 type="date"
                 value={updateDateInput}
                 onChange={(e) => setUpdateDateInput(e.target.value)}
+                onFocus={() => setActivePad(null)}
                 className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">วันหมดอายุ</label>
               <input
-                type="text"
-                value={expiryDaysInput}
-                onChange={(e) => setExpiryDaysInput(e.target.value)}
-                className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="เช่น 180D"
+                type="date"
+                value={expiryDateInput}
+                onChange={(e) => setExpiryDateInput(e.target.value)}
+                onFocus={() => setActivePad(null)}
+                className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
               />
             </div>
             <div>
@@ -302,22 +422,42 @@ export default function App() {
                 type="text"
                 value={productCodeInput}
                 onChange={(e) => setProductCodeInput(e.target.value)}
+                onFocus={() => setActivePad(null)}
                 className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="เว้นว่าง = XXXXXXX"
               />
             </div>
-            <div>
+
+            <div className="relative pad-container" ref={locWrapperRef}>
               <label className="block text-xs font-medium text-gray-700 mb-1">
                 ชั้นวาง <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 value={locationInput}
-                onChange={(e) => setLocationInput(e.target.value)}
+                onChange={handleLocationChange}
+                onKeyDown={handleLocationKeyDown} 
+                onFocus={() => { if (locationSuggestions.length > 0) setShowLocationSuggestions(true); setActivePad(null); }}
                 className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="เช่น N1F3"
                 required
+                autoComplete="off"
               />
+              {showLocationSuggestions && locationSuggestions.length > 0 && (
+                <ul className="absolute bottom-full left-0 mb-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-32 overflow-y-auto z-50">
+                  {locationSuggestions.map((loc, idx) => (
+                    <li 
+                      key={idx}
+                      onClick={() => { setLocationInput(loc); setShowLocationSuggestions(false); }}
+                      className={`px-3 py-1.5 text-sm cursor-pointer border-b border-gray-100 last:border-0 ${
+                        idx === activeLocationIndex ? 'bg-blue-100' : 'hover:bg-blue-50'
+                      }`} 
+                    >
+                      {loc}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           </div>
 
@@ -341,6 +481,19 @@ export default function App() {
             )}
           </div>
         </form>
+
+        <div className="mb-6 bg-gray-50 p-3 rounded-lg border border-gray-200">
+          <p className="text-sm font-bold text-gray-700 mb-2">💾 จัดการฐานข้อมูล (Backup)</p>
+          <div className="flex gap-2">
+            <button onClick={exportData} className="flex-1 bg-gray-800 hover:bg-black text-white py-2 rounded-md text-xs font-medium transition-colors text-center" title="เซฟข้อมูลเก็บไว้เป็นไฟล์">
+              บันทึกไฟล์ (Save)
+            </button>
+            <label className="flex-1 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 py-2 rounded-md text-xs font-medium transition-colors cursor-pointer text-center" title="โหลดข้อมูลจากไฟล์กลับมา">
+              โหลดไฟล์ (Load)
+              <input type="file" accept=".json" className="hidden" onChange={importData} />
+            </label>
+          </div>
+        </div>
 
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
@@ -370,12 +523,12 @@ export default function App() {
               บันทึกเป็น PDF
             </button>
           </div>
-          <p className="text-[10px] text-gray-400 mt-2 text-center">
-            *เมื่อหน้าต่างพิมพ์เด้งขึ้นมา ให้เลือก "Save as PDF"
-          </p>
         </div>
       </aside>
 
+      {/* ==========================================
+          ส่วนที่ 2: Print Preview
+          ========================================== */}
       <main className="flex-1 overflow-x-auto overflow-y-auto p-4 md:p-8 print:p-0 print:overflow-visible">
         <p className="md:hidden text-xs text-center text-gray-500 mb-4 print:hidden animate-pulse">
           👈 เลื่อนซ้าย-ขวาเพื่อดูเต็มแผ่น 👉
@@ -442,19 +595,19 @@ export default function App() {
                             ? `Pack ${product.packPrice.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bath` 
                             : ''}
                         </span>
-                        <span>{formatUpdateDate(product.updateDate)}</span>
+                        <span>{formatDate(product.updateDate, 'Update ')}</span>
                       </div>
                       <div className="flex justify-between text-[10px] font-mono font-bold leading-none mb-[4px] text-gray-800">
-                        <span>{product.expiryDays || '180D'}</span>
+                        <span>{formatDate(product.expiryDate, 'Exp ')}</span>
                         <span>{product.productCode || 'XXXXXXX'}</span>
-                        <span>{product.location || '1F'}</span>
+                        <span>{product.location}</span>
                       </div>
-                      <div 
-                        className="w-full h-[6mm] opacity-80 mt-[2px]"
-                        style={{
-                          background: 'repeating-linear-gradient(to right, #222 0, #222 1.5px, transparent 1.5px, transparent 3px, #222 3px, #222 4.5px, transparent 4.5px, transparent 6px, #222 6px, #222 9px, transparent 9px, transparent 11px, #222 11px, #222 13px, transparent 13px, transparent 15px)'
-                        }}
-                      ></div>
+                      
+                      <div className="w-full h-[6mm] mt-[2px]">
+                        <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 100 10">
+                          <path d="M0,0 h2 v10 h-2 Z M4,0 h1 v10 h-1 Z M7,0 h3 v10 h-3 Z M12,0 h1 v10 h-1 Z M15,0 h2 v10 h-2 Z M20,0 h3 v10 h-3 Z M25,0 h1 v10 h-1 Z M28,0 h2 v10 h-2 Z M33,0 h1 v10 h-1 Z M36,0 h4 v10 h-4 Z M42,0 h2 v10 h-2 Z M46,0 h1 v10 h-1 Z M49,0 h3 v10 h-3 Z M54,0 h2 v10 h-2 Z M58,0 h1 v10 h-1 Z M61,0 h2 v10 h-2 Z M65,0 h3 v10 h-3 Z M70,0 h1 v10 h-1 Z M73,0 h2 v10 h-2 Z M77,0 h4 v10 h-4 Z M83,0 h2 v10 h-2 Z M87,0 h1 v10 h-1 Z M90,0 h3 v10 h-3 Z M95,0 h2 v10 h-2 Z M99,0 h1 v10 h-1 Z" fill="#333" />
+                        </svg>
+                      </div>
                     </div>
 
                     <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 print:hidden transition-opacity z-10">
