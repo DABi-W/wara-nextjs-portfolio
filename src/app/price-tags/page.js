@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export default function App() {
-  // 1. Data State: เก็บข้อมูลสินค้า โดยมี Mock Data เริ่มต้น 1 ตัว
+  // 1. Data State: เก็บข้อมูลสินค้าที่จะแสดงบนหน้า A4
   const [products, setProducts] = useState([
     { 
       id: 1, 
@@ -11,12 +11,39 @@ export default function App() {
       size: "50ก", 
       price: 20.00, 
       packPrice: 55.00,
-      updateDate: new Date().toISOString().split('T')[0], // ดึงวันที่วันนี้เป็นค่าเริ่มต้น YYYY-MM-DD
+      updateDate: new Date().toISOString().split('T')[0],
       expiryDays: "180D",
       productCode: "A000000",
       location: "N1F3"
     }
   ]);
+
+  // ==========================================
+  // ระบบ Database จำลอง (Local Storage)
+  // ==========================================
+  const [productDB, setProductDB] = useState([]); // เก็บฐานข้อมูลสินค้าทั้งหมดที่เคยกรอก
+  const [suggestions, setSuggestions] = useState([]); // เก็บรายการที่ค้นเจอตอนพิมพ์
+  const [showSuggestions, setShowSuggestions] = useState(false); // เปิด/ปิด popup
+  const wrapperRef = useRef(null); // ใช้เช็คการคลิกนอกกรอบเพื่อปิด popup
+
+  // ดึงข้อมูลจาก Local Storage เมื่อเปิดเว็บครั้งแรก
+  useEffect(() => {
+    const savedDB = localStorage.getItem('priceTagDB');
+    if (savedDB) {
+      setProductDB(JSON.parse(savedDB));
+    }
+  }, []);
+
+  // คลิกนอกกรอบ Suggestion ให้ปิด
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // State สำหรับโหมดแก้ไข
   const [editingId, setEditingId] = useState(null);
@@ -25,42 +52,91 @@ export default function App() {
   const [nameInput, setNameInput] = useState('');
   const [sizeInput, setSizeInput] = useState('');
   const [priceInput, setPriceInput] = useState('');
-  const [packPriceInput, setPackPriceInput] = useState(''); // State สำหรับราคาแพ็ค
-  
-  // State ใหม่อีก 4 ตัว
+  const [packPriceInput, setPackPriceInput] = useState('');
   const [updateDateInput, setUpdateDateInput] = useState(new Date().toISOString().split('T')[0]);
   const [expiryDaysInput, setExpiryDaysInput] = useState('');
   const [productCodeInput, setProductCodeInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
 
+  // -----------------------------------------
+  // ฟังก์ชันจัดการการพิมพ์และแสดง Suggestion
+  // -----------------------------------------
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    setNameInput(value);
+
+    if (value.trim().length > 0) {
+      // ค้นหาใน DB ว่ามีชื่อไหนตรงกับที่พิมพ์บ้าง (ไม่สนตัวพิมพ์เล็กใหญ่)
+      const matches = productDB.filter(p => 
+        p.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setSuggestions(matches);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  // ฟังก์ชันเมื่อกดเลือก Suggestion (Auto-fill)
+  const handleSelectSuggestion = (product) => {
+    setNameInput(product.name);
+    setSizeInput(product.size === "1 ชิ้น" ? '' : product.size);
+    setPriceInput(product.price);
+    setPackPriceInput(product.packPrice || '');
+    // updateDate เราอาจจะอยากใช้วันที่ปัจจุบัน มากกว่าดึงวันที่เก่ามา
+    setUpdateDateInput(new Date().toISOString().split('T')[0]); 
+    setExpiryDaysInput(product.expiryDays === "180D" ? '' : product.expiryDays);
+    setProductCodeInput(product.productCode === "XXXXXXX" ? '' : product.productCode);
+    setLocationInput(product.location === "1F" ? '' : product.location);
+    
+    setShowSuggestions(false); // ปิด Popup
+  };
+
+  // -----------------------------------------
   // ฟังก์ชันเพิ่มหรือบันทึกการแก้ไขสินค้ารายการใหม่
+  // -----------------------------------------
   const handleSubmit = (e) => {
     e.preventDefault();
-    // เพิ่มเงื่อนไขบังคับให้ต้องมี locationInput ด้วย
     if (!nameInput || !priceInput || !locationInput) return;
 
     const productData = {
-      id: editingId ? editingId : Date.now(), // ถ้าแก้ให้ใช้ id เดิม ถ้าเพิ่มใหม่ใช้ Date.now()
+      id: editingId ? editingId : Date.now(),
       name: nameInput,
-      size: sizeInput || "1 ชิ้น", // ถ้าไม่ใส่ขนาดให้ใส่ค่าเริ่มต้น
+      size: sizeInput || "1 ชิ้น",
       price: parseFloat(priceInput),
-      packPrice: packPriceInput ? parseFloat(packPriceInput) : null, // ถ้าระบุราคาแพ็คมาให้เก็บค่าไว้
+      packPrice: packPriceInput ? parseFloat(packPriceInput) : null,
       updateDate: updateDateInput,
-      expiryDays: expiryDaysInput || "180D", // ค่าเริ่มต้นถ้าไม่กรอก
-      productCode: productCodeInput || "XXXXXXX", // ค่าเริ่มต้นถ้าไม่กรอก
-      location: locationInput || "1F" // ค่าเริ่มต้นถ้าไม่กรอก
+      expiryDays: expiryDaysInput || "180D",
+      productCode: productCodeInput || "XXXXXXX",
+      location: locationInput || "1F"
     };
 
     if (editingId) {
-      // โหมดแก้ไข: อัปเดตข้อมูลตัวที่ id ตรงกัน
       setProducts(products.map(p => p.id === editingId ? productData : p));
-      setEditingId(null); // ออกจากโหมดแก้ไข
+      setEditingId(null);
     } else {
-      // โหมดเพิ่มใหม่
       setProducts([...products, productData]);
     }
+
+    // --- อัปเดต Database (Local Storage) ---
+    const updateDB = [...productDB];
+    const existingIndex = updateDB.findIndex(p => p.name.toLowerCase() === productData.name.toLowerCase());
     
-    // ล้างค่าฟอร์มหลังจากทำงานเสร็จ (ส่วนวันที่ ไม่ล้าง เผื่อกดเพิ่มล็อตถัดไปได้เลย)
+    // ตัด id ทิ้งก่อนเก็บลง DB เพราะเราจำแค่ profile สินค้า
+    const dbProfile = { ...productData };
+    delete dbProfile.id;
+
+    if (existingIndex >= 0) {
+      updateDB[existingIndex] = dbProfile; // ถ้ามีชื่อนี้แล้ว ให้อัปเดตข้อมูลล่าสุด
+    } else {
+      updateDB.push(dbProfile); // ถ้าเป็นชื่อใหม่ให้เพิ่มเข้าไป
+    }
+    setProductDB(updateDB);
+    localStorage.setItem('priceTagDB', JSON.stringify(updateDB));
+    // ------------------------------------
+    
+    // ล้างค่าฟอร์ม
     setNameInput('');
     setSizeInput('');
     setPriceInput('');
@@ -70,11 +146,9 @@ export default function App() {
     setLocationInput('');
   };
 
-  // ฟังก์ชันเมื่อกดปุ่มแก้ไขที่การ์ด
   const handleEditClick = (product) => {
     setEditingId(product.id);
     setNameInput(product.name);
-    // กรณีที่ค่าเป็นค่าเริ่มต้น (default) ให้แสดงค่าว่างในช่องกรอก เพื่อให้แก้ไขได้ง่าย
     setSizeInput(product.size === "1 ชิ้น" ? '' : product.size);
     setPriceInput(product.price);
     setPackPriceInput(product.packPrice || '');
@@ -83,11 +157,9 @@ export default function App() {
     setProductCodeInput(product.productCode === "XXXXXXX" ? '' : product.productCode);
     setLocationInput(product.location === "1F" ? '' : product.location);
 
-    // เลื่อนหน้าจอขึ้นไปบนสุด (สำหรับมือถือ)
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // ฟังก์ชันยกเลิกการแก้ไข
   const cancelEdit = () => {
     setEditingId(null);
     setNameInput('');
@@ -99,30 +171,23 @@ export default function App() {
     setLocationInput('');
   };
 
-  // ฟังก์ชันสั่งปริ้นท์ / บันทึก PDF
   const handlePrint = () => {
     window.print();
   };
 
-  // ฟังก์ชันลบรายการ
   const handleDelete = (id) => {
     setProducts(products.filter(p => p.id !== id));
-    // ถ้ายกเลิกตัวที่กำลังแก้ไขอยู่ ให้เคลียร์ฟอร์มด้วย
     if (editingId === id) {
       cancelEdit();
     }
   };
 
-  // ==========================================
-  // ลอจิกสำหรับการแบ่งหน้า (Pagination)
-  // ==========================================
   const ITEMS_PER_PAGE = 10;
   const pages = [];
   for (let i = 0; i < products.length; i += ITEMS_PER_PAGE) {
     pages.push(products.slice(i, i + ITEMS_PER_PAGE));
   }
 
-  // Helper function แปลงวันที่ YYYY-MM-DD เป็นรูปแบบ Update DD/MM/YY (ปี พ.ศ.)
   const formatUpdateDate = (dateString) => {
     if (!dateString) return "Update --/--/--";
     const [year, month, day] = dateString.split('-');
@@ -133,39 +198,50 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-200 flex flex-col md:flex-row font-sans print:bg-white print:block">
       
-      {/* Print CSS */}
       <style dangerouslySetInnerHTML={{__html: `
         @media print {
-          @page {
-            size: A4;
-            margin: 0;
-          }
-          body {
-            margin: 0;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-          }
+          @page { size: A4; margin: 0; }
+          body { margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
       `}} />
 
-      {/* ==========================================
-          ส่วนที่ 1: Input/Control
-          ========================================== */}
       <aside className="w-full md:w-80 md:min-h-screen bg-white p-6 shadow-md print:hidden flex-shrink-0 z-10 md:sticky md:top-0 h-fit">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">จัดการป้ายราคา</h1>
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-8">
-          <div>
+          
+          {/* ช่องชื่อสินค้า (เพิ่มระบบ Suggestion) */}
+          <div className="relative" ref={wrapperRef}>
             <label className="block text-sm font-medium text-gray-700 mb-1">ชื่อสินค้า</label>
             <input
               type="text"
               value={nameInput}
-              onChange={(e) => setNameInput(e.target.value)}
+              onChange={handleNameChange}
+              onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="เช่น @ซันไบทส์ทรัฟเฟิล"
               required
+              autoComplete="off"
             />
+            {/* กล่อง Popup Suggestion */}
+            {showSuggestions && suggestions.length > 0 && (
+              <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto">
+                {suggestions.map((s, idx) => (
+                  <li 
+                    key={idx}
+                    onClick={() => handleSelectSuggestion(s)}
+                    className="px-3 py-2 text-sm hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-0 flex flex-col"
+                  >
+                    <span className="font-semibold text-gray-800">{s.name}</span>
+                    <span className="text-xs text-gray-500">
+                      ราคา: {s.price} บ. | รหัส: {s.productCode}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">ขนาด/น้ำหนัก</label>
             <input
@@ -200,9 +276,6 @@ export default function App() {
             />
           </div>
 
-          {/* ==========================================
-              กลุ่มฟิลด์ใหม่ 4 ตัว (จัดเป็น 2 คอลัมน์)
-              ========================================== */}
           <div className="grid grid-cols-2 gap-3 border-t border-gray-200 pt-3">
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">วันที่อัปเดต</label>
@@ -276,7 +349,6 @@ export default function App() {
           </div>
           
           <div className="flex flex-col gap-3">
-            {/* ปุ่มปริ้นท์ (สีเขียว) */}
             <button
               onClick={handlePrint}
               className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md shadow-sm transition-colors flex justify-center items-center gap-2"
@@ -287,7 +359,6 @@ export default function App() {
               สั่งปริ้นท์ (A4)
             </button>
             
-            {/* ปุ่มบันทึกเป็น PDF (สีแดง) */}
             <button
               onClick={handlePrint}
               className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-md shadow-sm transition-colors flex justify-center items-center gap-2"
@@ -305,21 +376,12 @@ export default function App() {
         </div>
       </aside>
 
-      {/* ==========================================
-          ส่วนที่ 2: A4 Print Preview (รองรับ Mobile Scroll)
-          ========================================== */}
-      {/* เปลี่ยนเป็น overflow-x-auto เพื่อให้มือถือเลื่อนซ้ายขวาได้ ไม่บีบขนาดกระดาษ */}
       <main className="flex-1 overflow-x-auto overflow-y-auto p-4 md:p-8 print:p-0 print:overflow-visible">
-        
-        {/* ข้อความแนะนำบนมือถือ */}
         <p className="md:hidden text-xs text-center text-gray-500 mb-4 print:hidden animate-pulse">
           👈 เลื่อนซ้าย-ขวาเพื่อดูเต็มแผ่น 👉
         </p>
 
-        {/* ห่อด้วย w-max และ mx-auto เพื่อรักษาขนาด 210mm และให้อยู่กึ่งกลางจอใหญ่ */}
         <div className="w-max mx-auto flex flex-col gap-8 print:gap-0 print:block">
-          
-          {/* ข้อความกรณีไม่มีสินค้า */}
           {products.length === 0 && (
             <div 
               className="bg-white shadow-xl relative flex items-center justify-center text-gray-400 print:hidden"
@@ -329,16 +391,15 @@ export default function App() {
             </div>
           )}
 
-          {/* วนลูปสร้างหน้า A4 */}
           {pages.map((pageProducts, pageIndex) => (
             <div 
               key={pageIndex}
               className="bg-white shadow-xl print:shadow-none relative print:break-after-page"
               style={{ 
                 width: '210mm', 
-                minWidth: '210mm', // บังคับไม่ให้มือถือบีบขนาดความกว้าง
+                minWidth: '210mm',
                 height: '297mm', 
-                minHeight: '297mm', // บังคับความสูง
+                minHeight: '297mm',
                 padding: '8mm',
                 boxSizing: 'border-box',
                 pageBreakAfter: pageIndex === pages.length - 1 ? 'auto' : 'always',
@@ -354,7 +415,6 @@ export default function App() {
                     }`}
                     style={{ height: '2in' }} 
                   >
-                    {/* ส่วนบน (พื้นที่สีขาว) */}
                     <div className="flex-1 p-[4mm] px-[6mm] flex flex-col justify-between">
                       <div className="text-[16px] font-bold leading-tight line-clamp-2 text-gray-800 tracking-tight pr-6">
                         {product.name}
@@ -375,24 +435,18 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* ส่วนล่าง */}
                     <div className="bg-white px-[6mm] py-[2mm] flex flex-col justify-end border-t border-gray-300" style={{ height: '18mm' }}>
                       <div className="flex justify-between text-[10px] font-mono font-bold leading-none mb-[2px] text-gray-800">
-                        {/* เงื่อนไขแสดง Pack Price ถ้ามีการกรอกเข้ามา */}
                         <span>
                           {product.packPrice 
                             ? `Pack ${product.packPrice.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bath` 
                             : ''}
                         </span>
-                        {/* วันที่อัปเดต (ขวาบน) ดึงข้อมูลจากฟอร์มและเติมคำว่า Update ให้ */}
                         <span>{formatUpdateDate(product.updateDate)}</span>
                       </div>
                       <div className="flex justify-between text-[10px] font-mono font-bold leading-none mb-[4px] text-gray-800">
-                        {/* วันหมดอายุ (ซ้ายล่าง) */}
                         <span>{product.expiryDays || '180D'}</span>
-                        {/* รหัสสินค้า (ตรงกลางล่าง) */}
                         <span>{product.productCode || 'XXXXXXX'}</span>
-                        {/* ชั้นวาง (ขวาล่าง) */}
                         <span>{product.location || '1F'}</span>
                       </div>
                       <div 
@@ -403,9 +457,7 @@ export default function App() {
                       ></div>
                     </div>
 
-                    {/* กลุ่มปุ่ม แก้ไข และ ลบ */}
                     <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 print:hidden transition-opacity z-10">
-                      {/* ปุ่มแก้ไข */}
                       <button 
                         onClick={() => handleEditClick(product)}
                         className="bg-blue-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-blue-700 shadow-md"
@@ -413,7 +465,6 @@ export default function App() {
                       >
                         ✎
                       </button>
-                      {/* ปุ่มลบ */}
                       <button 
                         onClick={() => handleDelete(product.id)}
                         className="bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-red-700 shadow-md"
