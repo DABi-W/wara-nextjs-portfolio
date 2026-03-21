@@ -559,12 +559,13 @@ export default function App() {
                 breakAfter: pageIndex === pages.length - 1 ? 'auto' : 'page',
               }}
             >
-              <div className="grid grid-cols-2 gap-[6mm]">
+              {/* เปลี่ยน Grid เป็นแนบชิดติดกัน (gap-0) และทำขอบตารางแบบแชร์เส้น */}
+              <div className="grid grid-cols-2 gap-0 border-t border-l border-gray-300">
                 {pageProducts.map((product) => (
                   <div 
                     key={product.id} 
-                    className={`relative border flex flex-col bg-white overflow-hidden group shadow-sm rounded-sm transition-all ${
-                      editingId === product.id ? 'border-orange-500 ring-2 ring-orange-300' : 'border-gray-300'
+                    className={`relative border-b border-r flex flex-col bg-white overflow-hidden group transition-all ${
+                      editingId === product.id ? 'ring-2 ring-inset ring-orange-500 z-10' : 'border-gray-300'
                     }`}
                     style={{ height: '2in' }} 
                   >
