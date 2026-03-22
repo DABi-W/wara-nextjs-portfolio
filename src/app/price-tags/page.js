@@ -63,6 +63,7 @@ export default function App() {
     initAuth();
     const unsubscribe = onAuthStateChanged(auth, setUser);
     return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 2. ดึงข้อมูลประวัติสินค้าจากระบบ Cloud แบบ Real-time
@@ -84,6 +85,7 @@ export default function App() {
     });
     
     return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   // ฟังก์ชันอัปเดตข้อมูลขึ้น Cloud
@@ -106,6 +108,7 @@ export default function App() {
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [editingId, setEditingId] = useState(null);
