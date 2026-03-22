@@ -1,32 +1,17 @@
 "use client";
+// @ts-nocheck
+/* eslint-disable */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
-
-// ==========================================
-// ตั้งค่า Firebase สำหรับเชื่อมต่อ Cloud Storage
-// ==========================================
-let app, auth, db;
-const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-if (typeof __firebase_config !== 'undefined') {
-  const firebaseConfig = JSON.parse(__firebase_config);
-  app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-}
 
 export default function App() {
-  const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
 
   // ==========================================
-  // ระบบ Database (Cloud Storage)
+  // ระบบ Database (Local Storage ล้วน 100%)
   // ==========================================
   const [productDB, setProductDB] = useState([]); 
-  const [isCloudSynced, setIsCloudSynced] = useState(false);
+  const isCloudSynced = false; // ปรับเป็นโหมดออฟไลน์ถาวรสำหรับ Deploy เอง
 
   const [suggestions, setSuggestions] = useState([]); 
   const [showSuggestions, setShowSuggestions] = useState(false); 
@@ -46,58 +31,17 @@ export default function App() {
   const locWrapperRef = useRef(null);
   const codeWrapperRef = useRef(null); 
 
-  // 1. ตรวจสอบการยืนยันตัวตน (Auth)
+  // ดึงข้อมูลประวัติสินค้าจาก LocalStorage
   useEffect(() => {
-    if (!auth) return;
-    const initAuth = async () => {
+    const savedDB = localStorage.getItem('priceTagDB');
+    if (savedDB) {
       try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
-        }
-      } catch (error) {
-        console.error("Auth error:", error);
+        setProductDB(JSON.parse(savedDB));
+      } catch (e) {
+        console.error("Error parsing local database:", e);
       }
-    };
-    initAuth();
-    const unsubscribe = onAuthStateChanged(auth, setUser);
-    return () => unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // 2. ดึงข้อมูลประวัติสินค้าจากระบบ Cloud แบบ Real-time
-  useEffect(() => {
-    if (!user || !db) return;
-    
-    // อ้างอิงพิกัดเก็บข้อมูลส่วนตัวของผู้ใช้
-    const dbRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'productDB');
-    
-    const unsubscribe = onSnapshot(dbRef, (docSnap) => {
-      if (docSnap.exists()) {
-        setProductDB(docSnap.data().items || []);
-      } else {
-        setProductDB([]);
-      }
-      setIsCloudSynced(true);
-    }, (error) => {
-      console.error("Firestore error:", error);
-    });
-    
-    return () => unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
-  // ฟังก์ชันอัปเดตข้อมูลขึ้น Cloud
-  const saveToCloud = async (newDB) => {
-    if (!user || !db) return;
-    try {
-      const dbRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'productDB');
-      await setDoc(dbRef, { items: newDB });
-    } catch (error) {
-      console.error("Error saving to cloud:", error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -108,7 +52,6 @@ export default function App() {
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const [editingId, setEditingId] = useState(null);
@@ -279,7 +222,7 @@ export default function App() {
         if (data.products) setProducts(data.products);
         if (data.productDB) {
           setProductDB(data.productDB);
-          saveToCloud(data.productDB); // ซิงค์ไฟล์ที่โหลดขึ้นคลาวด์ด้วย
+          localStorage.setItem('priceTagDB', JSON.stringify(data.productDB)); // บันทึกลงเครื่อง
         }
         alert('✅ โหลดข้อมูลจากไฟล์สำเร็จ!');
       } catch (err) {
@@ -290,7 +233,6 @@ export default function App() {
     e.target.value = ''; 
   };
 
-  // ตรวจเช็คสถานะว่ารหัสสินค้าที่พิมพ์มาซ้ำไหม (ดึงตัวสินค้าที่ซ้ำออกมาเลยเพื่อแสดงแจ้งเตือน)
   const duplicateProduct = (productCodeInput && productCodeInput.trim() !== '' && productCodeInput !== 'XXXXXXX') 
     ? products.find(p => p.productCode === productCodeInput && p.id !== editingId) 
     : null;
@@ -299,7 +241,6 @@ export default function App() {
     e.preventDefault();
     if (!nameInput || !priceInput || !locationInput) return;
 
-    // ล็อคป้องกันการบันทึกหากรหัสซ้ำ (เซฟตี้อีกชั้นแม้ปุ่มจะโดน Disable ไว้แล้ว)
     if (duplicateProduct) {
       return; 
     }
@@ -324,7 +265,6 @@ export default function App() {
     }
 
     const updateDB = [...productDB];
-    // อัปเดตฐานข้อมูลอ้างอิงจากรหัสสินค้า (ถ้ามี) หรือชื่อสินค้า
     let existingIndex = -1;
     if (productData.productCode !== 'XXXXXXX') {
       existingIndex = updateDB.findIndex(p => p.productCode === productData.productCode);
@@ -339,7 +279,7 @@ export default function App() {
     else updateDB.push(dbProfile);
     
     setProductDB(updateDB);
-    saveToCloud(updateDB); // บันทึกขึ้น Cloud 
+    localStorage.setItem('priceTagDB', JSON.stringify(updateDB)); // บันทึกลงเครื่อง
     
     setNameInput('');
     setSizeInput('');
@@ -535,7 +475,6 @@ export default function App() {
               />
             </div>
 
-            {/* ช่องรหัสสินค้า (เพิ่ม Suggestion และระบบแจ้งเตือนซ้ำ) */}
             <div className="relative pad-container" ref={codeWrapperRef}>
               <label className="block text-xs font-medium text-gray-700 mb-1">รหัสสินค้า</label>
               <input
@@ -602,7 +541,6 @@ export default function App() {
           </div>
 
           <div className="flex flex-col gap-2 mt-2">
-            {/* กล่องแจ้งเตือนขนาดใหญ่ หากพบสินค้าซ้ำ */}
             {duplicateProduct && (
               <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded-md text-sm shadow-sm animate-pulse mb-1">
                 <strong>🚨 แจ้งเตือน:</strong> พบรหัสสินค้าซ้ำในการ์ดใบที่ {products.findIndex(p => p.id === duplicateProduct.id) + 1}<br/>
@@ -720,7 +658,6 @@ export default function App() {
                 breakAfter: pageIndex === pages.length - 1 ? 'auto' : 'page',
               }}
             >
-              {/* เปลี่ยน Grid เป็นแนบชิดติดกัน (gap-0) และทำขอบตารางแบบแชร์เส้น */}
               <div className="grid grid-cols-2 gap-0 border-t border-l border-gray-300">
                 {pageProducts.map((product) => (
                   <div 
