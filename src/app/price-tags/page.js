@@ -18,10 +18,16 @@ export default function App() {
   const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
   const [activeLocationIndex, setActiveLocationIndex] = useState(-1);
 
+  // เพิ่ม State สำหรับ Suggestion รหัสสินค้า
+  const [productCodeSuggestions, setProductCodeSuggestions] = useState([]);
+  const [showProductCodeSuggestions, setShowProductCodeSuggestions] = useState(false);
+  const [activeProductCodeIndex, setActiveProductCodeIndex] = useState(-1);
+
   const [activePad, setActivePad] = useState(null); 
 
   const wrapperRef = useRef(null); 
   const locWrapperRef = useRef(null);
+  const codeWrapperRef = useRef(null); // เพิ่ม ref สำหรับช่องรหัสสินค้า
 
   // ดึงข้อมูลจาก Local Storage 
   useEffect(() => {
@@ -37,6 +43,7 @@ export default function App() {
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) setShowSuggestions(false);
       if (locWrapperRef.current && !locWrapperRef.current.contains(event.target)) setShowLocationSuggestions(false);
+      if (codeWrapperRef.current && !codeWrapperRef.current.contains(event.target)) setShowProductCodeSuggestions(false);
       if (!event.target.closest('.pad-container')) setActivePad(null); 
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -92,6 +99,41 @@ export default function App() {
     }
   };
 
+  // -----------------------------------------
+  // จัดการการค้นหา Suggestion สำหรับรหัสสินค้า
+  // -----------------------------------------
+  const handleProductCodeChange = (e) => {
+    const value = e.target.value;
+    setProductCodeInput(value);
+    setActiveProductCodeIndex(-1);
+    if (value.trim().length > 0) {
+      const matches = productDB.filter(p => 
+        p.productCode && p.productCode.toLowerCase().includes(value.toLowerCase())
+      );
+      setProductCodeSuggestions(matches);
+      setShowProductCodeSuggestions(true);
+    } else {
+      setShowProductCodeSuggestions(false);
+    }
+  };
+
+  const handleProductCodeKeyDown = (e) => {
+    if (!showProductCodeSuggestions || productCodeSuggestions.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveProductCodeIndex(prev => (prev < productCodeSuggestions.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveProductCodeIndex(prev => (prev > 0 ? prev - 1 : 0));
+    } else if (e.key === 'Enter' || e.key === 'Tab') {
+      if (activeProductCodeIndex >= 0 && activeProductCodeIndex < productCodeSuggestions.length) {
+        if (e.key === 'Enter') e.preventDefault(); 
+        handleSelectSuggestion(productCodeSuggestions[activeProductCodeIndex]);
+      }
+    }
+  };
+
   const handleLocationChange = (e) => {
     const value = e.target.value;
     setLocationInput(value);
@@ -134,6 +176,7 @@ export default function App() {
     setProductCodeInput(product.productCode === "XXXXXXX" ? '' : product.productCode);
     setLocationInput(product.location === "1F" ? '' : product.location);
     setShowSuggestions(false); 
+    setShowProductCodeSuggestions(false); // ปิด popup รหัสสินค้าด้วยเวลาเลือกเสร็จ
   };
 
   const QUICK_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100];
@@ -416,16 +459,36 @@ export default function App() {
                 className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
               />
             </div>
-            <div>
+
+            {/* ช่องรหัสสินค้า (เพิ่ม Suggestion) */}
+            <div className="relative pad-container" ref={codeWrapperRef}>
               <label className="block text-xs font-medium text-gray-700 mb-1">รหัสสินค้า</label>
               <input
                 type="text"
                 value={productCodeInput}
-                onChange={(e) => setProductCodeInput(e.target.value)}
-                onFocus={() => setActivePad(null)}
+                onChange={handleProductCodeChange}
+                onKeyDown={handleProductCodeKeyDown}
+                onFocus={() => { if (productCodeSuggestions.length > 0) setShowProductCodeSuggestions(true); setActivePad(null); }}
                 className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="เว้นว่าง = XXXXXXX"
+                autoComplete="off"
               />
+              {showProductCodeSuggestions && productCodeSuggestions.length > 0 && (
+                <ul className="absolute bottom-full left-0 mb-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto z-50">
+                  {productCodeSuggestions.map((s, idx) => (
+                    <li 
+                      key={idx}
+                      onClick={() => handleSelectSuggestion(s)}
+                      className={`px-3 py-2 text-sm cursor-pointer border-b border-gray-100 last:border-0 flex flex-col ${
+                        idx === activeProductCodeIndex ? 'bg-blue-100' : 'hover:bg-blue-50'
+                      }`} 
+                    >
+                      <span className="font-semibold text-gray-800">{s.productCode || 'ไม่มีรหัส'}</span>
+                      <span className="text-xs text-gray-500">{s.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <div className="relative pad-container" ref={locWrapperRef}>
