@@ -1,15 +1,33 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
+
+// ==========================================
+// ตั้งค่า Firebase สำหรับเชื่อมต่อ Cloud Storage
+// ==========================================
+let app, auth, db;
+const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+if (typeof __firebase_config !== 'undefined') {
+  const firebaseConfig = JSON.parse(__firebase_config);
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+}
 
 export default function App() {
-  // 1. Data State (เริ่มต้นเป็นหน้าเปล่า)
+  const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
 
   // ==========================================
-  // ระบบ Database จำลอง (Local Storage)
+  // ระบบ Database (Cloud Storage)
   // ==========================================
   const [productDB, setProductDB] = useState([]); 
+  const [isCloudSynced, setIsCloudSynced] = useState(false);
+
   const [suggestions, setSuggestions] = useState([]); 
   const [showSuggestions, setShowSuggestions] = useState(false); 
   const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
@@ -18,7 +36,6 @@ export default function App() {
   const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
   const [activeLocationIndex, setActiveLocationIndex] = useState(-1);
 
-  // เพิ่ม State สำหรับ Suggestion รหัสสินค้า
   const [productCodeSuggestions, setProductCodeSuggestions] = useState([]);
   const [showProductCodeSuggestions, setShowProductCodeSuggestions] = useState(false);
   const [activeProductCodeIndex, setActiveProductCodeIndex] = useState(-1);
@@ -27,17 +44,58 @@ export default function App() {
 
   const wrapperRef = useRef(null); 
   const locWrapperRef = useRef(null);
-  const codeWrapperRef = useRef(null); // เพิ่ม ref สำหรับช่องรหัสสินค้า
+  const codeWrapperRef = useRef(null); 
 
-  // ดึงข้อมูลจาก Local Storage 
+  // 1. ตรวจสอบการยืนยันตัวตน (Auth)
   useEffect(() => {
-    const savedDB = localStorage.getItem('priceTagDB');
-    if (savedDB) {
-      setProductDB(JSON.parse(savedDB));
-    } else {
-      setProductDB([]);
-    }
+    if (!auth) return;
+    const initAuth = async () => {
+      try {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+      } catch (error) {
+        console.error("Auth error:", error);
+      }
+    };
+    initAuth();
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return () => unsubscribe();
   }, []);
+
+  // 2. ดึงข้อมูลประวัติสินค้าจากระบบ Cloud แบบ Real-time
+  useEffect(() => {
+    if (!user || !db) return;
+    
+    // อ้างอิงพิกัดเก็บข้อมูลส่วนตัวของผู้ใช้
+    const dbRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'productDB');
+    
+    const unsubscribe = onSnapshot(dbRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setProductDB(docSnap.data().items || []);
+      } else {
+        setProductDB([]);
+      }
+      setIsCloudSynced(true);
+    }, (error) => {
+      console.error("Firestore error:", error);
+    });
+    
+    return () => unsubscribe();
+  }, [user]);
+
+  // ฟังก์ชันอัปเดตข้อมูลขึ้น Cloud
+  const saveToCloud = async (newDB) => {
+    if (!user || !db) return;
+    try {
+      const dbRef = doc(db, 'artifacts', appId, 'users', user.uid, 'settings', 'productDB');
+      await setDoc(dbRef, { items: newDB });
+    } catch (error) {
+      console.error("Error saving to cloud:", error);
+    }
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -61,7 +119,7 @@ export default function App() {
   const [locationInput, setLocationInput] = useState('');
 
   // -----------------------------------------
-  // ฟังก์ชันจัดรูปแบบวันที่ (แสดงเป็น ปี ค.ศ. 4 หลัก เช่น 2024)
+  // ฟังก์ชันจัดรูปแบบวันที่ (แสดงเป็น ปี ค.ศ. 4 หลัก)
   // -----------------------------------------
   const formatDate = (dateString, prefix = "") => {
     if (!dateString) return `${prefix}--/--/----`;
@@ -99,9 +157,6 @@ export default function App() {
     }
   };
 
-  // -----------------------------------------
-  // จัดการการค้นหา Suggestion สำหรับรหัสสินค้า
-  // -----------------------------------------
   const handleProductCodeChange = (e) => {
     const value = e.target.value;
     setProductCodeInput(value);
@@ -176,7 +231,7 @@ export default function App() {
     setProductCodeInput(product.productCode === "XXXXXXX" ? '' : product.productCode);
     setLocationInput(product.location === "1F" ? '' : product.location);
     setShowSuggestions(false); 
-    setShowProductCodeSuggestions(false); // ปิด popup รหัสสินค้าด้วยเวลาเลือกเสร็จ
+    setShowProductCodeSuggestions(false); 
   };
 
   const QUICK_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 50, 100];
@@ -221,7 +276,7 @@ export default function App() {
         if (data.products) setProducts(data.products);
         if (data.productDB) {
           setProductDB(data.productDB);
-          localStorage.setItem('priceTagDB', JSON.stringify(data.productDB));
+          saveToCloud(data.productDB); // ซิงค์ไฟล์ที่โหลดขึ้นคลาวด์ด้วย
         }
         alert('✅ โหลดข้อมูลจากไฟล์สำเร็จ!');
       } catch (err) {
@@ -235,6 +290,15 @@ export default function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!nameInput || !priceInput || !locationInput) return;
+
+    // ระบบแจ้งเตือนหากพยายามเพิ่มรหัสสินค้าที่ซ้ำกับรายการที่มีอยู่แล้วในหน้าพิมพ์
+    if (productCodeInput && productCodeInput.trim() !== '' && productCodeInput !== 'XXXXXXX') {
+      const isDuplicateInList = products.some(p => p.productCode === productCodeInput && p.id !== editingId);
+      if (isDuplicateInList) {
+        alert('🚨 มีสินค้ารหัสนี้อยู่ในรายการพิมพ์แล้วครับ ไม่สามารถเพิ่มซ้ำได้!');
+        return; // ยกเลิกการบันทึก
+      }
+    }
 
     const productData = {
       id: editingId ? editingId : Date.now(),
@@ -256,7 +320,14 @@ export default function App() {
     }
 
     const updateDB = [...productDB];
-    const existingIndex = updateDB.findIndex(p => p.name.toLowerCase() === productData.name.toLowerCase());
+    // อัปเดตฐานข้อมูลอ้างอิงจากรหัสสินค้า (ถ้ามี) หรือชื่อสินค้า
+    let existingIndex = -1;
+    if (productData.productCode !== 'XXXXXXX') {
+      existingIndex = updateDB.findIndex(p => p.productCode === productData.productCode);
+    } else {
+      existingIndex = updateDB.findIndex(p => p.name.toLowerCase() === productData.name.toLowerCase());
+    }
+    
     const dbProfile = { ...productData };
     delete dbProfile.id;
 
@@ -264,7 +335,7 @@ export default function App() {
     else updateDB.push(dbProfile);
     
     setProductDB(updateDB);
-    localStorage.setItem('priceTagDB', JSON.stringify(updateDB));
+    saveToCloud(updateDB); // บันทึกขึ้น Cloud 
     
     setNameInput('');
     setSizeInput('');
@@ -344,6 +415,9 @@ export default function App() {
       </div>
     );
   };
+
+  // ตรวจเช็คสถานะว่ารหัสสินค้าที่พิมพ์มาซ้ำไหม
+  const isDuplicateCode = productCodeInput && productCodeInput.trim() !== '' && productCodeInput !== 'XXXXXXX' && products.some(p => p.productCode === productCodeInput && p.id !== editingId);
 
   return (
     <div className="min-h-screen bg-gray-200 flex flex-col md:flex-row font-sans print:bg-white print:block">
@@ -460,7 +534,7 @@ export default function App() {
               />
             </div>
 
-            {/* ช่องรหัสสินค้า (เพิ่ม Suggestion) */}
+            {/* ช่องรหัสสินค้า (เพิ่ม Suggestion และระบบแจ้งเตือนซ้ำ) */}
             <div className="relative pad-container" ref={codeWrapperRef}>
               <label className="block text-xs font-medium text-gray-700 mb-1">รหัสสินค้า</label>
               <input
@@ -469,10 +543,17 @@ export default function App() {
                 onChange={handleProductCodeChange}
                 onKeyDown={handleProductCodeKeyDown}
                 onFocus={() => { if (productCodeSuggestions.length > 0) setShowProductCodeSuggestions(true); setActivePad(null); }}
-                className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`w-full border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 ${
+                  isDuplicateCode ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                }`}
                 placeholder="เว้นว่าง = XXXXXXX"
                 autoComplete="off"
               />
+              {isDuplicateCode && (
+                <p className="text-[10px] text-red-500 mt-0.5 font-medium absolute top-full left-0 w-full z-10">
+                  🚨 ถูกเพิ่มไปในการพิมพ์แล้ว
+                </p>
+              )}
               {showProductCodeSuggestions && productCodeSuggestions.length > 0 && (
                 <ul className="absolute bottom-full left-0 mb-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto z-50">
                   {productCodeSuggestions.map((s, idx) => (
@@ -546,7 +627,18 @@ export default function App() {
         </form>
 
         <div className="mb-6 bg-gray-50 p-3 rounded-lg border border-gray-200">
-          <p className="text-sm font-bold text-gray-700 mb-2">💾 จัดการฐานข้อมูล (Backup)</p>
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-sm font-bold text-gray-700">💾 จัดการฐานข้อมูล</p>
+            {isCloudSynced ? (
+              <span className="text-[10px] text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full font-medium flex items-center gap-1" title="ข้อมูลเชื่อมต่อกับระบบคลาวด์แล้ว">
+                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> ☁️ ออนไลน์
+              </span>
+            ) : (
+              <span className="text-[10px] text-gray-600 bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full font-medium flex items-center gap-1" title="บันทึกข้อมูลในเครื่องเท่านั้น">
+                <span className="w-1.5 h-1.5 bg-gray-400 rounded-full"></span> 💻 ออฟไลน์
+              </span>
+            )}
+          </div>
           <div className="flex gap-2">
             <button onClick={exportData} className="flex-1 bg-gray-800 hover:bg-black text-white py-2 rounded-md text-xs font-medium transition-colors text-center" title="เซฟข้อมูลเก็บไว้เป็นไฟล์">
               บันทึกไฟล์ (Save)
