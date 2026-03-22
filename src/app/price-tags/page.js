@@ -287,17 +287,18 @@ export default function App() {
     e.target.value = ''; 
   };
 
+  // ตรวจเช็คสถานะว่ารหัสสินค้าที่พิมพ์มาซ้ำไหม (ดึงตัวสินค้าที่ซ้ำออกมาเลยเพื่อแสดงแจ้งเตือน)
+  const duplicateProduct = (productCodeInput && productCodeInput.trim() !== '' && productCodeInput !== 'XXXXXXX') 
+    ? products.find(p => p.productCode === productCodeInput && p.id !== editingId) 
+    : null;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!nameInput || !priceInput || !locationInput) return;
 
-    // ระบบแจ้งเตือนหากพยายามเพิ่มรหัสสินค้าที่ซ้ำกับรายการที่มีอยู่แล้วในหน้าพิมพ์
-    if (productCodeInput && productCodeInput.trim() !== '' && productCodeInput !== 'XXXXXXX') {
-      const isDuplicateInList = products.some(p => p.productCode === productCodeInput && p.id !== editingId);
-      if (isDuplicateInList) {
-        alert('🚨 มีสินค้ารหัสนี้อยู่ในรายการพิมพ์แล้วครับ ไม่สามารถเพิ่มซ้ำได้!');
-        return; // ยกเลิกการบันทึก
-      }
+    // ล็อคป้องกันการบันทึกหากรหัสซ้ำ (เซฟตี้อีกชั้นแม้ปุ่มจะโดน Disable ไว้แล้ว)
+    if (duplicateProduct) {
+      return; 
     }
 
     const productData = {
@@ -415,9 +416,6 @@ export default function App() {
       </div>
     );
   };
-
-  // ตรวจเช็คสถานะว่ารหัสสินค้าที่พิมพ์มาซ้ำไหม
-  const isDuplicateCode = productCodeInput && productCodeInput.trim() !== '' && productCodeInput !== 'XXXXXXX' && products.some(p => p.productCode === productCodeInput && p.id !== editingId);
 
   return (
     <div className="min-h-screen bg-gray-200 flex flex-col md:flex-row font-sans print:bg-white print:block">
@@ -544,16 +542,11 @@ export default function App() {
                 onKeyDown={handleProductCodeKeyDown}
                 onFocus={() => { if (productCodeSuggestions.length > 0) setShowProductCodeSuggestions(true); setActivePad(null); }}
                 className={`w-full border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 ${
-                  isDuplicateCode ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                  duplicateProduct ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
                 }`}
                 placeholder="เว้นว่าง = XXXXXXX"
                 autoComplete="off"
               />
-              {isDuplicateCode && (
-                <p className="text-[10px] text-red-500 mt-0.5 font-medium absolute top-full left-0 w-full z-10">
-                  🚨 ถูกเพิ่มไปในการพิมพ์แล้ว
-                </p>
-              )}
               {showProductCodeSuggestions && productCodeSuggestions.length > 0 && (
                 <ul className="absolute bottom-full left-0 mb-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto z-50">
                   {productCodeSuggestions.map((s, idx) => (
@@ -606,9 +599,19 @@ export default function App() {
           </div>
 
           <div className="flex flex-col gap-2 mt-2">
+            {/* กล่องแจ้งเตือนขนาดใหญ่ หากพบสินค้าซ้ำ */}
+            {duplicateProduct && (
+              <div className="bg-red-50 border border-red-200 text-red-700 p-3 rounded-md text-sm shadow-sm animate-pulse mb-1">
+                <strong>🚨 แจ้งเตือน:</strong> พบรหัสสินค้าซ้ำในการ์ดใบที่ {products.findIndex(p => p.id === duplicateProduct.id) + 1}<br/>
+                <span className="text-xs">({duplicateProduct.name}) กรุณาตรวจสอบอีกครั้ง</span>
+              </div>
+            )}
+
             <button
               type="submit"
+              disabled={!!duplicateProduct}
               className={`w-full text-white font-medium py-2 px-4 rounded-md transition-colors ${
+                duplicateProduct ? 'bg-gray-400 cursor-not-allowed' :
                 editingId ? 'bg-orange-500 hover:bg-orange-600' : 'bg-blue-600 hover:bg-blue-700'
               }`}
             >
