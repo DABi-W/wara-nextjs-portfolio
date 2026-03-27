@@ -11,7 +11,7 @@ export default function App() {
   // ระบบ Database (Local Storage ล้วน 100%)
   // ==========================================
   const [productDB, setProductDB] = useState([]); 
-  const isCloudSynced = false; // ปรับเป็นโหมดออฟไลน์ถาวรสำหรับ Deploy เอง
+  const isCloudSynced = false; 
 
   const [suggestions, setSuggestions] = useState([]); 
   const [showSuggestions, setShowSuggestions] = useState(false); 
@@ -26,12 +26,18 @@ export default function App() {
   const [activeProductCodeIndex, setActiveProductCodeIndex] = useState(-1);
 
   const [activePad, setActivePad] = useState(null); 
+  
+  // State สำหรับสถานะการดึงข้อมูลจาก API
+  const [isFetchingAPI, setIsFetchingAPI] = useState(false);
+
+  // State สำหรับเปิด/ปิดกล้องสแกนบาร์โค้ดบนมือถือ
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const scannerRef = useRef(null);
 
   const wrapperRef = useRef(null); 
   const locWrapperRef = useRef(null);
   const codeWrapperRef = useRef(null); 
 
-  // ดึงข้อมูลประวัติสินค้าจาก LocalStorage
   useEffect(() => {
     const savedDB = localStorage.getItem('priceTagDB');
     if (savedDB) {
@@ -53,6 +59,76 @@ export default function App() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // -----------------------------------------
+  // ระบบกล้องสแกนบาร์โค้ด (โหลดไลบรารีอัตโนมัติ)
+  // -----------------------------------------
+  useEffect(() => {
+    if (isCameraOpen) {
+      const loadScanner = () => {
+        if (window.Html5QrcodeScanner) {
+          startScanner();
+          return;
+        }
+        const script = document.createElement('script');
+        script.src = "https://unpkg.com/html5-qrcode";
+        script.onload = startScanner;
+        document.body.appendChild(script);
+      };
+
+      const startScanner = () => {
+        // ล้างตัวเดิมถ้ามีค้างอยู่
+        if (scannerRef.current) {
+          try { scannerRef.current.clear(); } catch(e) {}
+        }
+        document.getElementById('reader').innerHTML = '';
+
+        scannerRef.current = new window.Html5QrcodeScanner(
+          "reader",
+          { 
+            fps: 10, 
+            qrbox: { width: 250, height: 150 },
+            rememberLastUsedCamera: true,
+            supportedScanTypes: [window.Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+          },
+          false
+        );
+
+        scannerRef.current.render(
+          (decodedText) => {
+            // เมื่อสแกนสำเร็จ
+            closeScanner();
+            setProductCodeInput(decodedText);
+            
+            // เช็คในระบบเราก่อน ถ้ามีก็ดึงมาเลย
+            const exactMatch = productDB.find(p => p.productCode === decodedText);
+            if (exactMatch) {
+              handleSelectSuggestion(exactMatch);
+            } else {
+              // ถ้าไม่มีให้ดึงออนไลน์
+              fetchProductFromAPI(decodedText);
+            }
+          },
+          (error) => {
+            // ข้าม Error เพราะกล้องมันจะสแกนหาเรื่อยๆ ตลอดเวลา
+          }
+        );
+      };
+
+      loadScanner();
+    }
+  }, [isCameraOpen, productDB]);
+
+  const closeScanner = () => {
+    if (scannerRef.current) {
+      try {
+        scannerRef.current.clear();
+      } catch (error) {
+        console.error("Failed to clear scanner", error);
+      }
+    }
+    setIsCameraOpen(false);
+  };
 
   const [editingId, setEditingId] = useState(null);
   const [nameInput, setNameInput] = useState('');
@@ -103,6 +179,46 @@ export default function App() {
     }
   };
 
+  // -----------------------------------------
+  // ฟังก์ชันดึงข้อมูลจาก API สาธารณะ (Open Food Facts)
+  // -----------------------------------------
+  const fetchProductFromAPI = async (barcode) => {
+    if (!barcode || barcode.trim() === '' || barcode === 'XXXXXXX') return;
+    
+    setIsFetchingAPI(true);
+    try {
+      // ใช้ Open Food Facts API (ใช้งานฟรี ไม่ต้องใช้ API Key)
+      const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
+      const data = await response.json();
+      
+      if (data.status === 1 && data.product) {
+        // ดึงชื่อสินค้า (เน้นภาษาไทยก่อน ถ้าไม่มีเอาภาษาอังกฤษ)
+        const nameTH = data.product.product_name_th || data.product.product_name_en || data.product.product_name || '';
+        const brand = data.product.brands || '';
+        const quantity = data.product.quantity || '';
+        
+        // รวมยี่ห้อและชื่อสินค้าเข้าด้วยกัน
+        let fullName = nameTH;
+        if (brand && !nameTH.includes(brand)) {
+           fullName = `${brand} ${nameTH}`;
+        }
+
+        setNameInput(fullName.trim() || 'ไม่ระบุชื่อสินค้า (จากออนไลน์)');
+        if (quantity) setSizeInput(quantity);
+        
+        // โฟกัสไปที่ช่องราคาเพื่อให้ผู้ใช้กรอกราคาต่อได้เลย
+        document.getElementById('price-input-field')?.focus();
+        
+      } else {
+        alert('ℹ️ ไม่พบข้อมูลสินค้านี้ในระบบออนไลน์ กรุณากรอกชื่อและราคาเองครับ');
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      alert('❌ ไม่สามารถเชื่อมต่อฐานข้อมูลออนไลน์ได้ในขณะนี้');
+    }
+    setIsFetchingAPI(false);
+  };
+
   const handleProductCodeChange = (e) => {
     const value = e.target.value;
     setProductCodeInput(value);
@@ -119,6 +235,33 @@ export default function App() {
   };
 
   const handleProductCodeKeyDown = (e) => {
+    // 🌟 ดักจับการกด Enter จากเครื่องสแกนบาร์โค้ดฮาร์ดแวร์ หรือ กด Enter เอง
+    if (e.key === 'Enter') {
+      e.preventDefault(); 
+
+      const scannedCode = e.target.value.trim();
+      if (!scannedCode) return;
+      
+      // 1. ค้นหาในฐานข้อมูลของเราเองก่อน
+      const exactMatch = productDB.find(p => p.productCode === scannedCode);
+      
+      if (exactMatch) {
+        handleSelectSuggestion(exactMatch); 
+        return;
+      }
+
+      // กรณีใช้คีย์บอร์ดกดลูกศรเลือก Suggestion ตามปกติ
+      if (showProductCodeSuggestions && activeProductCodeIndex >= 0 && activeProductCodeIndex < productCodeSuggestions.length) {
+        handleSelectSuggestion(productCodeSuggestions[activeProductCodeIndex]);
+        return;
+      }
+
+      // 2. ถ้าไม่พบในฐานข้อมูลเรา ให้วิ่งไปค้นหาใน API ออนไลน์
+      fetchProductFromAPI(scannedCode);
+      setShowProductCodeSuggestions(false);
+      return;
+    }
+
     if (!showProductCodeSuggestions || productCodeSuggestions.length === 0) return;
 
     if (e.key === 'ArrowDown') {
@@ -127,9 +270,8 @@ export default function App() {
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setActiveProductCodeIndex(prev => (prev > 0 ? prev - 1 : 0));
-    } else if (e.key === 'Enter' || e.key === 'Tab') {
+    } else if (e.key === 'Tab') {
       if (activeProductCodeIndex >= 0 && activeProductCodeIndex < productCodeSuggestions.length) {
-        if (e.key === 'Enter') e.preventDefault(); 
         handleSelectSuggestion(productCodeSuggestions[activeProductCodeIndex]);
       }
     }
@@ -222,7 +364,7 @@ export default function App() {
         if (data.products) setProducts(data.products);
         if (data.productDB) {
           setProductDB(data.productDB);
-          localStorage.setItem('priceTagDB', JSON.stringify(data.productDB)); // บันทึกลงเครื่อง
+          localStorage.setItem('priceTagDB', JSON.stringify(data.productDB)); 
         }
         alert('✅ โหลดข้อมูลจากไฟล์สำเร็จ!');
       } catch (err) {
@@ -241,9 +383,12 @@ export default function App() {
     e.preventDefault();
     if (!nameInput || !priceInput || !locationInput) return;
 
-    if (duplicateProduct) {
-      return; 
-    }
+    if (duplicateProduct) return; 
+
+    // รหัสสินค้าสำหรับบาร์โค้ด ไม่ควรเว้นว่าง ถ้าไม่มีให้สุ่มรหัสหรือใช้ชื่อ
+    const finalProductCode = productCodeInput && productCodeInput !== 'XXXXXXX' 
+      ? productCodeInput 
+      : `SKU-${Math.floor(Math.random() * 1000000)}`;
 
     const productData = {
       id: editingId ? editingId : Date.now(),
@@ -253,7 +398,7 @@ export default function App() {
       packPrice: packPriceInput ? parseFloat(packPriceInput) : null,
       updateDate: updateDateInput,
       expiryDate: expiryDateInput, 
-      productCode: productCodeInput || "XXXXXXX",
+      productCode: finalProductCode,
       location: locationInput
     };
 
@@ -266,7 +411,7 @@ export default function App() {
 
     const updateDB = [...productDB];
     let existingIndex = -1;
-    if (productData.productCode !== 'XXXXXXX') {
+    if (productData.productCode && !productData.productCode.startsWith('SKU-')) {
       existingIndex = updateDB.findIndex(p => p.productCode === productData.productCode);
     } else {
       existingIndex = updateDB.findIndex(p => p.name.toLowerCase() === productData.name.toLowerCase());
@@ -279,7 +424,7 @@ export default function App() {
     else updateDB.push(dbProfile);
     
     setProductDB(updateDB);
-    localStorage.setItem('priceTagDB', JSON.stringify(updateDB)); // บันทึกลงเครื่อง
+    localStorage.setItem('priceTagDB', JSON.stringify(updateDB)); 
     
     setNameInput('');
     setSizeInput('');
@@ -298,7 +443,7 @@ export default function App() {
     setPackPriceInput(product.packPrice || '');
     setUpdateDateInput(product.updateDate);
     setExpiryDateInput(product.expiryDate || '');
-    setProductCodeInput(product.productCode === "XXXXXXX" ? '' : product.productCode);
+    setProductCodeInput(product.productCode.startsWith('SKU-') ? '' : product.productCode);
     setLocationInput(product.location);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -320,7 +465,7 @@ export default function App() {
     if (editingId === id) cancelEdit();
   };
 
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = 15;
   const pages = [];
   for (let i = 0; i < products.length; i += ITEMS_PER_PAGE) {
     pages.push(products.slice(i, i + ITEMS_PER_PAGE));
@@ -370,6 +515,25 @@ export default function App() {
         }
       `}} />
 
+      {/* 🌟 Modal สำหรับเปิดกล้องสแกนบาร์โค้ด */}
+      {isCameraOpen && (
+        <div className="fixed inset-0 bg-black/80 z-[100] flex flex-col items-center justify-center p-4">
+          <div className="bg-white p-4 rounded-xl w-full max-w-sm flex flex-col items-center">
+            <h3 className="text-lg font-bold mb-2">เล็งกล้องไปที่บาร์โค้ด</h3>
+            <p className="text-xs text-gray-500 mb-4 text-center">ระบบจะทำการสแกนและค้นหาข้อมูลออนไลน์อัตโนมัติ</p>
+            
+            <div id="reader" className="w-full min-h-[250px] bg-gray-100 rounded-lg overflow-hidden border-2 border-dashed border-gray-300"></div>
+            
+            <button 
+              onClick={closeScanner}
+              className="mt-6 w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-lg shadow-sm"
+            >
+              ✕ ปิดกล้อง
+            </button>
+          </div>
+        </div>
+      )}
+
       <aside className="w-full md:w-80 md:min-h-screen bg-white p-6 shadow-md print:hidden flex-shrink-0 z-10 md:sticky md:top-0 h-fit overflow-y-auto">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">จัดการป้ายราคา</h1>
         
@@ -408,52 +572,112 @@ export default function App() {
             )}
           </div>
 
-          <div className="relative pad-container">
-            <label className="block text-sm font-medium text-gray-700 mb-1">ขนาด/น้ำหนัก</label>
-            <input
-              type="text"
-              value={sizeInput}
-              onChange={(e) => setSizeInput(e.target.value)}
-              onFocus={() => setActivePad('size')}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="เช่น 50ก"
-              autoComplete="off"
-            />
-            {renderNumberPad('size')}
-          </div>
-
-          <div className="relative pad-container">
-            <label className="block text-sm font-medium text-gray-700 mb-1">ราคา (บาท)</label>
-            <input
-              type="number"
-              step="0.01"
-              value={priceInput}
-              onChange={(e) => setPriceInput(e.target.value)}
-              onFocus={() => setActivePad('price')}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="เช่น 20.00"
-              required
-              autoComplete="off"
-            />
-            {renderNumberPad('price')}
-          </div>
-
-          <div className="relative pad-container">
-            <label className="block text-sm font-medium text-gray-700 mb-1">ราคายกแพ็ค (ไม่บังคับ)</label>
-            <input
-              type="number"
-              step="0.01"
-              value={packPriceInput}
-              onChange={(e) => setPackPriceInput(e.target.value)}
-              onFocus={() => setActivePad('packPrice')}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="เช่น 55.00"
-              autoComplete="off"
-            />
-            {renderNumberPad('packPrice')}
+          <div className="relative pad-container" ref={codeWrapperRef}>
+            <label className="block text-sm font-medium text-gray-700 mb-1 flex justify-between">
+              <span>รหัสสินค้า (Barcode)</span>
+              <span className="text-[10px] text-gray-400 font-normal">แสกน หรือ พิมพ์ค้นหา</span>
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={productCodeInput}
+                onChange={handleProductCodeChange}
+                onKeyDown={handleProductCodeKeyDown}
+                onFocus={() => { if (productCodeSuggestions.length > 0) setShowProductCodeSuggestions(true); setActivePad(null); }}
+                className={`w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 ${
+                  duplicateProduct ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                }`}
+                placeholder="คลิกแล้วยิงสแกน..."
+                autoComplete="off"
+              />
+              {/* ปุ่มเปิดกล้องสำหรับมือถือ/เว็บแคม */}
+              <button
+                type="button"
+                onClick={() => setIsCameraOpen(true)}
+                className="px-3 py-2 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs transition-colors whitespace-nowrap flex items-center gap-1 shadow-sm"
+                title="เปิดกล้องมือถือ/เว็บแคม เพื่อสแกนบาร์โค้ด"
+              >
+                📷 <span className="hidden sm:inline">สแกน</span>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => fetchProductFromAPI(productCodeInput)}
+                disabled={isFetchingAPI || !productCodeInput}
+                className={`px-3 py-2 rounded-md text-white font-medium text-xs transition-colors whitespace-nowrap flex items-center gap-1 shadow-sm ${
+                  isFetchingAPI || !productCodeInput ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'
+                }`}
+                title="ค้นหาจากฐานข้อมูลอินเทอร์เน็ต"
+              >
+                {isFetchingAPI ? '⏳' : '🔍'} <span className="hidden sm:inline">ค้นหา</span>
+              </button>
+            </div>
+            
+            {showProductCodeSuggestions && productCodeSuggestions.length > 0 && (
+              <ul className="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto">
+                {productCodeSuggestions.map((s, idx) => (
+                  <li 
+                    key={idx}
+                    onClick={() => handleSelectSuggestion(s)}
+                    className={`px-3 py-2 text-sm cursor-pointer border-b border-gray-100 last:border-0 flex flex-col ${
+                      idx === activeProductCodeIndex ? 'bg-blue-100' : 'hover:bg-blue-50'
+                    }`} 
+                  >
+                    <span className="font-semibold text-gray-800">{s.productCode || 'ไม่มีรหัส'}</span>
+                    <span className="text-xs text-gray-500">{s.name}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3 border-t border-gray-200 pt-3">
+            <div className="relative pad-container col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">ราคา (บาท)</label>
+              <input
+                id="price-input-field"
+                type="number"
+                step="0.01"
+                value={priceInput}
+                onChange={(e) => setPriceInput(e.target.value)}
+                onFocus={() => setActivePad('price')}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="เช่น 20.00"
+                required
+                autoComplete="off"
+              />
+              {renderNumberPad('price')}
+            </div>
+
+            <div className="relative pad-container">
+              <label className="block text-xs font-medium text-gray-700 mb-1">ขนาด/น้ำหนัก</label>
+              <input
+                type="text"
+                value={sizeInput}
+                onChange={(e) => setSizeInput(e.target.value)}
+                onFocus={() => setActivePad('size')}
+                className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="เช่น 50ก"
+                autoComplete="off"
+              />
+              {renderNumberPad('size')}
+            </div>
+
+            <div className="relative pad-container">
+              <label className="block text-xs font-medium text-gray-700 mb-1">ราคายกแพ็ค (ถ้ามี)</label>
+              <input
+                type="number"
+                step="0.01"
+                value={packPriceInput}
+                onChange={(e) => setPackPriceInput(e.target.value)}
+                onFocus={() => setActivePad('packPrice')}
+                className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="เช่น 55.00"
+                autoComplete="off"
+              />
+              {renderNumberPad('packPrice')}
+            </div>
+
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">วันที่อัปเดต</label>
               <input
@@ -475,39 +699,7 @@ export default function App() {
               />
             </div>
 
-            <div className="relative pad-container" ref={codeWrapperRef}>
-              <label className="block text-xs font-medium text-gray-700 mb-1">รหัสสินค้า</label>
-              <input
-                type="text"
-                value={productCodeInput}
-                onChange={handleProductCodeChange}
-                onKeyDown={handleProductCodeKeyDown}
-                onFocus={() => { if (productCodeSuggestions.length > 0) setShowProductCodeSuggestions(true); setActivePad(null); }}
-                className={`w-full border rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 ${
-                  duplicateProduct ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
-                }`}
-                placeholder="เว้นว่าง = XXXXXXX"
-                autoComplete="off"
-              />
-              {showProductCodeSuggestions && productCodeSuggestions.length > 0 && (
-                <ul className="absolute bottom-full left-0 mb-1 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-48 overflow-y-auto z-50">
-                  {productCodeSuggestions.map((s, idx) => (
-                    <li 
-                      key={idx}
-                      onClick={() => handleSelectSuggestion(s)}
-                      className={`px-3 py-2 text-sm cursor-pointer border-b border-gray-100 last:border-0 flex flex-col ${
-                        idx === activeProductCodeIndex ? 'bg-blue-100' : 'hover:bg-blue-50'
-                      }`} 
-                    >
-                      <span className="font-semibold text-gray-800">{s.productCode || 'ไม่มีรหัส'}</span>
-                      <span className="text-xs text-gray-500">{s.name}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            <div className="relative pad-container" ref={locWrapperRef}>
+            <div className="relative pad-container col-span-2" ref={locWrapperRef}>
               <label className="block text-xs font-medium text-gray-700 mb-1">
                 ชั้นวาง <span className="text-red-500">*</span>
               </label>
@@ -628,12 +820,8 @@ export default function App() {
       {/* ==========================================
           ส่วนที่ 2: Print Preview
           ========================================== */}
-      <main className="flex-1 overflow-x-auto overflow-y-auto p-4 md:p-8 print:p-0 print:overflow-visible">
-        <p className="md:hidden text-xs text-center text-gray-500 mb-4 print:hidden animate-pulse">
-          👈 เลื่อนซ้าย-ขวาเพื่อดูเต็มแผ่น 👉
-        </p>
-
-        <div className="w-max mx-auto flex flex-col gap-8 print:gap-0 print:block">
+      <main className="flex-1 overflow-x-auto overflow-y-auto p-4 md:p-8 print:p-0 print:overflow-visible flex justify-center">
+        <div className="w-max flex flex-col gap-8 print:gap-0 print:block">
           {products.length === 0 && (
             <div 
               className="bg-white shadow-xl relative flex items-center justify-center text-gray-400 print:hidden"
@@ -646,80 +834,91 @@ export default function App() {
           {pages.map((pageProducts, pageIndex) => (
             <div 
               key={pageIndex}
-              className="bg-white shadow-xl print:shadow-none relative print:break-after-page"
+              className="bg-white shadow-xl print:shadow-none relative print:break-after-page mx-auto flex justify-center"
               style={{ 
                 width: '210mm', 
                 minWidth: '210mm',
                 height: '297mm', 
                 minHeight: '297mm',
-                padding: '8mm',
+                padding: '8mm', // ขอบกระดาษ 8 มม. 
                 boxSizing: 'border-box',
                 pageBreakAfter: pageIndex === pages.length - 1 ? 'auto' : 'always',
                 breakAfter: pageIndex === pages.length - 1 ? 'auto' : 'page',
               }}
             >
-              <div className="grid grid-cols-2 gap-0 border-t border-l border-gray-300">
+              <div 
+                className="grid border-t border-l border-gray-300"
+                style={{ gridTemplateColumns: 'repeat(3, 60mm)', alignContent: 'start' }}
+              >
                 {pageProducts.map((product) => (
                   <div 
                     key={product.id} 
                     className={`relative border-b border-r flex flex-col bg-white overflow-hidden group transition-all ${
                       editingId === product.id ? 'ring-2 ring-inset ring-orange-500 z-10' : 'border-gray-300'
                     }`}
-                    style={{ height: '2in' }} 
+                    style={{ width: '60mm', height: '50mm' }} 
                   >
-                    <div className="flex-1 p-[4mm] px-[6mm] flex flex-col justify-between">
-                      <div className="text-[16px] font-bold leading-tight line-clamp-2 text-gray-800 tracking-tight pr-6">
+                    {/* ส่วนครึ่งบน (ข้อมูลสินค้าและราคา) */}
+                    <div className="flex-1 p-[2.5mm] px-[3.5mm] flex flex-col justify-between">
+                      <div className="text-[12px] font-bold leading-tight line-clamp-2 text-gray-800 tracking-tight pr-4">
                         {product.name}
                       </div>
                       
                       <div className="flex justify-between items-end mt-1">
-                        <div className="text-[14px] text-gray-500 font-medium mb-[4px]">
+                        <div className="text-[9px] text-gray-500 font-medium mb-[1px]">
                           {product.size}
                         </div>
                         <div className="flex items-baseline">
-                          <span className="text-[52px] font-black tracking-tighter leading-none text-gray-900">
+                          <span className="text-[32px] font-black tracking-tighter leading-none text-gray-900">
                             {product.price.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </span>
-                          <span className="text-[12px] ml-2 font-medium text-gray-700 mb-2">
+                          <span className="text-[9px] ml-1 font-medium text-gray-700 mb-1">
                             บาท
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-white px-[6mm] py-[2mm] flex flex-col justify-end border-t border-gray-300" style={{ height: '18mm' }}>
-                      <div className="flex justify-between text-[10px] font-mono font-bold leading-none mb-[2px] text-gray-800">
+                    {/* ส่วนครึ่งล่าง (แถบเทาข้อมูลรองและบาร์โค้ดของจริง) */}
+                    <div className="bg-white px-[3.5mm] py-[1.5mm] flex flex-col justify-end border-t border-gray-300" style={{ height: '14mm' }}>
+                      <div className="flex justify-between text-[7px] font-mono font-bold leading-none mb-[2px] text-gray-800">
                         <span>
                           {product.packPrice 
-                            ? `Pack ${product.packPrice.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bath` 
+                            ? `Pack ${product.packPrice.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
                             : ''}
                         </span>
-                        <span>{formatDate(product.updateDate, 'Update ')}</span>
+                        <span>{formatDate(product.updateDate, 'Upd ')}</span>
                       </div>
-                      <div className="flex justify-between text-[10px] font-mono font-bold leading-none mb-[4px] text-gray-800">
+                      <div className="flex justify-between text-[7px] font-mono font-bold leading-none mb-[2px] text-gray-800">
                         <span>{formatDate(product.expiryDate, 'Exp ')}</span>
-                        <span>{product.productCode || 'XXXXXXX'}</span>
+                        <span>{product.productCode}</span>
                         <span>{product.location}</span>
                       </div>
                       
-                      <div className="w-full h-[6mm] mt-[2px]">
-                        <svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 100 10">
-                          <path d="M0,0 h2 v10 h-2 Z M4,0 h1 v10 h-1 Z M7,0 h3 v10 h-3 Z M12,0 h1 v10 h-1 Z M15,0 h2 v10 h-2 Z M20,0 h3 v10 h-3 Z M25,0 h1 v10 h-1 Z M28,0 h2 v10 h-2 Z M33,0 h1 v10 h-1 Z M36,0 h4 v10 h-4 Z M42,0 h2 v10 h-2 Z M46,0 h1 v10 h-1 Z M49,0 h3 v10 h-3 Z M54,0 h2 v10 h-2 Z M58,0 h1 v10 h-1 Z M61,0 h2 v10 h-2 Z M65,0 h3 v10 h-3 Z M70,0 h1 v10 h-1 Z M73,0 h2 v10 h-2 Z M77,0 h4 v10 h-4 Z M83,0 h2 v10 h-2 Z M87,0 h1 v10 h-1 Z M90,0 h3 v10 h-3 Z M95,0 h2 v10 h-2 Z M99,0 h1 v10 h-1 Z" fill="#333" />
-                        </svg>
+                      {/* ดึงบาร์โค้ดของจริงจาก API แทนการวาดเส้นหลอก */}
+                      <div className="w-full h-[4.5mm] mt-[1px] flex justify-center overflow-hidden mix-blend-multiply opacity-90">
+                        {product.productCode ? (
+                          <img 
+                            src={`https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(product.productCode)}&includetext=false`} 
+                            alt={`Barcode for ${product.productCode}`}
+                            className="h-full w-full object-fill grayscale"
+                            crossOrigin="anonymous"
+                          />
+                        ) : null}
                       </div>
                     </div>
 
-                    <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 print:hidden transition-opacity z-10">
+                    <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 print:hidden transition-opacity z-10">
                       <button 
                         onClick={() => handleEditClick(product)}
-                        className="bg-blue-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-blue-700 shadow-md"
+                        className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-blue-700 shadow-md"
                         title="แก้ไขรายการ"
                       >
                         ✎
                       </button>
                       <button 
                         onClick={() => handleDelete(product.id)}
-                        className="bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-red-700 shadow-md"
+                        className="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700 shadow-md"
                         title="ลบรายการนี้"
                       >
                         ✕
