@@ -180,41 +180,66 @@ export default function App() {
   };
 
   // -----------------------------------------
-  // ฟังก์ชันดึงข้อมูลจาก API สาธารณะ (Open Food Facts)
+  // 🌟 ฟังก์ชันดึงข้อมูลจาก API ผสม (2 แหล่ง) ให้ครอบคลุมที่สุด
   // -----------------------------------------
   const fetchProductFromAPI = async (barcode) => {
     if (!barcode || barcode.trim() === '' || barcode === 'XXXXXXX') return;
     
     setIsFetchingAPI(true);
     try {
-      // ใช้ Open Food Facts API (ใช้งานฟรี ไม่ต้องใช้ API Key)
-      const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
-      const data = await response.json();
+      // แหล่งที่ 1: Open Food Facts (ถนัดหมวดอาหาร ของกิน ขนม)
+      let response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
+      let data = await response.json();
       
       if (data.status === 1 && data.product) {
-        // ดึงชื่อสินค้า (เน้นภาษาไทยก่อน ถ้าไม่มีเอาภาษาอังกฤษ)
         const nameTH = data.product.product_name_th || data.product.product_name_en || data.product.product_name || '';
         const brand = data.product.brands || '';
         const quantity = data.product.quantity || '';
         
-        // รวมยี่ห้อและชื่อสินค้าเข้าด้วยกัน
         let fullName = nameTH;
         if (brand && !nameTH.includes(brand)) {
            fullName = `${brand} ${nameTH}`;
         }
 
-        setNameInput(fullName.trim() || 'ไม่ระบุชื่อสินค้า (จากออนไลน์)');
+        setNameInput(fullName.trim() || 'ไม่ระบุชื่อสินค้า (จาก Food API)');
         if (quantity) setSizeInput(quantity);
         
-        // โฟกัสไปที่ช่องราคาเพื่อให้ผู้ใช้กรอกราคาต่อได้เลย
         document.getElementById('price-input-field')?.focus();
+        setIsFetchingAPI(false);
+        return; // ถ้าเจอแล้ว ให้จบการทำงานตรงนี้เลย
+      } 
+      
+      // แหล่งที่ 2: UPCitemDB (ถนัดหมวดของใช้ในบ้าน, ไอที, นำเข้า)
+      // *หมายเหตุ: API ฟรีตัวนี้อนุญาตให้เรียก 100 ครั้งต่อวัน
+      response = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${barcode}`);
+      data = await response.json();
+
+      if (data.code === 'OK' && data.items && data.items.length > 0) {
+        const item = data.items[0];
+        const title = item.title || '';
+        const brand = item.brand || '';
+        const size = item.size || item.weight || '';
+
+        let fullName = title;
+        if (brand && !title.toLowerCase().includes(brand.toLowerCase())) {
+           fullName = `${brand} ${title}`;
+        }
+
+        // มักจะเป็นภาษาอังกฤษ แต่ดีกว่าไม่เจออะไรเลย
+        setNameInput(fullName.trim() || 'ไม่ระบุชื่อสินค้า (จาก UPC DB)');
+        if (size) setSizeInput(size);
         
-      } else {
-        alert('ℹ️ ไม่พบข้อมูลสินค้านี้ในระบบออนไลน์ กรุณากรอกชื่อและราคาเองครับ');
+        document.getElementById('price-input-field')?.focus();
+        setIsFetchingAPI(false);
+        return;
       }
+
+      // ถ้าไม่เจอทั้ง 2 แหล่ง
+      alert('ℹ️ ไม่พบข้อมูลสินค้านี้ในระบบออนไลน์ (ค้นหาทั้ง 2 ฐานข้อมูลแล้ว) กรุณากรอกชื่อและราคาเองในครั้งแรกครับ');
+
     } catch (error) {
       console.error("API Error:", error);
-      alert('❌ ไม่สามารถเชื่อมต่อฐานข้อมูลออนไลน์ได้ในขณะนี้');
+      alert('❌ ไม่สามารถเชื่อมต่อฐานข้อมูลออนไลน์ได้ หรือโควต้าฟรีรายวันอาจจะเต็มครับ');
     }
     setIsFetchingAPI(false);
   };
@@ -235,14 +260,13 @@ export default function App() {
   };
 
   const handleProductCodeKeyDown = (e) => {
-    // 🌟 ดักจับการกด Enter จากเครื่องสแกนบาร์โค้ดฮาร์ดแวร์ หรือ กด Enter เอง
     if (e.key === 'Enter') {
       e.preventDefault(); 
 
       const scannedCode = e.target.value.trim();
       if (!scannedCode) return;
       
-      // 1. ค้นหาในฐานข้อมูลของเราเองก่อน
+      // 1. ค้นหาในฐานข้อมูลของเราเองก่อน (ไวและแม่นยำสุด)
       const exactMatch = productDB.find(p => p.productCode === scannedCode);
       
       if (exactMatch) {
@@ -250,13 +274,12 @@ export default function App() {
         return;
       }
 
-      // กรณีใช้คีย์บอร์ดกดลูกศรเลือก Suggestion ตามปกติ
       if (showProductCodeSuggestions && activeProductCodeIndex >= 0 && activeProductCodeIndex < productCodeSuggestions.length) {
         handleSelectSuggestion(productCodeSuggestions[activeProductCodeIndex]);
         return;
       }
 
-      // 2. ถ้าไม่พบในฐานข้อมูลเรา ให้วิ่งไปค้นหาใน API ออนไลน์
+      // 2. ถ้าไม่พบในฐานข้อมูลเรา ให้วิ่งไปค้นหาใน API ออนไลน์ทั้ง 2 แหล่ง
       fetchProductFromAPI(scannedCode);
       setShowProductCodeSuggestions(false);
       return;
@@ -385,7 +408,6 @@ export default function App() {
 
     if (duplicateProduct) return; 
 
-    // รหัสสินค้าสำหรับบาร์โค้ด ไม่ควรเว้นว่าง ถ้าไม่มีให้สุ่มรหัสหรือใช้ชื่อ
     const finalProductCode = productCodeInput && productCodeInput !== 'XXXXXXX' 
       ? productCodeInput 
       : `SKU-${Math.floor(Math.random() * 1000000)}`;
