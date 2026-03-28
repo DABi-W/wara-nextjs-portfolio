@@ -86,10 +86,16 @@ export default function App() {
         scannerRef.current = new window.Html5QrcodeScanner(
           "reader",
           { 
-            fps: 10, 
+            fps: 30, // 🌟 ปรับเพิ่มความเร็วเฟรมเรตให้กล้องลื่นไหลจับภาพได้ไวขึ้น
             qrbox: { width: 250, height: 150 },
             rememberLastUsedCamera: true,
-            supportedScanTypes: [window.Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+            supportedScanTypes: [window.Html5QrcodeScanType.SCAN_TYPE_CAMERA],
+            videoConstraints: { // 🌟 บังคับการตั้งค่ากล้องเพื่อให้โฟกัสได้ดีและภาพชัด
+              facingMode: "environment", // บังคับเปิดกล้องหลังเสมอ
+              width: { min: 640, ideal: 1280, max: 1920 }, // ปรับความละเอียดให้ภาพคมชัดขึ้น
+              height: { min: 480, ideal: 720, max: 1080 },
+              advanced: [{ focusMode: "continuous" }] // บังคับใช้โหมดโฟกัสอัตโนมัติตลอดเวลา (ถ้าเครื่องรองรับ)
+            }
           },
           false
         );
@@ -493,10 +499,15 @@ export default function App() {
     pages.push(products.slice(i, i + ITEMS_PER_PAGE));
   }
 
-  const renderNumberPad = (field) => {
+  const renderNumberPad = (field, align = 'left', vAlign = 'bottom') => {
     if (activePad !== field) return null;
+    
+    // กำหนดทิศทางการเด้งของ Popup ให้ไม่ล้นจอ
+    const hClass = align === 'right' ? 'right-0' : 'left-0';
+    const vClass = vAlign === 'top' ? 'bottom-[calc(100%+4px)]' : 'top-[calc(100%+4px)]';
+
     return (
-      <div className="absolute top-full left-0 mt-1 w-[260px] bg-white border border-gray-200 rounded-md shadow-xl z-50 p-2 pad-container">
+      <div className={`absolute ${vClass} ${hClass} w-[260px] bg-white border border-gray-200 rounded-md shadow-xl z-[60] p-2 pad-container`}>
         <div className="text-[10px] text-gray-500 mb-2 font-medium">💡 กดเพื่อบวกตัวเลขเพิ่ม</div>
         <div className="grid grid-cols-5 gap-1">
           {QUICK_NUMBERS.map(num => (
@@ -518,14 +529,14 @@ export default function App() {
               if (field === 'price') setPriceInput('');
               if (field === 'packPrice') setPackPriceInput('');
             }}
-            className="bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-1.5 rounded text-xs transition-colors border border-red-200 col-span-5 mt-1"
-          >
-            ⌫ เคลียร์ค่า
-          </button>
+              className="bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-1.5 rounded text-xs transition-colors border border-red-200 col-span-5 mt-1"
+            >
+              ⌫ เคลียร์ค่า
+            </button>
+          </div>
         </div>
-      </div>
-    );
-  };
+      );
+    };
 
   return (
     <div className="min-h-screen bg-gray-200 flex flex-col md:flex-row font-sans print:bg-white print:block">
@@ -551,15 +562,16 @@ export default function App() {
               className="mt-6 w-full bg-red-500 hover:bg-red-600 text-white font-medium py-3 rounded-lg shadow-sm"
             >
               ✕ ปิดกล้อง
-            </button>
-          </div>
+          </button>
         </div>
-      )}
+      </div>
+    )}
 
-      <aside className="w-full md:w-80 md:min-h-screen bg-white p-6 shadow-md print:hidden flex-shrink-0 z-10 md:sticky md:top-0 h-fit overflow-y-auto">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">จัดการป้ายราคา</h1>
-        
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-8">
+    {/* เพิ่ม pb-24 เผื่อพื้นที่ด้านล่างสุดให้เลื่อนหน้าจอได้ ไม่ให้เมนูจม */}
+    <aside className="w-full md:w-80 md:min-h-screen bg-white p-6 pb-24 shadow-md print:hidden flex-shrink-0 z-10 md:sticky md:top-0 h-fit overflow-y-auto">
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">จัดการป้ายราคา</h1>
+      
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mb-8">
           
           <div className="relative pad-container" ref={wrapperRef}>
             <label className="block text-sm font-medium text-gray-700 mb-1">ชื่อสินค้า</label>
@@ -655,53 +667,56 @@ export default function App() {
 
           <div className="grid grid-cols-2 gap-3 border-t border-gray-200 pt-3">
             <div className="relative pad-container col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">ราคา (บาท)</label>
-              <input
-                id="price-input-field"
-                type="number"
-                step="0.01"
-                value={priceInput}
-                onChange={(e) => setPriceInput(e.target.value)}
-                onFocus={() => setActivePad('price')}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="เช่น 20.00"
-                required
-                autoComplete="off"
-              />
-              {renderNumberPad('price')}
-            </div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">ราคา (บาท)</label>
+            <input
+              id="price-input-field"
+              type="number"
+              step="0.01"
+              value={priceInput}
+              onChange={(e) => setPriceInput(e.target.value)}
+              onFocus={() => setActivePad('price')}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="เช่น 20.00"
+              required
+              autoComplete="off"
+            />
+            {/* ราคากล่องใหญ่ ให้เด้งลงล่าง ชิดซ้าย */}
+            {renderNumberPad('price', 'left', 'bottom')}
+          </div>
 
-            <div className="relative pad-container">
-              <label className="block text-xs font-medium text-gray-700 mb-1">ขนาด/น้ำหนัก</label>
-              <input
-                type="text"
-                value={sizeInput}
-                onChange={(e) => setSizeInput(e.target.value)}
-                onFocus={() => setActivePad('size')}
-                className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="เช่น 50ก"
-                autoComplete="off"
-              />
-              {renderNumberPad('size')}
-            </div>
+          <div className="relative pad-container">
+            <label className="block text-xs font-medium text-gray-700 mb-1">ขนาด/น้ำหนัก</label>
+            <input
+              type="text"
+              value={sizeInput}
+              onChange={(e) => setSizeInput(e.target.value)}
+              onFocus={() => setActivePad('size')}
+              className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="เช่น 50ก"
+              autoComplete="off"
+            />
+            {/* ขนาดอยู่ซ้ายล่าง ให้เด้งขึ้นบน ชิดซ้าย */}
+            {renderNumberPad('size', 'left', 'top')}
+          </div>
 
-            <div className="relative pad-container">
-              <label className="block text-xs font-medium text-gray-700 mb-1">ราคายกแพ็ค (ถ้ามี)</label>
-              <input
-                type="number"
-                step="0.01"
-                value={packPriceInput}
-                onChange={(e) => setPackPriceInput(e.target.value)}
-                onFocus={() => setActivePad('packPrice')}
-                className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="เช่น 55.00"
-                autoComplete="off"
-              />
-              {renderNumberPad('packPrice')}
-            </div>
+          <div className="relative pad-container">
+            <label className="block text-xs font-medium text-gray-700 mb-1">ราคายกแพ็ค (ถ้ามี)</label>
+            <input
+              type="number"
+              step="0.01"
+              value={packPriceInput}
+              onChange={(e) => setPackPriceInput(e.target.value)}
+              onFocus={() => setActivePad('packPrice')}
+              className="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="เช่น 55.00"
+              autoComplete="off"
+            />
+            {/* ยกแพ็คอยู่ขวาล่าง ให้เด้งขึ้นบน และชิดขวา (กันล้นจอ) */}
+            {renderNumberPad('packPrice', 'right', 'top')}
+          </div>
 
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">วันที่อัปเดต</label>
+          <div>
+            <label className="block text-xs font-medium text-gray-700 mb-1">วันที่อัปเดต</label>
               <input
                 type="date"
                 value={updateDateInput}
