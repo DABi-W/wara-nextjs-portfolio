@@ -132,7 +132,6 @@ export default function App() {
   const [productCodeInput, setProductCodeInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
   
-  // 🌟 เพิ่ม State สำหรับเก็บขนาดการ์ด (อัปเดตเป็น 6x4)
   const [layoutInput, setLayoutInput] = useState('6x5');
 
   const formatDate = (dateString, prefix = "") => {
@@ -314,7 +313,7 @@ export default function App() {
     setExpiryDateInput(product.expiryDate || '');
     setProductCodeInput(product.productCode === "XXXXXXX" ? '' : product.productCode);
     setLocationInput(product.location === "1F" ? '' : product.location);
-    setLayoutInput(product.layout || '6x5'); // ดึงขนาดเดิมมาด้วย
+    setLayoutInput(product.layout || '6x5'); 
     setShowSuggestions(false); 
     setShowProductCodeSuggestions(false); 
   };
@@ -396,7 +395,7 @@ export default function App() {
       expiryDate: expiryDateInput, 
       productCode: finalProductCode,
       location: locationInput,
-      layout: layoutInput // บันทึกขนาดที่เลือก
+      layout: layoutInput 
     };
 
     if (editingId) {
@@ -463,47 +462,42 @@ export default function App() {
     if (editingId === id) cancelEdit();
   };
 
-  // 🌟 ระบบคำนวณพื้นที่หน้ากระดาษอัจฉริยะ (ผสม 2 ขนาดได้ในหน้าเดียว)
+  // 🌟 ระบบคำนวณพื้นที่หน้ากระดาษอัจฉริยะ 
   const pages = [];
   let currentPageGroups = [];
   let currentHeight = 0;
   let currentRow = [];
   let currentLayoutType = null;
-  const MAX_PAGE_HEIGHT = 281; // 297mm (A4) - 16mm (Padding บนล่าง)
+  // ลดความสูงลงนิดหน่อยเพื่อความปลอดภัย ไม่ให้หั่นการ์ดบนมือถือ
+  const MAX_PAGE_HEIGHT = 285; 
 
   products.forEach((product) => {
-    // กำหนดค่าเริ่มต้นถ้าหากเลือก 6x4 จะใช้ 40mm ถ้า 6x5 ใช้ 50mm
     const pLayout = product.layout || '6x5';
     const pHeight = pLayout === '6x4' ? 40 : 50;
 
-    // ถ้ามีการเปลี่ยนขนาด และแถวเดิมยังมีของอยู่ ให้ตัดขึ้นบรรทัดใหม่ทันที
     if (currentLayoutType && currentLayoutType !== pLayout && currentRow.length > 0) {
       currentPageGroups.push({ type: currentLayoutType, items: currentRow });
       currentRow = [];
     }
 
-    // ตรวจสอบว่าถ้าขึ้นบรรทัดใหม่ จะล้นหน้ากระดาษหรือไม่?
     if (currentRow.length === 0) {
       if (currentHeight + pHeight > MAX_PAGE_HEIGHT) {
-        // ล้น! ให้ยกยอดไปหน้าถัดไป
         pages.push(currentPageGroups);
         currentPageGroups = [];
         currentHeight = 0;
       }
-      currentHeight += pHeight; // จองพื้นที่ความสูงสำหรับแถวใหม่
+      currentHeight += pHeight; 
     }
 
     currentRow.push(product);
     currentLayoutType = pLayout;
 
-    // 1 แถวมีได้สูงสุด 3 คอลัมน์ ถ้าเต็มแล้วให้ตัดจบแถว
     if (currentRow.length === 3) {
       currentPageGroups.push({ type: currentLayoutType, items: currentRow });
       currentRow = [];
     }
   });
 
-  // เก็บตกเศษที่เหลือ
   if (currentRow.length > 0) {
     currentPageGroups.push({ type: currentLayoutType, items: currentRow });
   }
@@ -552,14 +546,16 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-200 flex flex-col md:flex-row font-sans print:bg-white print:block">
       
+      {/* 🌟 ปรับปรุง CSS สำหรับการปริ้นท์ เพื่อป้องกันหน้ากระดาษขาดกลาง */}
       <style dangerouslySetInnerHTML={{__html: `
         @media print {
-          @page { size: A4; margin: 0; }
+          @page { size: A4 portrait; margin: 0; }
           body { margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          * { box-sizing: border-box !important; }
         }
       `}} />
 
-      {/* 🌟 Modal สำหรับเปิดกล้องสแกนบาร์โค้ด */}
+      {/* Modal สำหรับเปิดกล้องสแกนบาร์โค้ด */}
       {isCameraOpen && (
         <div className="fixed inset-0 bg-black/80 z-[100] flex flex-col items-center justify-center p-4">
           <div className="bg-white p-4 rounded-xl w-full max-w-sm flex flex-col items-center">
@@ -783,7 +779,6 @@ export default function App() {
               </div>
             )}
 
-            {/* 🌟 ปุ่มเลือกขนาดการ์ด (เปลี่ยนจาก 6x6 เป็น 6x4) */}
             <div className="flex gap-2 mb-1">
                <button 
                   type="button" 
@@ -882,32 +877,32 @@ export default function App() {
         </div>
       </aside>
 
-      {/* ==========================================
-          ส่วนที่ 2: Print Preview
-          ========================================== */}
       <main className="flex-1 overflow-x-auto overflow-y-auto p-4 md:p-8 print:p-0 print:overflow-visible flex justify-center">
         <div className="w-max flex flex-col gap-8 print:gap-0 print:block">
           {products.length === 0 && (
             <div 
               className="bg-white shadow-xl relative flex items-center justify-center text-gray-400 print:hidden"
-              style={{ width: '210mm', minWidth: '210mm', height: '297mm', minHeight: '297mm' }}
+              style={{ width: '210mm', minWidth: '210mm', height: '296mm', minHeight: '296mm' }}
             >
               ยังไม่มีรายการสินค้า กรุณาเพิ่มสินค้าที่แถบด้านซ้าย
             </div>
           )}
 
-          {/* 🌟 แสดงผลกระดาษที่คำนวณมาอย่างแม่นยำแล้ว */}
+          {/* 🌟 แสดงผลกระดาษที่คำนวณมาอย่างแม่นยำแล้ว (เพิ่มระบบป้องกันหน้าขาด) */}
           {pages.map((pageGroups, pageIndex) => (
             <div 
               key={pageIndex}
-              className="bg-white shadow-xl print:shadow-none relative print:break-after-page mx-auto flex flex-col items-center justify-start"
+              // เพิ่ม print:overflow-hidden เพื่อตัดส่วนล้นยิบย่อยออก ป้องกันกระดาษทะลุไปหน้าถัดไป
+              className="bg-white shadow-xl print:shadow-none relative print:break-after-page print:overflow-hidden mx-auto flex flex-col items-center justify-start"
               style={{ 
                 width: '210mm', 
                 minWidth: '210mm',
-                height: '297mm', 
-                minHeight: '297mm',
-                padding: '8mm', 
+                height: '296mm', // ลดความสูงลงมา 1mm เผื่อระยะขอบบราวเซอร์
+                paddingTop: '5mm', // ลดขอบบนลงให้มีพื้นที่ปลอดภัยมากขึ้น
+                paddingBottom: '5mm',
                 boxSizing: 'border-box',
+                pageBreakInside: 'avoid', // สั่งไม่ให้เนื้อหาข้างในหน้ากระดาษแตกแถว
+                breakInside: 'avoid',
                 pageBreakAfter: pageIndex === pages.length - 1 ? 'auto' : 'always',
                 breakAfter: pageIndex === pages.length - 1 ? 'auto' : 'page',
               }}
@@ -915,20 +910,23 @@ export default function App() {
               {pageGroups.map((group, groupIdx) => (
                 <div 
                   key={groupIdx}
-                  // เส้นขอบด้านบนจะมีแค่กลุ่มแรกของหน้า เพื่อไม่ให้ขอบทับซ้อนกันหนาเกินไป
                   className={`grid border-l border-gray-300 ${groupIdx === 0 ? 'border-t' : ''}`}
                   style={{ gridTemplateColumns: 'repeat(3, 60mm)', alignContent: 'start' }}
                 >
                   {group.items.map((product) => (
                     <div 
                       key={product.id} 
-                      className={`relative border-b border-r flex flex-col bg-white overflow-hidden group transition-all ${
+                      // 🌟 เพิ่ม print:break-inside-avoid ป้องกันบราวเซอร์จับการ์ดหั่นครึ่ง
+                      className={`relative border-b border-r flex flex-col bg-white overflow-hidden group transition-all print:break-inside-avoid ${
                         editingId === product.id ? 'ring-2 ring-inset ring-orange-500 z-10' : 'border-gray-300'
                       }`}
-                      // 🌟 ปรับความสูงของการ์ดตามที่เลือก (6x4 ใช้ 40mm)
-                      style={{ width: '60mm', height: group.type === '6x4' ? '40mm' : '50mm' }} 
+                      style={{ 
+                        width: '60mm', 
+                        height: group.type === '6x4' ? '40mm' : '50mm',
+                        pageBreakInside: 'avoid',
+                        breakInside: 'avoid'
+                      }} 
                     >
-                      {/* ส่วนครึ่งบน (ข้อมูลสินค้าและราคา) ปรับระยะเผื่อขนาด 6x4 */}
                       <div className={`flex-1 flex flex-col justify-between ${group.type === '6x4' ? 'p-[1.5mm] px-[2.5mm]' : 'p-[2.5mm] px-[3.5mm]'}`}>
                         <div className={`${group.type === '6x4' ? 'text-[11px]' : 'text-[12px]'} font-bold leading-tight line-clamp-2 text-gray-800 tracking-tight pr-4`}>
                           {product.name}
@@ -949,7 +947,6 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* ส่วนครึ่งล่าง (แถบเทาข้อมูลรองและบาร์โค้ดของจริง) ย่อส่วนให้เหมาะกับ 6x4 */}
                       <div className={`bg-white border-t border-gray-300 flex flex-col justify-end ${group.type === '6x4' ? 'px-[2.5mm] py-[1mm] h-[12mm]' : 'px-[3.5mm] py-[1.5mm] h-[14mm]'}`}>
                         <div className="flex justify-between text-[7px] font-mono font-bold leading-none mb-[2px] text-gray-800">
                           <span>
