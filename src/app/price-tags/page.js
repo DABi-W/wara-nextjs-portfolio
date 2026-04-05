@@ -132,7 +132,7 @@ export default function App() {
   const [productCodeInput, setProductCodeInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
   
-  // 🌟 เพิ่ม State สำหรับเก็บขนาดการ์ด
+  // 🌟 เพิ่ม State สำหรับเก็บขนาดการ์ด (อัปเดตเป็น 6x4)
   const [layoutInput, setLayoutInput] = useState('6x5');
 
   const formatDate = (dateString, prefix = "") => {
@@ -472,8 +472,9 @@ export default function App() {
   const MAX_PAGE_HEIGHT = 281; // 297mm (A4) - 16mm (Padding บนล่าง)
 
   products.forEach((product) => {
+    // กำหนดค่าเริ่มต้นถ้าหากเลือก 6x4 จะใช้ 40mm ถ้า 6x5 ใช้ 50mm
     const pLayout = product.layout || '6x5';
-    const pHeight = pLayout === '6x6' ? 60 : 50;
+    const pHeight = pLayout === '6x4' ? 40 : 50;
 
     // ถ้ามีการเปลี่ยนขนาด และแถวเดิมยังมีของอยู่ ให้ตัดขึ้นบรรทัดใหม่ทันที
     if (currentLayoutType && currentLayoutType !== pLayout && currentRow.length > 0) {
@@ -782,7 +783,7 @@ export default function App() {
               </div>
             )}
 
-            {/* 🌟 ปุ่มเลือกขนาดการ์ด */}
+            {/* 🌟 ปุ่มเลือกขนาดการ์ด (เปลี่ยนจาก 6x6 เป็น 6x4) */}
             <div className="flex gap-2 mb-1">
                <button 
                   type="button" 
@@ -795,12 +796,12 @@ export default function App() {
                </button>
                <button 
                   type="button" 
-                  onClick={() => setLayoutInput('6x6')} 
+                  onClick={() => setLayoutInput('6x4')} 
                   className={`flex-1 py-1.5 text-[11px] font-bold rounded-md border transition-all ${
-                    layoutInput === '6x6' ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                    layoutInput === '6x4' ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                   }`}
                >
-                  ขนาด 6x6 ซม. (12 ใบ/หน้า)
+                  ขนาด 6x4 ซม. (21 ใบ/หน้า)
                </button>
             </div>
 
@@ -924,21 +925,21 @@ export default function App() {
                       className={`relative border-b border-r flex flex-col bg-white overflow-hidden group transition-all ${
                         editingId === product.id ? 'ring-2 ring-inset ring-orange-500 z-10' : 'border-gray-300'
                       }`}
-                      // 🌟 ปรับความสูงของการ์ดตามที่เลือก
-                      style={{ width: '60mm', height: group.type === '6x6' ? '60mm' : '50mm' }} 
+                      // 🌟 ปรับความสูงของการ์ดตามที่เลือก (6x4 ใช้ 40mm)
+                      style={{ width: '60mm', height: group.type === '6x4' ? '40mm' : '50mm' }} 
                     >
-                      {/* ส่วนครึ่งบน (ข้อมูลสินค้าและราคา) */}
-                      <div className={`flex-1 flex flex-col justify-between ${group.type === '6x6' ? 'p-[3.5mm] px-[4.5mm]' : 'p-[2.5mm] px-[3.5mm]'}`}>
-                        <div className={`${group.type === '6x6' ? 'text-[14px]' : 'text-[12px]'} font-bold leading-tight line-clamp-2 text-gray-800 tracking-tight pr-4`}>
+                      {/* ส่วนครึ่งบน (ข้อมูลสินค้าและราคา) ปรับระยะเผื่อขนาด 6x4 */}
+                      <div className={`flex-1 flex flex-col justify-between ${group.type === '6x4' ? 'p-[1.5mm] px-[2.5mm]' : 'p-[2.5mm] px-[3.5mm]'}`}>
+                        <div className={`${group.type === '6x4' ? 'text-[11px]' : 'text-[12px]'} font-bold leading-tight line-clamp-2 text-gray-800 tracking-tight pr-4`}>
                           {product.name}
                         </div>
                         
                         <div className="flex justify-between items-end mt-1">
-                          <div className={`text-[9px] text-gray-500 font-medium ${group.type === '6x6' ? 'mb-[2px]' : 'mb-[1px]'}`}>
+                          <div className={`text-[9px] text-gray-500 font-medium ${group.type === '6x4' ? 'mb-[0px]' : 'mb-[1px]'}`}>
                             {product.size}
                           </div>
                           <div className="flex items-baseline">
-                            <span className={`${group.type === '6x6' ? 'text-[38px]' : 'text-[32px]'} font-black tracking-tighter leading-none text-gray-900`}>
+                            <span className={`${group.type === '6x4' ? 'text-[26px]' : 'text-[32px]'} font-black tracking-tighter leading-none text-gray-900`}>
                               {product.price.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
                             <span className="text-[9px] ml-1 font-medium text-gray-700 mb-1">
@@ -948,8 +949,8 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* ส่วนครึ่งล่าง (แถบเทาข้อมูลรองและบาร์โค้ดของจริง) */}
-                      <div className={`bg-white border-t border-gray-300 flex flex-col justify-end ${group.type === '6x6' ? 'px-[4.5mm] py-[2mm] h-[16mm]' : 'px-[3.5mm] py-[1.5mm] h-[14mm]'}`}>
+                      {/* ส่วนครึ่งล่าง (แถบเทาข้อมูลรองและบาร์โค้ดของจริง) ย่อส่วนให้เหมาะกับ 6x4 */}
+                      <div className={`bg-white border-t border-gray-300 flex flex-col justify-end ${group.type === '6x4' ? 'px-[2.5mm] py-[1mm] h-[12mm]' : 'px-[3.5mm] py-[1.5mm] h-[14mm]'}`}>
                         <div className="flex justify-between text-[7px] font-mono font-bold leading-none mb-[2px] text-gray-800">
                           <span>
                             {product.packPrice 
@@ -964,7 +965,7 @@ export default function App() {
                           <span>{product.location}</span>
                         </div>
                         
-                        <div className={`w-full mt-[1px] flex justify-center overflow-hidden mix-blend-multiply opacity-90 ${group.type === '6x6' ? 'h-[5.5mm]' : 'h-[4.5mm]'}`}>
+                        <div className={`w-full mt-[1px] flex justify-center overflow-hidden mix-blend-multiply opacity-90 ${group.type === '6x4' ? 'h-[3.5mm]' : 'h-[4.5mm]'}`}>
                           {product.productCode ? (
                             <img 
                               src={`https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(product.productCode)}&includetext=false`} 
