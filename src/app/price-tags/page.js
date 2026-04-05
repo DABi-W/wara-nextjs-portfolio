@@ -27,10 +27,7 @@ export default function App() {
 
   const [activePad, setActivePad] = useState(null); 
   
-  // State สำหรับสถานะการดึงข้อมูลจาก API
   const [isFetchingAPI, setIsFetchingAPI] = useState(false);
-
-  // State สำหรับเปิด/ปิดกล้องสแกนบาร์โค้ดบนมือถือ
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const scannerRef = useRef(null);
 
@@ -61,7 +58,7 @@ export default function App() {
   }, []);
 
   // -----------------------------------------
-  // ระบบกล้องสแกนบาร์โค้ด (โหลดไลบรารีอัตโนมัติ)
+  // ระบบกล้องสแกนบาร์โค้ด
   // -----------------------------------------
   useEffect(() => {
     if (isCameraOpen) {
@@ -77,7 +74,6 @@ export default function App() {
       };
 
       const startScanner = () => {
-        // ล้างตัวเดิมถ้ามีค้างอยู่
         if (scannerRef.current) {
           try { scannerRef.current.clear(); } catch(e) {}
         }
@@ -86,15 +82,15 @@ export default function App() {
         scannerRef.current = new window.Html5QrcodeScanner(
           "reader",
           { 
-            fps: 30, // 🌟 ปรับเพิ่มความเร็วเฟรมเรตให้กล้องลื่นไหลจับภาพได้ไวขึ้น
+            fps: 30, 
             qrbox: { width: 250, height: 150 },
             rememberLastUsedCamera: true,
             supportedScanTypes: [window.Html5QrcodeScanType.SCAN_TYPE_CAMERA],
-            videoConstraints: { // 🌟 บังคับการตั้งค่ากล้องเพื่อให้โฟกัสได้ดีและภาพชัด
-              facingMode: "environment", // บังคับเปิดกล้องหลังเสมอ
-              width: { min: 640, ideal: 1280, max: 1920 }, // ปรับความละเอียดให้ภาพคมชัดขึ้น
+            videoConstraints: { 
+              facingMode: "environment", 
+              width: { min: 640, ideal: 1280, max: 1920 }, 
               height: { min: 480, ideal: 720, max: 1080 },
-              advanced: [{ focusMode: "continuous" }] // บังคับใช้โหมดโฟกัสอัตโนมัติตลอดเวลา (ถ้าเครื่องรองรับ)
+              advanced: [{ focusMode: "continuous" }] 
             }
           },
           false
@@ -102,22 +98,16 @@ export default function App() {
 
         scannerRef.current.render(
           (decodedText) => {
-            // เมื่อสแกนสำเร็จ
             closeScanner();
             setProductCodeInput(decodedText);
-            
-            // เช็คในระบบเราก่อน ถ้ามีก็ดึงมาเลย
             const exactMatch = productDB.find(p => p.productCode === decodedText);
             if (exactMatch) {
               handleSelectSuggestion(exactMatch);
             } else {
-              // ถ้าไม่มีให้ดึงออนไลน์
               fetchProductFromAPI(decodedText);
             }
           },
-          (error) => {
-            // ข้าม Error เพราะกล้องมันจะสแกนหาเรื่อยๆ ตลอดเวลา
-          }
+          (error) => {}
         );
       };
 
@@ -127,11 +117,7 @@ export default function App() {
 
   const closeScanner = () => {
     if (scannerRef.current) {
-      try {
-        scannerRef.current.clear();
-      } catch (error) {
-        console.error("Failed to clear scanner", error);
-      }
+      try { scannerRef.current.clear(); } catch (error) {}
     }
     setIsCameraOpen(false);
   };
@@ -145,10 +131,10 @@ export default function App() {
   const [expiryDateInput, setExpiryDateInput] = useState(''); 
   const [productCodeInput, setProductCodeInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
+  
+  // 🌟 เพิ่ม State สำหรับเก็บขนาดการ์ด
+  const [layoutInput, setLayoutInput] = useState('6x5');
 
-  // -----------------------------------------
-  // ฟังก์ชันจัดรูปแบบวันที่ (แสดงเป็น ปี ค.ศ. 4 หลัก)
-  // -----------------------------------------
   const formatDate = (dateString, prefix = "") => {
     if (!dateString) return `${prefix}--/--/----`;
     const [year, month, day] = dateString.split('-');
@@ -185,15 +171,11 @@ export default function App() {
     }
   };
 
-  // -----------------------------------------
-  // 🌟 ฟังก์ชันดึงข้อมูลจาก API ผสม (2 แหล่ง) ให้ครอบคลุมที่สุด
-  // -----------------------------------------
   const fetchProductFromAPI = async (barcode) => {
     if (!barcode || barcode.trim() === '' || barcode === 'XXXXXXX') return;
     
     setIsFetchingAPI(true);
     try {
-      // แหล่งที่ 1: Open Food Facts (ถนัดหมวดอาหาร ของกิน ขนม)
       let response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${barcode}.json`);
       let data = await response.json();
       
@@ -203,20 +185,15 @@ export default function App() {
         const quantity = data.product.quantity || '';
         
         let fullName = nameTH;
-        if (brand && !nameTH.includes(brand)) {
-           fullName = `${brand} ${nameTH}`;
-        }
+        if (brand && !nameTH.includes(brand)) fullName = `${brand} ${nameTH}`;
 
         setNameInput(fullName.trim() || 'ไม่ระบุชื่อสินค้า (จาก Food API)');
         if (quantity) setSizeInput(quantity);
-        
         document.getElementById('price-input-field')?.focus();
         setIsFetchingAPI(false);
-        return; // ถ้าเจอแล้ว ให้จบการทำงานตรงนี้เลย
+        return; 
       } 
       
-      // แหล่งที่ 2: UPCitemDB (ถนัดหมวดของใช้ในบ้าน, ไอที, นำเข้า)
-      // *หมายเหตุ: API ฟรีตัวนี้อนุญาตให้เรียก 100 ครั้งต่อวัน
       response = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${barcode}`);
       data = await response.json();
 
@@ -227,22 +204,16 @@ export default function App() {
         const size = item.size || item.weight || '';
 
         let fullName = title;
-        if (brand && !title.toLowerCase().includes(brand.toLowerCase())) {
-           fullName = `${brand} ${title}`;
-        }
+        if (brand && !title.toLowerCase().includes(brand.toLowerCase())) fullName = `${brand} ${title}`;
 
-        // มักจะเป็นภาษาอังกฤษ แต่ดีกว่าไม่เจออะไรเลย
         setNameInput(fullName.trim() || 'ไม่ระบุชื่อสินค้า (จาก UPC DB)');
         if (size) setSizeInput(size);
-        
         document.getElementById('price-input-field')?.focus();
         setIsFetchingAPI(false);
         return;
       }
 
-      // ถ้าไม่เจอทั้ง 2 แหล่ง
       alert('ℹ️ ไม่พบข้อมูลสินค้านี้ในระบบออนไลน์ (ค้นหาทั้ง 2 ฐานข้อมูลแล้ว) กรุณากรอกชื่อและราคาเองในครั้งแรกครับ');
-
     } catch (error) {
       console.error("API Error:", error);
       alert('❌ ไม่สามารถเชื่อมต่อฐานข้อมูลออนไลน์ได้ หรือโควต้าฟรีรายวันอาจจะเต็มครับ');
@@ -268,13 +239,10 @@ export default function App() {
   const handleProductCodeKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault(); 
-
       const scannedCode = e.target.value.trim();
       if (!scannedCode) return;
       
-      // 1. ค้นหาในฐานข้อมูลของเราเองก่อน (ไวและแม่นยำสุด)
       const exactMatch = productDB.find(p => p.productCode === scannedCode);
-      
       if (exactMatch) {
         handleSelectSuggestion(exactMatch); 
         return;
@@ -285,7 +253,6 @@ export default function App() {
         return;
       }
 
-      // 2. ถ้าไม่พบในฐานข้อมูลเรา ให้วิ่งไปค้นหาใน API ออนไลน์ทั้ง 2 แหล่ง
       fetchProductFromAPI(scannedCode);
       setShowProductCodeSuggestions(false);
       return;
@@ -347,6 +314,7 @@ export default function App() {
     setExpiryDateInput(product.expiryDate || '');
     setProductCodeInput(product.productCode === "XXXXXXX" ? '' : product.productCode);
     setLocationInput(product.location === "1F" ? '' : product.location);
+    setLayoutInput(product.layout || '6x5'); // ดึงขนาดเดิมมาด้วย
     setShowSuggestions(false); 
     setShowProductCodeSuggestions(false); 
   };
@@ -427,7 +395,8 @@ export default function App() {
       updateDate: updateDateInput,
       expiryDate: expiryDateInput, 
       productCode: finalProductCode,
-      location: locationInput
+      location: locationInput,
+      layout: layoutInput // บันทึกขนาดที่เลือก
     };
 
     if (editingId) {
@@ -473,6 +442,7 @@ export default function App() {
     setExpiryDateInput(product.expiryDate || '');
     setProductCodeInput(product.productCode.startsWith('SKU-') ? '' : product.productCode);
     setLocationInput(product.location);
+    setLayoutInput(product.layout || '6x5');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -493,16 +463,56 @@ export default function App() {
     if (editingId === id) cancelEdit();
   };
 
-  const ITEMS_PER_PAGE = 15;
+  // 🌟 ระบบคำนวณพื้นที่หน้ากระดาษอัจฉริยะ (ผสม 2 ขนาดได้ในหน้าเดียว)
   const pages = [];
-  for (let i = 0; i < products.length; i += ITEMS_PER_PAGE) {
-    pages.push(products.slice(i, i + ITEMS_PER_PAGE));
+  let currentPageGroups = [];
+  let currentHeight = 0;
+  let currentRow = [];
+  let currentLayoutType = null;
+  const MAX_PAGE_HEIGHT = 281; // 297mm (A4) - 16mm (Padding บนล่าง)
+
+  products.forEach((product) => {
+    const pLayout = product.layout || '6x5';
+    const pHeight = pLayout === '6x6' ? 60 : 50;
+
+    // ถ้ามีการเปลี่ยนขนาด และแถวเดิมยังมีของอยู่ ให้ตัดขึ้นบรรทัดใหม่ทันที
+    if (currentLayoutType && currentLayoutType !== pLayout && currentRow.length > 0) {
+      currentPageGroups.push({ type: currentLayoutType, items: currentRow });
+      currentRow = [];
+    }
+
+    // ตรวจสอบว่าถ้าขึ้นบรรทัดใหม่ จะล้นหน้ากระดาษหรือไม่?
+    if (currentRow.length === 0) {
+      if (currentHeight + pHeight > MAX_PAGE_HEIGHT) {
+        // ล้น! ให้ยกยอดไปหน้าถัดไป
+        pages.push(currentPageGroups);
+        currentPageGroups = [];
+        currentHeight = 0;
+      }
+      currentHeight += pHeight; // จองพื้นที่ความสูงสำหรับแถวใหม่
+    }
+
+    currentRow.push(product);
+    currentLayoutType = pLayout;
+
+    // 1 แถวมีได้สูงสุด 3 คอลัมน์ ถ้าเต็มแล้วให้ตัดจบแถว
+    if (currentRow.length === 3) {
+      currentPageGroups.push({ type: currentLayoutType, items: currentRow });
+      currentRow = [];
+    }
+  });
+
+  // เก็บตกเศษที่เหลือ
+  if (currentRow.length > 0) {
+    currentPageGroups.push({ type: currentLayoutType, items: currentRow });
+  }
+  if (currentPageGroups.length > 0) {
+    pages.push(currentPageGroups);
   }
 
   const renderNumberPad = (field, align = 'left', vAlign = 'bottom') => {
     if (activePad !== field) return null;
     
-    // กำหนดทิศทางการเด้งของ Popup ให้ไม่ล้นจอ
     const hClass = align === 'right' ? 'right-0' : 'left-0';
     const vClass = vAlign === 'top' ? 'bottom-[calc(100%+4px)]' : 'top-[calc(100%+4px)]';
 
@@ -567,7 +577,6 @@ export default function App() {
       </div>
     )}
 
-    {/* เพิ่ม pb-24 เผื่อพื้นที่ด้านล่างสุดให้เลื่อนหน้าจอได้ ไม่ให้เมนูจม */}
     <aside className="w-full md:w-80 md:min-h-screen bg-white p-6 pb-24 shadow-md print:hidden flex-shrink-0 z-10 md:sticky md:top-0 h-fit overflow-y-auto">
       <h1 className="text-2xl font-bold mb-6 text-gray-800">จัดการป้ายราคา</h1>
       
@@ -624,7 +633,6 @@ export default function App() {
                 placeholder="คลิกแล้วยิงสแกน..."
                 autoComplete="off"
               />
-              {/* ปุ่มเปิดกล้องสำหรับมือถือ/เว็บแคม */}
               <button
                 type="button"
                 onClick={() => setIsCameraOpen(true)}
@@ -680,7 +688,6 @@ export default function App() {
               required
               autoComplete="off"
             />
-            {/* ราคากล่องใหญ่ ให้เด้งลงล่าง ชิดซ้าย */}
             {renderNumberPad('price', 'left', 'bottom')}
           </div>
 
@@ -695,7 +702,6 @@ export default function App() {
               placeholder="เช่น 50ก"
               autoComplete="off"
             />
-            {/* ขนาดอยู่ซ้ายล่าง ให้เด้งขึ้นบน ชิดซ้าย */}
             {renderNumberPad('size', 'left', 'top')}
           </div>
 
@@ -711,7 +717,6 @@ export default function App() {
               placeholder="เช่น 55.00"
               autoComplete="off"
             />
-            {/* ยกแพ็คอยู่ขวาล่าง ให้เด้งขึ้นบน และชิดขวา (กันล้นจอ) */}
             {renderNumberPad('packPrice', 'right', 'top')}
           </div>
 
@@ -776,6 +781,28 @@ export default function App() {
                 <span className="text-xs">({duplicateProduct.name}) กรุณาตรวจสอบอีกครั้ง</span>
               </div>
             )}
+
+            {/* 🌟 ปุ่มเลือกขนาดการ์ด */}
+            <div className="flex gap-2 mb-1">
+               <button 
+                  type="button" 
+                  onClick={() => setLayoutInput('6x5')} 
+                  className={`flex-1 py-1.5 text-[11px] font-bold rounded-md border transition-all ${
+                    layoutInput === '6x5' ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                  }`}
+               >
+                  ขนาด 6x5 ซม. (15 ใบ/หน้า)
+               </button>
+               <button 
+                  type="button" 
+                  onClick={() => setLayoutInput('6x6')} 
+                  className={`flex-1 py-1.5 text-[11px] font-bold rounded-md border transition-all ${
+                    layoutInput === '6x6' ? 'bg-blue-100 border-blue-500 text-blue-700 shadow-sm' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                  }`}
+               >
+                  ขนาด 6x6 ซม. (12 ใบ/หน้า)
+               </button>
+            </div>
 
             <button
               type="submit"
@@ -868,102 +895,107 @@ export default function App() {
             </div>
           )}
 
-          {pages.map((pageProducts, pageIndex) => (
+          {/* 🌟 แสดงผลกระดาษที่คำนวณมาอย่างแม่นยำแล้ว */}
+          {pages.map((pageGroups, pageIndex) => (
             <div 
               key={pageIndex}
-              className="bg-white shadow-xl print:shadow-none relative print:break-after-page mx-auto flex justify-center"
+              className="bg-white shadow-xl print:shadow-none relative print:break-after-page mx-auto flex flex-col items-center justify-start"
               style={{ 
                 width: '210mm', 
                 minWidth: '210mm',
                 height: '297mm', 
                 minHeight: '297mm',
-                padding: '8mm', // ขอบกระดาษ 8 มม. 
+                padding: '8mm', 
                 boxSizing: 'border-box',
                 pageBreakAfter: pageIndex === pages.length - 1 ? 'auto' : 'always',
                 breakAfter: pageIndex === pages.length - 1 ? 'auto' : 'page',
               }}
             >
-              <div 
-                className="grid border-t border-l border-gray-300"
-                style={{ gridTemplateColumns: 'repeat(3, 60mm)', alignContent: 'start' }}
-              >
-                {pageProducts.map((product) => (
-                  <div 
-                    key={product.id} 
-                    className={`relative border-b border-r flex flex-col bg-white overflow-hidden group transition-all ${
-                      editingId === product.id ? 'ring-2 ring-inset ring-orange-500 z-10' : 'border-gray-300'
-                    }`}
-                    style={{ width: '60mm', height: '50mm' }} 
-                  >
-                    {/* ส่วนครึ่งบน (ข้อมูลสินค้าและราคา) */}
-                    <div className="flex-1 p-[2.5mm] px-[3.5mm] flex flex-col justify-between">
-                      <div className="text-[12px] font-bold leading-tight line-clamp-2 text-gray-800 tracking-tight pr-4">
-                        {product.name}
-                      </div>
-                      
-                      <div className="flex justify-between items-end mt-1">
-                        <div className="text-[9px] text-gray-500 font-medium mb-[1px]">
-                          {product.size}
+              {pageGroups.map((group, groupIdx) => (
+                <div 
+                  key={groupIdx}
+                  // เส้นขอบด้านบนจะมีแค่กลุ่มแรกของหน้า เพื่อไม่ให้ขอบทับซ้อนกันหนาเกินไป
+                  className={`grid border-l border-gray-300 ${groupIdx === 0 ? 'border-t' : ''}`}
+                  style={{ gridTemplateColumns: 'repeat(3, 60mm)', alignContent: 'start' }}
+                >
+                  {group.items.map((product) => (
+                    <div 
+                      key={product.id} 
+                      className={`relative border-b border-r flex flex-col bg-white overflow-hidden group transition-all ${
+                        editingId === product.id ? 'ring-2 ring-inset ring-orange-500 z-10' : 'border-gray-300'
+                      }`}
+                      // 🌟 ปรับความสูงของการ์ดตามที่เลือก
+                      style={{ width: '60mm', height: group.type === '6x6' ? '60mm' : '50mm' }} 
+                    >
+                      {/* ส่วนครึ่งบน (ข้อมูลสินค้าและราคา) */}
+                      <div className={`flex-1 flex flex-col justify-between ${group.type === '6x6' ? 'p-[3.5mm] px-[4.5mm]' : 'p-[2.5mm] px-[3.5mm]'}`}>
+                        <div className={`${group.type === '6x6' ? 'text-[14px]' : 'text-[12px]'} font-bold leading-tight line-clamp-2 text-gray-800 tracking-tight pr-4`}>
+                          {product.name}
                         </div>
-                        <div className="flex items-baseline">
-                          <span className="text-[32px] font-black tracking-tighter leading-none text-gray-900">
-                            {product.price.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                          </span>
-                          <span className="text-[9px] ml-1 font-medium text-gray-700 mb-1">
-                            บาท
-                          </span>
+                        
+                        <div className="flex justify-between items-end mt-1">
+                          <div className={`text-[9px] text-gray-500 font-medium ${group.type === '6x6' ? 'mb-[2px]' : 'mb-[1px]'}`}>
+                            {product.size}
+                          </div>
+                          <div className="flex items-baseline">
+                            <span className={`${group.type === '6x6' ? 'text-[38px]' : 'text-[32px]'} font-black tracking-tighter leading-none text-gray-900`}>
+                              {product.price.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </span>
+                            <span className="text-[9px] ml-1 font-medium text-gray-700 mb-1">
+                              บาท
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* ส่วนครึ่งล่าง (แถบเทาข้อมูลรองและบาร์โค้ดของจริง) */}
-                    <div className="bg-white px-[3.5mm] py-[1.5mm] flex flex-col justify-end border-t border-gray-300" style={{ height: '14mm' }}>
-                      <div className="flex justify-between text-[7px] font-mono font-bold leading-none mb-[2px] text-gray-800">
-                        <span>
-                          {product.packPrice 
-                            ? `Pack ${product.packPrice.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
-                            : ''}
-                        </span>
-                        <span>{formatDate(product.updateDate, 'Upd ')}</span>
+                      {/* ส่วนครึ่งล่าง (แถบเทาข้อมูลรองและบาร์โค้ดของจริง) */}
+                      <div className={`bg-white border-t border-gray-300 flex flex-col justify-end ${group.type === '6x6' ? 'px-[4.5mm] py-[2mm] h-[16mm]' : 'px-[3.5mm] py-[1.5mm] h-[14mm]'}`}>
+                        <div className="flex justify-between text-[7px] font-mono font-bold leading-none mb-[2px] text-gray-800">
+                          <span>
+                            {product.packPrice 
+                              ? `Pack ${product.packPrice.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
+                              : ''}
+                          </span>
+                          <span>{formatDate(product.updateDate, 'Upd ')}</span>
+                        </div>
+                        <div className="flex justify-between text-[7px] font-mono font-bold leading-none mb-[2px] text-gray-800">
+                          <span>{formatDate(product.expiryDate, 'Exp ')}</span>
+                          <span>{product.productCode}</span>
+                          <span>{product.location}</span>
+                        </div>
+                        
+                        <div className={`w-full mt-[1px] flex justify-center overflow-hidden mix-blend-multiply opacity-90 ${group.type === '6x6' ? 'h-[5.5mm]' : 'h-[4.5mm]'}`}>
+                          {product.productCode ? (
+                            <img 
+                              src={`https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(product.productCode)}&includetext=false`} 
+                              alt={`Barcode for ${product.productCode}`}
+                              className="h-full w-full object-fill grayscale"
+                              crossOrigin="anonymous"
+                            />
+                          ) : null}
+                        </div>
                       </div>
-                      <div className="flex justify-between text-[7px] font-mono font-bold leading-none mb-[2px] text-gray-800">
-                        <span>{formatDate(product.expiryDate, 'Exp ')}</span>
-                        <span>{product.productCode}</span>
-                        <span>{product.location}</span>
-                      </div>
-                      
-                      {/* ดึงบาร์โค้ดของจริงจาก API แทนการวาดเส้นหลอก */}
-                      <div className="w-full h-[4.5mm] mt-[1px] flex justify-center overflow-hidden mix-blend-multiply opacity-90">
-                        {product.productCode ? (
-                          <img 
-                            src={`https://bwipjs-api.metafloor.com/?bcid=code128&text=${encodeURIComponent(product.productCode)}&includetext=false`} 
-                            alt={`Barcode for ${product.productCode}`}
-                            className="h-full w-full object-fill grayscale"
-                            crossOrigin="anonymous"
-                          />
-                        ) : null}
-                      </div>
-                    </div>
 
-                    <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 print:hidden transition-opacity z-10">
-                      <button 
-                        onClick={() => handleEditClick(product)}
-                        className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-blue-700 shadow-md"
-                        title="แก้ไขรายการ"
-                      >
-                        ✎
-                      </button>
-                      <button 
-                        onClick={() => handleDelete(product.id)}
-                        className="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700 shadow-md"
-                        title="ลบรายการนี้"
-                      >
-                        ✕
-                      </button>
+                      <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 print:hidden transition-opacity z-10">
+                        <button 
+                          onClick={() => handleEditClick(product)}
+                          className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-blue-700 shadow-md"
+                          title="แก้ไขรายการ"
+                        >
+                          ✎
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(product.id)}
+                          className="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700 shadow-md"
+                          title="ลบรายการนี้"
+                        >
+                          ✕
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ))}
             </div>
           ))}
         </div>
